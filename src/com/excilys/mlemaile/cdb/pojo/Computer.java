@@ -8,11 +8,23 @@ public class Computer {
 	private LocalDate introduced;
 	private LocalDate discontinued;
 	private int company_id;
+	
+	private Computer(){}
+	
+	public Computer(int id){
+		this();
+		this.setId(id);
+	}
+	
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
-		this.id = id;
+		if(id>0){
+			this.id = id;
+		}else{
+			throw new IllegalArgumentException("The Id of a computer must be an interger greater than or equal to 1.");
+		}
 	}
 	public String getName() {
 		return name;
@@ -35,6 +47,10 @@ public class Computer {
 			this.discontinued = discontinued;
 		}else if(introduced!=null && discontinued.isAfter(introduced)){
 			this.discontinued = discontinued;
+		}else if(introduced==null){
+			this.discontinued = discontinued;
+		}else{
+			throw new IllegalArgumentException("The discontinued date must be after the introduced date.");
 		}
 	}
 	public int getCompany_id() {

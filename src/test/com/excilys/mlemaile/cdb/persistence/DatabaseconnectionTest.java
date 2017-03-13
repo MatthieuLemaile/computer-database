@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.test.persistence;
+package com.excilys.mlemaile.cdb.persistence;
 
 
 import static org.junit.Assert.assertNotNull;

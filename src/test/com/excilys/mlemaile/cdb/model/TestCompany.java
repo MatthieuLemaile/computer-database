@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.test.model;
+package com.excilys.mlemaile.cdb.model;
 
 import static org.junit.Assert.assertEquals;
 

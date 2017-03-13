@@ -1,5 +1,10 @@
-package com.excilys.mlemaile.cdb.pojo;
+package com.excilys.mlemaile.cdb.model;
 
+/**
+ * This class represent a company as in database
+ * @author Matthieu Lemaile
+ *
+ */
 public class Company {
 	private int id;
 	private String name;

@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.test.pojo;
+package com.excilys.mlemaile.cdb.test.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -7,34 +7,36 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
-import com.excilys.mlemaile.cdb.pojo.Computer;
+import com.excilys.mlemaile.cdb.model.Computer;
 
 public class TestComputer {
 	@Test
 	public void testCreationComputer(){
-		Computer computer = new Computer(5);
+		Computer computer = new Computer("");
 		assertNotNull(computer);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testCreationComputerIllegalArgument(){
-		Computer computer = new Computer(-3);
+		Computer computer = new Computer("");
+		computer.setId(-3);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testCreationComputerIllegalArgument0(){
-		Computer computer = new Computer(0);
+		Computer computer = new Computer("");
+		computer.setId(0);
 	}
 	
 	@Test
 	public void testComputer(){
-		Computer computer = new Computer(5);
+		String name = "name of the computer";
+		Computer computer = new Computer(name);
+		computer.setId(5);
 		LocalDate introduced = LocalDate.now();
 		introduced.minusYears(1);
 		computer.setIntroduced(introduced);
 		assertEquals("The introduced date is not set properly",introduced,computer.getIntroduced());
-		String name = "name of the computer";
-		computer.setName(name);
 		assertEquals("The name is not set properly",name,computer.getName());
 		int company_id = 8;
 		computer.setCompany_id(company_id);
@@ -46,7 +48,7 @@ public class TestComputer {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testComputerDiscontinuedBeforeIntroduced(){
-		Computer computer = new Computer(4);
+		Computer computer = new Computer("");
 		LocalDate introduced = LocalDate.now();
 		introduced.minusYears(1);
 		LocalDate discontinued = introduced.minusMonths(4);

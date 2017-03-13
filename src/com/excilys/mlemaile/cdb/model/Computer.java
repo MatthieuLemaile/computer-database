@@ -1,7 +1,12 @@
-package com.excilys.mlemaile.cdb.pojo;
+package com.excilys.mlemaile.cdb.model;
 
 import java.time.LocalDate;
 
+/**
+ * This class represent a computer as in the database
+ * @author Matthieu Lemaile
+ * 
+ */
 public class Computer {
 	private int id;
 	private String name;
@@ -11,9 +16,11 @@ public class Computer {
 	
 	private Computer(){}
 	
-	public Computer(int id){
+	//need to keep the default constructor private to ensure the computer has a name when created
+	
+	public Computer(String name){
 		this();
-		this.setId(id);
+		this.setName(name);
 	}
 	
 	public int getId() {
@@ -45,7 +52,7 @@ public class Computer {
 		//Pour pouvoir remettre à zéro cette propriété
 		if(discontinued==null){
 			this.discontinued = discontinued;
-		}else if(introduced!=null && discontinued.isAfter(introduced)){
+		}else if(introduced!=null && (discontinued.isAfter(introduced) || discontinued.isEqual(introduced))){
 			this.discontinued = discontinued;
 		}else if(introduced==null){
 			this.discontinued = discontinued;

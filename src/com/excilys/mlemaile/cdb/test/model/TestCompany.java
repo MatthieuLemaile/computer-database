@@ -1,10 +1,10 @@
-package com.excilys.mlemaile.cdb.test.pojo;
+package com.excilys.mlemaile.cdb.test.model;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.excilys.mlemaile.cdb.pojo.Company;
+import com.excilys.mlemaile.cdb.model.Company;
 
 public class TestCompany {
 	@Test

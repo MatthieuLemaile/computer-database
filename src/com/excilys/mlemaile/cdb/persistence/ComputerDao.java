@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -68,9 +70,23 @@ public class ComputerDao {
 			Connection connection = DatabaseConnection.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO computer (name,introduced,discontinued,company_id) values(?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, computer.getName());
-			preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
-			preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
-			preparedStatement.setInt(4, computer.getCompany_id());
+			LocalDate introduced = computer.getIntroduced();
+			if(introduced!=null){
+				preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
+			}else{
+				preparedStatement.setNull(2, Types.TIMESTAMP);
+			}
+			LocalDate discontinued = computer.getDiscontinued();
+			if(discontinued!=null){
+				preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
+			}else{
+				preparedStatement.setNull(3, Types.TIMESTAMP);
+			}
+			if(computer.getCompany_id()>0){
+				preparedStatement.setInt(4, computer.getCompany_id());
+			}else{
+				preparedStatement.setNull(4, Types.BIGINT);
+			}
 			if(preparedStatement.executeUpdate()>0){
 				ResultSet generatedKey = preparedStatement.getGeneratedKeys();
 				if(generatedKey.next()){

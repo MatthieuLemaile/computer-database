@@ -65,5 +65,10 @@ public class Computer {
 	}
 	public void setCompany_id(int company_id) {
 		this.company_id = company_id;
-	} 
+	}
+	
+	@Override
+	public String toString(){
+		return "ID : "+getId()+" name : "+getName()+" manufacturer : "+getCompany_id()+" introduced : "+getIntroduced()+" Discontinued : "+getDiscontinued();
+	}
 }

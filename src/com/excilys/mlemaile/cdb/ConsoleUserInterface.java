@@ -38,10 +38,10 @@ public class ConsoleUserInterface {
 		
 		switch(optionNumber){
 			case 1:
-				listComputers();
+				listComputers(br);
 				break;
 			case 2:
-				listCompanies();
+				listCompanies(br);
 				break;
 			case 3:
 				showComputerDetails(br);
@@ -63,18 +63,76 @@ public class ConsoleUserInterface {
 		
 	}
 	
-	private static void listComputers(){
+	private static void listComputers(BufferedReader br){
 		ArrayList<Computer> computers = (ArrayList<Computer>) ComputerDao.listComputers();
-		for(Computer computer : computers){
-			System.out.println("\tid : "+computer.getId()+" name : "+computer.getName());
-		}
+		String entry;
+		int pageNumber = 0;
+		do{
+			System.out.println("Enter a page number, 0 to leave.");
+			try {
+				entry = br.readLine();
+				pageNumber = Integer.parseInt(entry);
+				if(pageNumber>0){
+					Page<Computer> page = new Page<Computer>(pageNumber);
+					ArrayList<Computer> listPage = new ArrayList<>();
+					int indexMin =(pageNumber-1)*Page.number_per_page;
+					int indexMax =pageNumber*Page.number_per_page;
+					if(indexMin>computers.size()){
+						indexMin=0;
+						indexMax=0;
+						System.out.println("There is less than "+(pageNumber-1)*Page.number_per_page+" in the database.");
+					}
+					if(indexMax>computers.size()){
+						indexMax = computers.size();
+					}
+					for(int i=indexMin;i<indexMax;i++){
+						listPage.add(computers.get(i));
+					}
+					page.setList(listPage);
+					page.displayPage();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (NumberFormatException e){
+				System.out.println("You must enter an integer");
+			}
+		}while(pageNumber>0); //Le cas négatif n'est pa géré ici, mais c'est un bug mineur.
 	}
 	
-	private static void listCompanies(){
+	private static void listCompanies(BufferedReader br){
 		ArrayList<Company> companies = (ArrayList<Company>) CompanyDao.listCompanies();
-		for(Company company : companies){
-			System.out.println("\tid : "+company.getId()+" name : "+company.getName());
-		}
+		String entry;
+		int pageNumber = 0;
+		do{
+			System.out.println("Enter a page number, 0 to leave.");
+			try {
+				entry = br.readLine();
+				pageNumber = Integer.parseInt(entry);
+				if(pageNumber>0){
+					Page<Company> page = new Page<Company>(pageNumber);
+					ArrayList<Company> listPage = new ArrayList<>();
+					int indexMin =(pageNumber-1)*Page.number_per_page;
+					int indexMax =pageNumber*Page.number_per_page;
+					if(indexMin>companies.size()){
+						indexMin=0;
+						indexMax=0;
+						System.out.println("There is less than "+(pageNumber-1)*Page.number_per_page+" in the database.");
+					}
+					if(indexMax>companies.size()){
+						indexMax = companies.size();
+					}
+					for(int i=indexMin;i<indexMax;i++){
+						listPage.add(companies.get(i));
+					}
+					page.setList(listPage);
+					page.displayPage();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (NumberFormatException e){
+				System.out.println("You must enter an integer");
+			}
+		}while(pageNumber>0); //Le cas négatif n'est pa géré ici, mais c'est un bug mineur.
 	}
 	
 	private static void showComputerDetails(BufferedReader br){

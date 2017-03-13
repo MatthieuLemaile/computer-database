@@ -11,6 +11,7 @@ import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
+import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
 
 public class MainClass {
 
@@ -20,6 +21,7 @@ public class MainClass {
 		
 		System.out.println("Hello, what do you want to do ?");
 		while(ConsoleUserInterface.menu());
+		DatabaseConnection.closeConnection();
 		/*
 		Company c = CompanyDao.getCompany(1);
 		System.out.println(c.getId() + " : "+ c.getName());

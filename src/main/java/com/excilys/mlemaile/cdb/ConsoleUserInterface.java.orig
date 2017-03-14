@@ -245,12 +245,8 @@ public class ConsoleUserInterface {
 <<<<<<< HEAD
 			if(ComputerDao.updateComputer(c)){
 =======
-<<<<<<< HEAD
 			if(ServiceComputer.updatecomputer(c)){
-=======
-			if(ComputerDao.updateComputer(c)){
->>>>>>> changement de l'interface pour la mise à jour d'un ordi
->>>>>>> changement de l'interface pour la mise à jour d'un ordi
+>>>>>>> Utilisation du service pour la mise à jour d'un ordi
 				System.out.println("computer successfully updated");
 			}
 		} catch (IOException e) {

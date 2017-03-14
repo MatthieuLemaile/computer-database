@@ -58,8 +58,7 @@ public class ComputerDao {
 				computers.add(computer);
 			}
 		}catch(SQLException e){
-			String error = "can't dinf computer : "+e;
-			logger.error(error);
+			logger.error("can't dinf computer : ",e);
 		}
 		return computers;
 	}
@@ -101,8 +100,7 @@ public class ComputerDao {
 				}
 			}
 		} catch (SQLException e) {
-			String error = "Error storing the computer : "+e;
-			logger.error(error);
+			logger.error("Error storing the computer : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
@@ -122,8 +120,7 @@ public class ComputerDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) bindingComputer(resultSet);
 		} catch (SQLException e) {
-			String error = "Can't list computers : "+e;
-			logger.error(error);
+			logger.error("Can't list computers : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
@@ -147,8 +144,7 @@ public class ComputerDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) bindingComputer(resultSet);
 		} catch (SQLException e) {
-			String error = "Can't list computers : "+e;
-			logger.error(error);
+			logger.error("Can't list computers : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
@@ -169,8 +165,7 @@ public class ComputerDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) bindingComputer(resultSet);
 		} catch (SQLException e) {
-			String error = "Can't retrieve computer : "+e;
-			logger.error(error);
+			logger.error("Can't retrieve computer : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
@@ -215,8 +210,7 @@ public class ComputerDao {
 				logger.info("updated computer to : "+computer.toString());
 			}
 		} catch (SQLException e) {
-			String error = "Can't update computer : "+e;
-			logger.error(error);
+			logger.error("Can't update computer : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
@@ -239,8 +233,7 @@ public class ComputerDao {
 				logger.info("computer deleted : "+computer.toString());
 			}
 		} catch (SQLException e) {
-			String error = "Can't delete computer : "+e;
-			logger.error(error);
+			logger.error("Can't delete computer : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}

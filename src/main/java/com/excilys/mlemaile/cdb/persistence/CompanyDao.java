@@ -36,8 +36,7 @@ public class CompanyDao {
 				companies.add(company);
 			}
 		}catch(SQLException e){
-			String error = "Can't bind company : \n"+e; 
-			logger.error(error);
+			logger.error("Can't bind company :",e);
 		}
 		return companies;
 	}
@@ -57,8 +56,7 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			String error = "Can't find company : "+e;
-			logger.error(error);
+			logger.error("Can't find company :",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
@@ -82,8 +80,7 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			String error = "Can't list companies : "+e;
-			logger.error(error);
+			logger.error("Can't list companies : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
@@ -101,8 +98,7 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			String error = "Can't list companies : "+e;
-			logger.error(error);
+			logger.error("Can't list companies : ",e);
 		} finally{
 			DatabaseConnection.closeConnection();
 		}

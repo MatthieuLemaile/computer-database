@@ -11,6 +11,7 @@ import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
+import com.excilys.mlemaile.cdb.service.ServiceComputer;
 
 public class ConsoleUserInterface {
 	
@@ -182,18 +183,16 @@ public class ConsoleUserInterface {
 					return;
 				}
 			}
-			Computer c = new Computer(name);
-			if(!ldIntro.isEqual(defaultDate)){
-				c.setIntroduced(ldIntro);
+			if(ldIntro.isEqual(defaultDate)){
+				ldIntro = null;
 			}
-			if(!ldDisco.isEqual(defaultDate)){
-				c.setDiscontinued(ldDisco);
+			if(ldDisco.isEqual(defaultDate)){
+				ldDisco = null;
 			}
-			if(company_id!=0){
-				c.setCompany_id(company_id);
-			}
-			if(ComputerDao.createComputer(c)){
-				System.out.println("Computer successfully created. ID :"+c.getId());
+			if(ServiceComputer.createComputer(name, ldIntro, ldDisco, company_id)){
+				System.out.println("computer successfully created !");
+			}else{
+				System.out.println("Something went wrong. Ensure the order of date if entered, and eventually check log file.");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

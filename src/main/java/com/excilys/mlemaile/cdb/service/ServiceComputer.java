@@ -25,4 +25,8 @@ public class ServiceComputer {
 			logger.warn("can't create the computer :",e);
 		}return computerCreated;
 	}
+	
+	public static boolean updatecomputer(Computer c){
+		return ComputerDao.updateComputer(c);
+	}
 }

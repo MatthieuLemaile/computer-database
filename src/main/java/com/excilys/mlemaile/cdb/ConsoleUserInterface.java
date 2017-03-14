@@ -208,63 +208,50 @@ public class ConsoleUserInterface {
 	 * @param br BufferedReader to read the user's entry
 	 */
 	private static void updateComputer(BufferedReader br){
-		System.out.println("Enter the id of the computer you want to update.");
+		System.out.println("Type the id of the computer you want to update.");
+		System.out.println("Then type -[Field to change]=[new value]. fields are : name; introduced-date, discontinued-date, company-id.");
+		System.out.println("A date is formatted as follow : yyyy-mm-dd");
+		System.out.println("example :'214 -name=nouveau nom -introduced-date=2012-08-26'");
 		String entry;
 		int id = 0;
-		do{
-			System.out.println("Enter a number greater or equal to 1");
-			try {
-				entry = br.readLine();
-				id = Integer.parseInt(entry);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (NumberFormatException e){
-				System.out.println("You must enter an integer");
-			}
-		}while(id<1);
-		Computer c = ComputerDao.getComputer(id); 
-		System.out.println("Do you want to change the name (y/n) ?");
 		try {
-			if("y".equals(br.readLine())){
-				System.out.println("enter the new name");
-				String name = br.readLine();
-				if(name!=null && !name.trim().isEmpty()){
-					c.setName(name);
-				}
-			}
-			System.out.println("Do you want to change the introduced date (y/n) ?");
-			if("y".equals(br.readLine())){
-				System.out.println("enter the new date (yyyy-mm-dd).");
-				String date = br.readLine();
-				if(date!=null && !date.trim().isEmpty()){
-					c.setIntroduced(LocalDate.parse(date));
-				}
-			}
-			System.out.println("Do you want to change the discontinued date (y/n) ?");
-			if("y".equals(br.readLine())){
-				System.out.println("enter the new date (yyyy-mm-dd).");
-				String date = br.readLine();
-				if(date!=null && !date.trim().isEmpty()){
-					c.setDiscontinued(LocalDate.parse(date));
-				}
-			}
-			System.out.println("Do you want to change the company id (y/n) ?");
-			if("y".equals(br.readLine())){
-				System.out.println("enter the new company id.");
-				String strId = br.readLine();
-				if(strId!=null && !strId.trim().isEmpty()){
-					int companyId = Integer.parseInt(strId);
-					if(companyId>1){
-						c.setCompany_id(companyId);
+			entry = br.readLine();
+			String[] args = entry.split("( -|=)");
+			id = Integer.parseInt(args[0]);
+			Computer c = ComputerDao.getComputer(id);
+			for(int i=1;i<args.length;i=i+2){
+				if("name".equals(args[i])){
+					c.setName(args[i+1]);
+				}else if("introduced-date".equals(args[i])){
+					String date = args[i+1];
+					if(date!=null && !date.trim().isEmpty()){
+						c.setIntroduced(LocalDate.parse(date));
+					}
+				}else if("discontinued-date".equals(args[i])){
+					String date = args[i+1];
+					if(date!=null && !date.trim().isEmpty()){
+						c.setDiscontinued(LocalDate.parse(date));
+					}
+				}else if("company-id".equals(args[i])){
+					String strId = args[i+1];
+					if(strId!=null && !strId.trim().isEmpty()){
+						int companyId = Integer.parseInt(strId);
+						if(companyId>1){
+							c.setCompany_id(companyId);
+						}
 					}
 				}
 			}
-			ComputerDao.updateComputer(c);
+			if(ComputerDao.updateComputer(c)){
+				System.out.println("computer successfully updated");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (DateTimeParseException e){
-			System.out.println("please try again formatting your date the way indicated");
+		} catch (NumberFormatException e){
+			System.out.println("you must identify the computer by an id(number). The company-id parameter require an interger too.");
 		}
+		
+			
 	}
 	
 	/**

@@ -1,16 +1,4 @@
 package com.excilys.mlemaile.cdb;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-
-import com.excilys.mlemaile.cdb.model.Company;
-import com.excilys.mlemaile.cdb.model.Computer;
-import com.excilys.mlemaile.cdb.persistence.CompanyDao;
-import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
 
 public class MainClass {

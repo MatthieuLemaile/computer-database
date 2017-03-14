@@ -12,6 +12,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.mysql.jdbc.Statement;
 
@@ -22,6 +25,7 @@ import com.mysql.jdbc.Statement;
  */
 public class ComputerDao {
 	
+	private final static Logger logger = LoggerFactory.getLogger(ComputerDao.class);
 	private ComputerDao(){} //we don't need any constructor
 	
 	/**
@@ -54,7 +58,8 @@ public class ComputerDao {
 				computers.add(computer);
 			}
 		}catch(SQLException e){
-			e.printStackTrace();
+			String error = "can't dinf computer : "+e;
+			logger.error(error);
 		}
 		return computers;
 	}
@@ -92,11 +97,12 @@ public class ComputerDao {
 				if(generatedKey.next()){
 					computer.setId((int)generatedKey.getLong(1));
 					executed = true;
+					logger.info("Computer created : "+computer.toString());
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Error storing the computer : "+e;
+			logger.error(error);
 		}
 		return executed;
 	}
@@ -114,8 +120,8 @@ public class ComputerDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) bindingComputer(resultSet);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't list computers : "+e;
+			logger.error(error);
 		}
 		return computers;
 	}
@@ -137,8 +143,8 @@ public class ComputerDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) bindingComputer(resultSet);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't list computers : "+e;
+			logger.error(error);
 		}
 		return computers;
 	}
@@ -157,8 +163,8 @@ public class ComputerDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) bindingComputer(resultSet);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't retrieve computer : "+e;
+			logger.error(error);
 		}
 		Computer c = new Computer("");
 		if(computers.size()==1){
@@ -178,16 +184,31 @@ public class ComputerDao {
 			Connection connection = DatabaseConnection.getConnection();
 			PreparedStatement preparedStatement = connection.prepareStatement("UPDATE computer SET name=?, introduced=?,discontinued=?,company_id=? where id = ?");
 			preparedStatement.setString(1, computer.getName());
-			preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
-			preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
-			preparedStatement.setInt(4, computer.getCompany_id());
+			LocalDate introduced = computer.getIntroduced();
+			if(introduced!=null){
+				preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
+			}else{
+				preparedStatement.setNull(2, Types.TIMESTAMP);
+			}
+			LocalDate discontinued = computer.getDiscontinued();
+			if(discontinued!=null){
+				preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
+			}else{
+				preparedStatement.setNull(3, Types.TIMESTAMP);
+			}
+			if(computer.getCompany_id()>0){
+				preparedStatement.setInt(4, computer.getCompany_id());
+			}else{
+				preparedStatement.setNull(4, Types.BIGINT);
+			}
 			preparedStatement.setInt(5, computer.getId());
 			if(preparedStatement.executeUpdate()!=0){
 				executed = true;
+				logger.info("updated computer to : "+computer.toString());
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't update computer : "+e;
+			logger.error(error);
 		}
 		return executed;
 	}
@@ -205,10 +226,11 @@ public class ComputerDao {
 			preparedStatement.setInt(1, computer.getId());
 			if(preparedStatement.executeUpdate()!=0){
 				executed = true;
+				logger.info("computer deleted : "+computer.toString());
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't delete computer : "+e;
+			logger.error(error);
 		}
 		return executed;
 	}

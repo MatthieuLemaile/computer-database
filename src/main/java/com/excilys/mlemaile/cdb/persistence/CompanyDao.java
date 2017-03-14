@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mlemaile.cdb.model.Company;
 
 /**
@@ -17,7 +20,7 @@ import com.excilys.mlemaile.cdb.model.Company;
 public class CompanyDao {
 	
 	private CompanyDao(){} //we don't need any constructor
-	
+	private final static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
 	/**
 	 * This method map the result of a request (in the result set) to a company object
 	 * @param resultSet the ResultSet of the request
@@ -33,7 +36,8 @@ public class CompanyDao {
 				companies.add(company);
 			}
 		}catch(SQLException e){
-			e.printStackTrace();
+			String error = "Can't bind company : \n"+e; 
+			logger.error(error);
 		}
 		return companies;
 	}
@@ -53,8 +57,8 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't find company : "+e;
+			logger.error(error);
 		}
 		Company c = new Company();
 		if(companies.size()==1){
@@ -76,8 +80,8 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't list companies : "+e;
+			logger.error(error);
 		}
 		return companies;
 	}
@@ -93,8 +97,8 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			String error = "Can't list companies : "+e;
+			logger.error(error);
 		}
 		return companies;
 	}

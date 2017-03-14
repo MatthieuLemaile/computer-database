@@ -103,6 +103,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			String error = "Error storing the computer : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		return executed;
 	}
@@ -122,6 +124,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			String error = "Can't list computers : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		return computers;
 	}
@@ -145,6 +149,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			String error = "Can't list computers : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		return computers;
 	}
@@ -165,6 +171,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			String error = "Can't retrieve computer : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		Computer c = new Computer("");
 		if(computers.size()==1){
@@ -209,6 +217,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			String error = "Can't update computer : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		return executed;
 	}
@@ -231,6 +241,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			String error = "Can't delete computer : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		return executed;
 	}

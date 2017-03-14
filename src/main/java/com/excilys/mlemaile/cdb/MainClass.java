@@ -9,7 +9,6 @@ public class MainClass {
 		
 		System.out.println("Hello, what do you want to do ?");
 		while(ConsoleUserInterface.menu());
-		DatabaseConnection.closeConnection();
 		/*
 		Company c = CompanyDao.getCompany(1);
 		System.out.println(c.getId() + " : "+ c.getName());

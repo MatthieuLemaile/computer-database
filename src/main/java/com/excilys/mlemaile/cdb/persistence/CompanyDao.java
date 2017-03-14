@@ -59,6 +59,8 @@ public class CompanyDao {
 		} catch (SQLException e) {
 			String error = "Can't find company : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		Company c = new Company();
 		if(companies.size()==1){
@@ -82,6 +84,8 @@ public class CompanyDao {
 		} catch (SQLException e) {
 			String error = "Can't list companies : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		return companies;
 	}
@@ -99,6 +103,8 @@ public class CompanyDao {
 		} catch (SQLException e) {
 			String error = "Can't list companies : "+e;
 			logger.error(error);
+		} finally{
+			DatabaseConnection.closeConnection();
 		}
 		return companies;
 	}

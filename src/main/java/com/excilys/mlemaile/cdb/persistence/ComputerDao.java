@@ -102,7 +102,7 @@ public class ComputerDao {
 	}
 	
 	/**
-	 * this method list all computers on the database
+	 * This method list all computers on the database
 	 * @return A List of all computers
 	 */
 	public static List<Computer> listComputers(){
@@ -111,6 +111,29 @@ public class ComputerDao {
 			Connection connection = DatabaseConnection.getConnection();
 			PreparedStatement preparedStatement;
 			preparedStatement = connection.prepareStatement("select * from computer");
+			ResultSet resultSet = preparedStatement.executeQuery();
+			computers = (ArrayList<Computer>) bindingComputer(resultSet);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return computers;
+	}
+	
+	/**
+	 * This method list a number of computer.
+	 * @param number The number of computer to list
+	 * @param idFirst The id of the first computer to list
+	 * @return a List of Computer
+	 */
+	public static List<Computer> listSomecomputer(int number,int idFirst){
+		ArrayList<Computer> computers = new ArrayList<>(); //permet d'éviter de retourner null
+		try {
+			Connection connection = DatabaseConnection.getConnection();
+			PreparedStatement preparedStatement;
+			preparedStatement = connection.prepareStatement("SELECT * FROM computer ORDER BY id ASC LIMIT ?,?");
+			preparedStatement.setInt(1, idFirst);
+			preparedStatement.setInt(2, number);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) bindingComputer(resultSet);
 		} catch (SQLException e) {

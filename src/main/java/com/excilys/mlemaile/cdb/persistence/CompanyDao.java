@@ -82,4 +82,21 @@ public class CompanyDao {
 		return companies;
 	}
 	
+	public static List<Company> listSomeCompanies(int number,int idFirst){
+		ArrayList<Company> companies = new ArrayList<>(); //permet d'éviter de retourner null
+		try {
+			Connection connection = DatabaseConnection.getConnection();
+			PreparedStatement preparedStatement;
+			preparedStatement = connection.prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
+			preparedStatement.setInt(1, idFirst);
+			preparedStatement.setInt(2, number);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			companies = (ArrayList<Company>) bindingCompany(resultSet);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return companies;
+	}
+	
 }

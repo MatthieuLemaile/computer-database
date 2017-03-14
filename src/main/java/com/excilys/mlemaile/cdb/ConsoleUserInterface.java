@@ -13,6 +13,11 @@ import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 
 public class ConsoleUserInterface {
+	
+	/**
+	 * Display the menu and call the function to do the choosen action
+	 * @return a boolean which is true as long as the user don't choose to leave
+	 */
 	public static boolean menu(){
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String entry;
@@ -63,8 +68,12 @@ public class ConsoleUserInterface {
 		
 	}
 	
+	/**
+	 * Display the list of computers 
+	 * @param br BufferedReader to read the user's entry
+	 */
 	private static void listComputers(BufferedReader br){
-		ArrayList<Computer> computers = (ArrayList<Computer>) ComputerDao.listComputers();
+		ArrayList<Computer> computers = new ArrayList<Computer>();
 		String entry;
 		int pageNumber = 0;
 		do{
@@ -74,21 +83,9 @@ public class ConsoleUserInterface {
 				pageNumber = Integer.parseInt(entry);
 				if(pageNumber>0){
 					Page<Computer> page = new Page<Computer>(pageNumber);
-					ArrayList<Computer> listPage = new ArrayList<>();
 					int indexMin =(pageNumber-1)*Page.number_per_page;
-					int indexMax =pageNumber*Page.number_per_page;
-					if(indexMin>computers.size()){
-						indexMin=0;
-						indexMax=0;
-						System.out.println("There is less than "+(pageNumber-1)*Page.number_per_page+" in the database.");
-					}
-					if(indexMax>computers.size()){
-						indexMax = computers.size();
-					}
-					for(int i=indexMin;i<indexMax;i++){
-						listPage.add(computers.get(i));
-					}
-					page.setList(listPage);
+					computers = (ArrayList<Computer>) ComputerDao.listSomecomputer(Page.number_per_page, indexMin);
+					page.setList(computers);
 					page.displayPage();
 				}
 			} catch (IOException e) {
@@ -99,8 +96,12 @@ public class ConsoleUserInterface {
 		}while(pageNumber>0); //Le cas négatif n'est pa géré ici, mais c'est un bug mineur.
 	}
 	
+	/**
+	 * Display the list of companies
+	 * @param br BufferedReader to read the user's entry
+	 */
 	private static void listCompanies(BufferedReader br){
-		ArrayList<Company> companies = (ArrayList<Company>) CompanyDao.listCompanies();
+		ArrayList<Company> companies = new ArrayList<Company>();
 		String entry;
 		int pageNumber = 0;
 		do{
@@ -110,21 +111,9 @@ public class ConsoleUserInterface {
 				pageNumber = Integer.parseInt(entry);
 				if(pageNumber>0){
 					Page<Company> page = new Page<Company>(pageNumber);
-					ArrayList<Company> listPage = new ArrayList<>();
 					int indexMin =(pageNumber-1)*Page.number_per_page;
-					int indexMax =pageNumber*Page.number_per_page;
-					if(indexMin>companies.size()){
-						indexMin=0;
-						indexMax=0;
-						System.out.println("There is less than "+(pageNumber-1)*Page.number_per_page+" in the database.");
-					}
-					if(indexMax>companies.size()){
-						indexMax = companies.size();
-					}
-					for(int i=indexMin;i<indexMax;i++){
-						listPage.add(companies.get(i));
-					}
-					page.setList(listPage);
+					companies = (ArrayList<Company>) CompanyDao.listSomeCompanies(Page.number_per_page, indexMin);
+					page.setList(companies);
 					page.displayPage();
 				}
 			} catch (IOException e) {
@@ -135,6 +124,10 @@ public class ConsoleUserInterface {
 		}while(pageNumber>0); //Le cas négatif n'est pa géré ici, mais c'est un bug mineur.
 	}
 	
+	/**
+	 * Display details of a computer
+	 * @param br BufferedReader to read the user's entry
+	 */
 	private static void showComputerDetails(BufferedReader br){
 		System.out.println("enter the id of the computer of which you want to see the details");
 		String entry;
@@ -157,6 +150,10 @@ public class ConsoleUserInterface {
 		System.out.println("\tmanufacturer : "+company.getName());
 	}
 	
+	/**
+	 * This function allow the user to create a computer
+	 * @param br BufferedReader to read the user's entry
+	 */
 	private static void createComputer(BufferedReader br){
 		System.out.println("Enter the following details. You can just type enter to let a field blank, except for the name.");
 		try {
@@ -207,6 +204,10 @@ public class ConsoleUserInterface {
 		}
 	}
 	
+	/**
+	 * This function allow the user to update a computer
+	 * @param br BufferedReader to read the user's entry
+	 */
 	private static void updateComputer(BufferedReader br){
 		System.out.println("Enter the id of the computer you want to update.");
 		String entry;
@@ -267,6 +268,10 @@ public class ConsoleUserInterface {
 		}
 	}
 	
+	/**
+	 * This function allow  the user to delete a computer
+	 * @param br BufferedReader to read the user's entry
+	 */
 	private static void deleteComputer(BufferedReader br){
 		System.out.println("Enter the id of the computer you want to delete.");
 		String entry;

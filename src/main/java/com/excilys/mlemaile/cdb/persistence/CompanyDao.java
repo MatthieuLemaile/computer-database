@@ -13,19 +13,15 @@ import org.slf4j.LoggerFactory;
 import com.excilys.mlemaile.cdb.model.Company;
 
 /**
- * This class communicate with the database to store, update, and read companies
+ * This enum communicate with the database to store, update, and read companies
  * in the database
  * 
  * @author Matthieu Lemaile
  *
  */
-public class CompanyDao {
-
-	private CompanyDao() {
-	} // we don't need any constructor
-
+public enum CompanyDao{
+	INSTANCE;
 	private final static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
-
 	/**
 	 * This method map the result of a request (in the result set) to a company
 	 * object
@@ -34,7 +30,7 @@ public class CompanyDao {
 	 *            the ResultSet of the request
 	 * @return A List of companies
 	 */
-	private static List<Company> bindingCompany(ResultSet resultSet) {
+	private List<Company> bindingCompany(ResultSet resultSet) {
 		ArrayList<Company> companies = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
@@ -47,7 +43,7 @@ public class CompanyDao {
 		}
 		return companies;
 	}
-
+	
 	/**
 	 * This method return one company, finding it by the id
 	 * 
@@ -55,21 +51,21 @@ public class CompanyDao {
 	 *            the id of the company to retrieve
 	 * @return the company identified by the id
 	 */
-	public static Company getCompany(int id) {
+	public Company getCompany(int id) {
 		ArrayList<Company> companies = new ArrayList<>(); // initialising
-		Connection connection = DatabaseConnection.getManager.getConnection();													// companies
+		Connection connection = DatabaseConnection.INSTANCE.getConnection();													// companies
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {preparedStatement = connection.prepareStatement("select * from company where id=?");
 			preparedStatement.setInt(1, id);
 			resultSet = preparedStatement.executeQuery();
-			companies = (ArrayList<Company>) bindingCompany(resultSet);
+			companies = (ArrayList<Company>) CompanyDao.INSTANCE.bindingCompany(resultSet);
 		} catch (SQLException e) {
 			logger.error("Can't find company :", e);
 		} finally {
-			DatabaseConnection.getManager.closeConnection(connection);
-			DatabaseConnection.getManager.closeStatement(preparedStatement);
-			DatabaseConnection.getManager.closeResulSet(resultSet);
+			DatabaseConnection.INSTANCE.closeConnection(connection);
+			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
+			DatabaseConnection.INSTANCE.closeResulSet(resultSet);
 		}
 		Company c = new Company.Builder().build();
 		if (companies.size() == 1) {
@@ -77,26 +73,31 @@ public class CompanyDao {
 		}
 		return c;
 	}
-
-	public static List<Company> listSomeCompanies(int number, int idFirst) {
+	
+	/**
+	 * Retourne number Companies, dans l'ordre des index, triés par ordre ascendant d'index.
+	 * @param number le nombre de Company à retourner
+	 * @param idFirst l'index du premier à retourner
+	 * @return
+	 */
+	public List<Company> listSomeCompanies(int number, int idFirst) {
 		ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
 															// retourner null
-		Connection connection = DatabaseConnection.getManager.getConnection();
+		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {preparedStatement = connection.prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
 			preparedStatement.setInt(1, idFirst);
 			preparedStatement.setInt(2, number);
 			resultSet = preparedStatement.executeQuery();
-			companies = (ArrayList<Company>) bindingCompany(resultSet);
+			companies = (ArrayList<Company>) CompanyDao.INSTANCE.bindingCompany(resultSet);
 		} catch (SQLException e) {
 			logger.error("Can't list companies : ", e);
 		} finally {
-			DatabaseConnection.getManager.closeConnection(connection);
-			DatabaseConnection.getManager.closeStatement(preparedStatement);
-			DatabaseConnection.getManager.closeResulSet(resultSet);
+			DatabaseConnection.INSTANCE.closeConnection(connection);
+			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
+			DatabaseConnection.INSTANCE.closeResulSet(resultSet);
 		}
 		return companies;
 	}
-
 }

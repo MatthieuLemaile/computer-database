@@ -85,7 +85,7 @@ public class ConsoleUserInterface {
 				if(pageNumber>0){
 					Page<Computer> page = new Page<Computer>(pageNumber);
 					int indexMin =(pageNumber-1)*Page.number_per_page;
-					computers = (ArrayList<Computer>) ComputerDao.listSomecomputer(Page.number_per_page, indexMin);
+					computers = (ArrayList<Computer>) ComputerDao.INSTANCE.listSomecomputer(Page.number_per_page, indexMin);
 					page.setList(computers);
 					page.displayPage();
 				}
@@ -113,7 +113,7 @@ public class ConsoleUserInterface {
 				if(pageNumber>0){
 					Page<Company> page = new Page<Company>(pageNumber);
 					int indexMin =(pageNumber-1)*Page.number_per_page;
-					companies = (ArrayList<Company>) CompanyDao.listSomeCompanies(Page.number_per_page, indexMin);
+					companies = (ArrayList<Company>) CompanyDao.INSTANCE.listSomeCompanies(Page.number_per_page, indexMin);
 					page.setList(companies);
 					page.displayPage();
 				}
@@ -144,8 +144,8 @@ public class ConsoleUserInterface {
 				System.out.println("You must enter an integer");
 			}
 		}while(id<1);
-		Computer c = ComputerDao.getComputer(id);
-		Company company = CompanyDao.getCompany(c.getCompany_id());
+		Computer c = ComputerDao.INSTANCE.getComputer(id);
+		Company company = CompanyDao.INSTANCE.getCompany(c.getCompany_id());
 		System.out.println("\tid : "+c.getId()+" name : "+c.getName());
 		System.out.println("\tintroduced : "+c.getIntroduced()+" discontinued : "+c.getDiscontinued());
 		System.out.println("\tmanufacturer : "+company.getName());
@@ -218,7 +218,7 @@ public class ConsoleUserInterface {
 			entry = br.readLine();
 			String[] args = entry.split("( -|=)");
 			id = Integer.parseInt(args[0]);
-			Computer c = ComputerDao.getComputer(id);
+			Computer c = ComputerDao.INSTANCE.getComputer(id);
 			for(int i=1;i<args.length;i=i+2){
 				if("name".equals(args[i])){
 					c.setName(args[i+1]);
@@ -273,8 +273,8 @@ public class ConsoleUserInterface {
 				System.out.println("You must enter an integer");
 			}
 		}while(id<1);
-		Computer c = ComputerDao.getComputer(id); 
-		if(ComputerDao.deleteComputer(c)){
+		Computer c = ComputerDao.INSTANCE.getComputer(id); 
+		if(ComputerDao.INSTANCE.deleteComputer(c)){
 			System.out.println("Computer successfully deleted !");
 		}
 	}

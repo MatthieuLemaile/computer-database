@@ -19,19 +19,16 @@ import com.excilys.mlemaile.cdb.model.Computer;
 import com.mysql.jdbc.Statement;
 
 /**
- * This class communicate with the database to store, update and read computers
+ * This enum communicate with the database to store, update and read computers
  * in the database.
  * 
  * @author Matthieu Lemaile
  *
  */
-public class ComputerDao {
-
+public enum ComputerDao{
+	INSTANCE();
 	private final static Logger logger = LoggerFactory.getLogger(ComputerDao.class);
-
-	private ComputerDao() {
-	} // we don't need any constructor
-
+	
 	/**
 	 * this method map the result of a request (in the ResultSet) with the
 	 * computer object
@@ -40,7 +37,7 @@ public class ComputerDao {
 	 *            the result of the request
 	 * @return a List of computers
 	 */
-	private static List<Computer> bindingComputer(ResultSet resultSet) {
+	private List<Computer> bindingComputer(ResultSet resultSet) {
 		ArrayList<Computer> computers = new ArrayList<>();
 		
 		try {
@@ -72,7 +69,7 @@ public class ComputerDao {
 		}
 		return computers;
 	}
-
+	
 	/**
 	 * This method store the given computer in the database
 	 * 
@@ -80,7 +77,7 @@ public class ComputerDao {
 	 *            the computer to store
 	 * @return A boolean which is true if the execution went well
 	 */
-	public static boolean createComputer(Computer computer) {
+	public boolean createComputer(Computer computer) {
 		boolean executed = false;
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
@@ -126,7 +123,7 @@ public class ComputerDao {
 		}
 		return executed;
 	}
-
+	
 	/**
 	 * This method list a number of computer.
 	 * 
@@ -136,7 +133,7 @@ public class ComputerDao {
 	 *            The id of the first computer to list
 	 * @return a List of Computer
 	 */
-	public static List<Computer> listSomecomputer(int number, int idFirst) {
+	public List<Computer> listSomecomputer(int number, int idFirst) {
 		ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de
 															// retourner null
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
@@ -147,7 +144,7 @@ public class ComputerDao {
 			preparedStatement.setInt(1, idFirst);
 			preparedStatement.setInt(2, number);
 			resultSet = preparedStatement.executeQuery();
-			computers = (ArrayList<Computer>) bindingComputer(resultSet);
+			computers = (ArrayList<Computer>) ComputerDao.INSTANCE.bindingComputer(resultSet);
 		} catch (SQLException e) {
 			logger.error("Can't list computers : ", e);
 		} finally {
@@ -157,7 +154,7 @@ public class ComputerDao {
 		}
 		return computers;
 	}
-
+	
 	/**
 	 * This method return the computer identified by the id. If it doesn't
 	 * exist, it return a computer with an empty name.
@@ -165,7 +162,7 @@ public class ComputerDao {
 	 * @param id
 	 * @return
 	 */
-	public static Computer getComputer(int id) {
+	public Computer getComputer(int id) {
 		ArrayList<Computer> computers = new ArrayList<>(); // initialising
 															// computers
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
@@ -175,7 +172,7 @@ public class ComputerDao {
 			preparedStatement = connection.prepareStatement("select * from computer where id=?");
 			preparedStatement.setInt(1, id);
 			resultSet = preparedStatement.executeQuery();
-			computers = (ArrayList<Computer>) bindingComputer(resultSet);
+			computers = (ArrayList<Computer>) ComputerDao.INSTANCE.bindingComputer(resultSet);
 		} catch (SQLException e) {
 			logger.error("Can't retrieve computer : ", e);
 		} finally {
@@ -189,7 +186,7 @@ public class ComputerDao {
 		}
 		return c;
 	}
-
+	
 	/**
 	 * This method change all the attribute of the computer identified by the id
 	 * to those in the given computer
@@ -199,7 +196,7 @@ public class ComputerDao {
 	 *            stored
 	 * @return A boolean which is true if the execution went well
 	 */
-	public static boolean updateComputer(Computer computer) {
+	public boolean updateComputer(Computer computer) {
 		boolean executed = false;
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
@@ -239,7 +236,7 @@ public class ComputerDao {
 		}
 		return executed;
 	}
-
+	
 	/**
 	 * This method delete the computer identified by the id of the given
 	 * computer
@@ -248,7 +245,7 @@ public class ComputerDao {
 	 *            the computer to delete
 	 * @return A boolean which is true if the execution went well
 	 */
-	public static boolean deleteComputer(Computer computer) {
+	public boolean deleteComputer(Computer computer) {
 		boolean executed = false;
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;

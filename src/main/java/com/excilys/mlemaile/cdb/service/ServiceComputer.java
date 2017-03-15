@@ -15,7 +15,7 @@ public class ServiceComputer {
 		boolean computerCreated = false;
 		try{
 			Computer c = new Computer.Builder(name).introduced(introduced).discontinued(discontinued).companyId(company_id).build();
-			if(ComputerDao.createComputer(c)){
+			if(ComputerDao.INSTANCE.createComputer(c)){
 				computerCreated = true;
 			}
 		}catch(IllegalArgumentException e){
@@ -24,6 +24,6 @@ public class ServiceComputer {
 	}
 	
 	public static boolean updatecomputer(Computer c){
-		return ComputerDao.updateComputer(c);
+		return ComputerDao.INSTANCE.updateComputer(c);
 	}
 }

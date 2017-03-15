@@ -82,7 +82,7 @@ public class ComputerDao {
 	 */
 	public static boolean createComputer(Computer computer) {
 		boolean executed = false;
-		Connection connection = DatabaseConnection.getManager.getConnection();
+		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet generatedKey = null;
 		try {
@@ -120,9 +120,9 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			logger.error("Error storing the computer : ", e);
 		} finally {
-			DatabaseConnection.getManager.closeConnection(connection);
-			DatabaseConnection.getManager.closeStatement(preparedStatement);
-			DatabaseConnection.getManager.closeResulSet(generatedKey);
+			DatabaseConnection.INSTANCE.closeConnection(connection);
+			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
+			DatabaseConnection.INSTANCE.closeResulSet(generatedKey);
 		}
 		return executed;
 	}
@@ -139,7 +139,7 @@ public class ComputerDao {
 	public static List<Computer> listSomecomputer(int number, int idFirst) {
 		ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de
 															// retourner null
-		Connection connection = DatabaseConnection.getManager.getConnection();
+		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
@@ -151,9 +151,9 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			logger.error("Can't list computers : ", e);
 		} finally {
-			DatabaseConnection.getManager.closeConnection(connection);
-			DatabaseConnection.getManager.closeStatement(preparedStatement);
-			DatabaseConnection.getManager.closeResulSet(resultSet);
+			DatabaseConnection.INSTANCE.closeConnection(connection);
+			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
+			DatabaseConnection.INSTANCE.closeResulSet(resultSet);
 		}
 		return computers;
 	}
@@ -168,7 +168,7 @@ public class ComputerDao {
 	public static Computer getComputer(int id) {
 		ArrayList<Computer> computers = new ArrayList<>(); // initialising
 															// computers
-		Connection connection = DatabaseConnection.getManager.getConnection();
+		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
@@ -179,9 +179,9 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			logger.error("Can't retrieve computer : ", e);
 		} finally {
-			DatabaseConnection.getManager.closeConnection(connection);
-			DatabaseConnection.getManager.closeStatement(preparedStatement);
-			DatabaseConnection.getManager.closeResulSet(resultSet);
+			DatabaseConnection.INSTANCE.closeConnection(connection);
+			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
+			DatabaseConnection.INSTANCE.closeResulSet(resultSet);
 		}
 		Computer c = new Computer.Builder("").build();
 		if (computers.size() == 1) {
@@ -201,7 +201,7 @@ public class ComputerDao {
 	 */
 	public static boolean updateComputer(Computer computer) {
 		boolean executed = false;
-		Connection connection = DatabaseConnection.getManager.getConnection();
+		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(
@@ -234,8 +234,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			logger.error("Can't update computer : ", e);
 		} finally {
-			DatabaseConnection.getManager.closeConnection(connection);
-			DatabaseConnection.getManager.closeStatement(preparedStatement);
+			DatabaseConnection.INSTANCE.closeConnection(connection);
+			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
 		}
 		return executed;
 	}
@@ -250,7 +250,7 @@ public class ComputerDao {
 	 */
 	public static boolean deleteComputer(Computer computer) {
 		boolean executed = false;
-		Connection connection = DatabaseConnection.getManager.getConnection();
+		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
@@ -262,8 +262,8 @@ public class ComputerDao {
 		} catch (SQLException e) {
 			logger.error("Can't delete computer : ", e);
 		} finally {
-			DatabaseConnection.getManager.closeConnection(connection);
-			DatabaseConnection.getManager.closeStatement(preparedStatement);
+			DatabaseConnection.INSTANCE.closeConnection(connection);
+			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
 		}
 		return executed;
 	}

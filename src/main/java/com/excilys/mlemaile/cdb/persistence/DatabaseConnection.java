@@ -19,7 +19,11 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  *
  */
 enum DatabaseConnection{
-	getManager();
+	INSTANCE();
+	/**
+	 * Créé et retourne une connecion à la base de donnée
+	 * @return une Connection à la base de donnée
+	 */
 	public Connection getConnection(){
 		Connection connection = null;
 		try {
@@ -45,6 +49,11 @@ enum DatabaseConnection{
 		}
 		return connection;
 	}
+	
+	/**
+	 * Cette méthode ferme la Connection à la base de données
+	 * @param connection la connection à fermer
+	 */
 	public void closeConnection(Connection connection){
 		try {
 			if(connection!=null && !connection.isClosed()){
@@ -56,6 +65,10 @@ enum DatabaseConnection{
 		}
 	}
 	
+	/**
+	 * Cette méthode ferme le Statement
+	 * @param st le Statement à fermer
+	 */
 	public void closeStatement(Statement st){
 		if(st!=null){
 			try {
@@ -66,6 +79,10 @@ enum DatabaseConnection{
 		}
 	}
 	
+	/**
+	 * Cette méthode ferme le ResultSet
+	 * @param rs le ResultSet à fermer
+	 */
 	public void closeResulSet(ResultSet rs){
 		if(rs!=null){
 			try {

@@ -11,13 +11,10 @@ import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 public class ServiceComputer {
 	public static final Logger logger = LoggerFactory.getLogger(ServiceComputer.class);
 	
-	public static boolean createComputer(String name,LocalDate introduced,LocalDate Discontinued,int company_id){
+	public static boolean createComputer(String name,LocalDate introduced,LocalDate discontinued,int company_id){
 		boolean computerCreated = false;
 		try{
-			Computer c = new Computer(name);
-			c.setIntroduced(introduced);
-			c.setDiscontinued(Discontinued);
-			c.setCompany_id(company_id);
+			Computer c = new Computer.Builder(name).introduced(introduced).discontinued(discontinued).companyId(company_id).build();
 			if(ComputerDao.createComputer(c)){
 				computerCreated = true;
 			}

@@ -37,25 +37,24 @@ public class ComputerDao {
 		ArrayList<Computer> computers = new ArrayList<>();
 		try{
 			while(resultSet.next()){
-				Computer computer = new Computer(resultSet.getString("name"));
-				computer.setId(resultSet.getInt("id"));
+				Computer.Builder builder = new Computer.Builder(resultSet.getString("name")).id(resultSet.getInt("id"));
 				Timestamp tsIntro = resultSet.getTimestamp("introduced");
 				if(tsIntro!=null){
-					computer.setIntroduced(tsIntro.toLocalDateTime().toLocalDate());
+					builder = builder.introduced(tsIntro.toLocalDateTime().toLocalDate());
 				}
 				Timestamp tsDiscontinued = resultSet.getTimestamp("discontinued");
 				if(tsDiscontinued!=null && tsIntro!=null){
 					if(tsDiscontinued.after(tsIntro) || tsDiscontinued.equals(tsIntro)){
-						computer.setDiscontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
+						builder = builder.discontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
 					}else{
-						throw new RuntimeException("discontinued date not used  it was before the introduced date.\n ID : "+computer.getId()
-								+ "Introduced "+computer.getIntroduced()+" discontinued :"+tsDiscontinued.toLocalDateTime().toLocalDate());
+						throw new RuntimeException("discontinued date not used  it was before the introduced date.\n ID : "+resultSet.getInt("id")
+								+ "Introduced "+tsIntro.toLocalDateTime().toLocalDate()+" discontinued :"+tsDiscontinued.toLocalDateTime().toLocalDate());
 					}
 				}else if(tsDiscontinued!=null){
-					computer.setDiscontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
+					builder = builder.discontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
 				}
-				computer.setCompany_id(resultSet.getInt("company_id"));
-				computers.add(computer);
+				builder = builder.companyId(resultSet.getInt("company_id"));
+				computers.add(builder.build());
 			}
 		}catch(SQLException e){
 			logger.error("can't dinf computer : ",e);
@@ -169,7 +168,7 @@ public class ComputerDao {
 		} finally{
 			DatabaseConnection.closeConnection();
 		}
-		Computer c = new Computer("");
+		Computer c = new Computer.Builder("").build();
 		if(computers.size()==1){
 			c = computers.get(0);
 		}

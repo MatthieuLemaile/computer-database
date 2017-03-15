@@ -242,7 +242,7 @@ public class ConsoleUserInterface {
 					}
 				}
 			}
-			if(ComputerDao.updateComputer(c)){
+			if(ServiceComputer.updatecomputer(c)){
 				System.out.println("computer successfully updated");
 			}
 		} catch (IOException e) {

@@ -13,41 +13,51 @@ import org.slf4j.LoggerFactory;
 import com.excilys.mlemaile.cdb.model.Company;
 
 /**
- * This class communicate with the database to store, update, and read companies in the database
+ * This class communicate with the database to store, update, and read companies
+ * in the database
+ * 
  * @author Matthieu Lemaile
  *
  */
 public class CompanyDao {
-	
-	private CompanyDao(){} //we don't need any constructor
+
+	private CompanyDao() {
+	} // we don't need any constructor
+
 	private final static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
+
 	/**
-	 * This method map the result of a request (in the result set) to a company object
-	 * @param resultSet the ResultSet of the request
+	 * This method map the result of a request (in the result set) to a company
+	 * object
+	 * 
+	 * @param resultSet
+	 *            the ResultSet of the request
 	 * @return A List of companies
 	 */
-	private static List<Company> bindingCompany(ResultSet resultSet){
+	private static List<Company> bindingCompany(ResultSet resultSet) {
 		ArrayList<Company> companies = new ArrayList<>();
-		try{
-			while(resultSet.next()){
-				Company company = new Company();
-				company.setId(resultSet.getInt("id"));
-				company.setName(resultSet.getString("name"));
+		try {
+			while (resultSet.next()) {
+				Company company = new Company.Builder().id(resultSet.getInt("id")).name(resultSet.getString("name"))
+						.build();
 				companies.add(company);
 			}
-		}catch(SQLException e){
-			logger.error("Can't bind company :",e);
+		} catch (SQLException e) {
+			logger.error("Can't bind company :", e);
 		}
 		return companies;
 	}
-	
+
 	/**
 	 * This method return one company, finding it by the id
-	 * @param id the id of the company to retrieve
+	 * 
+	 * @param id
+	 *            the id of the company to retrieve
 	 * @return the company identified by the id
 	 */
-	public static Company getCompany(int id){
-		ArrayList<Company> companies = new ArrayList<>(); //initialising companies
+	public static Company getCompany(int id) {
+		ArrayList<Company> companies = new ArrayList<>(); // initialising
+															// companies
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			PreparedStatement preparedStatement;
@@ -56,23 +66,25 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			logger.error("Can't find company :",e);
-		} finally{
+			logger.error("Can't find company :", e);
+		} finally {
 			DatabaseConnection.closeConnection();
 		}
-		Company c = new Company();
-		if(companies.size()==1){
+		Company c = new Company.Builder().build();
+		if (companies.size() == 1) {
 			c = companies.get(0);
 		}
 		return c;
 	}
-	
+
 	/**
 	 * This method list all companies
+	 * 
 	 * @return An ArrayList of all companies
 	 */
-	public static List<Company> listCompanies(){
-		ArrayList<Company> companies = new ArrayList<>(); //permet d'éviter de retourner null
+	public static List<Company> listCompanies() {
+		ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
+															// retourner null
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			PreparedStatement preparedStatement;
@@ -80,15 +92,16 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			logger.error("Can't list companies : ",e);
-		} finally{
+			logger.error("Can't list companies : ", e);
+		} finally {
 			DatabaseConnection.closeConnection();
 		}
 		return companies;
 	}
-	
-	public static List<Company> listSomeCompanies(int number,int idFirst){
-		ArrayList<Company> companies = new ArrayList<>(); //permet d'éviter de retourner null
+
+	public static List<Company> listSomeCompanies(int number, int idFirst) {
+		ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
+															// retourner null
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			PreparedStatement preparedStatement;
@@ -98,11 +111,11 @@ public class CompanyDao {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
-			logger.error("Can't list companies : ",e);
-		} finally{
+			logger.error("Can't list companies : ", e);
+		} finally {
 			DatabaseConnection.closeConnection();
 		}
 		return companies;
 	}
-	
+
 }

@@ -9,9 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
-import com.excilys.mlemaile.cdb.persistence.CompanyDao;
-import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
+import com.excilys.mlemaile.cdb.persistence.DaoFactory;
 
 public enum ServiceComputer{
 	INSTANCE();
@@ -20,9 +19,9 @@ public enum ServiceComputer{
 	public boolean createComputer(String name,LocalDate introduced,LocalDate discontinued,int company_id){
 		boolean computerCreated = false;
 		try{
-			Company company = CompanyDao.INSTANCE.getCompany(company_id);
+			Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(company_id);
 			Computer c = new Computer.Builder(name).introduced(introduced).discontinued(discontinued).company(company).build();
-			if(ComputerDao.INSTANCE.createComputer(c)){
+			if(DaoFactory.INSTANCE.getComputerDao().createComputer(c)){
 				computerCreated = true;
 				logger.info("Computer created : " + c.toString());
 			}
@@ -34,7 +33,7 @@ public enum ServiceComputer{
 	public boolean updatecomputer(Computer c){
 		boolean execution = false;
 		try{
-			execution =  ComputerDao.INSTANCE.updateComputer(c);
+			execution =  DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
 			logger.info("updated computer to : " + c.toString());
 		}catch(DaoException e){
 			logger.warn("cant' update the computer",e);
@@ -45,7 +44,7 @@ public enum ServiceComputer{
 	public List<Computer> listComputer(int number,long idFirst){
 		List<Computer> computers = new ArrayList<>();
 		try{
-			computers =  ComputerDao.INSTANCE.listSomecomputer(number, idFirst);
+			computers =  DaoFactory.INSTANCE.getComputerDao().listSomecomputer(number, idFirst);
 		}catch(DaoException e){
 			logger.warn("cant' list computers",e);
 		}
@@ -55,7 +54,7 @@ public enum ServiceComputer{
 	public Computer getComputer(long id){
 		Computer computer = new Computer.Builder("").build();
 		try{
-			computer =  ComputerDao.INSTANCE.getComputer(id);
+			computer =  DaoFactory.INSTANCE.getComputerDao().getComputer(id);
 		}catch(DaoException e){
 			logger.warn("cant' find the computer",e);
 		}
@@ -65,7 +64,7 @@ public enum ServiceComputer{
 	public boolean deleteComputer(Computer c){
 		boolean execution = false;
 		try{
-			execution =  ComputerDao.INSTANCE.deleteComputer(c);
+			execution =  DaoFactory.INSTANCE.getComputerDao().deleteComputer(c);
 			logger.info("computer deleted : " + c.toString());
 		}catch(DaoException e){
 			logger.warn("cant' update the computer",e);

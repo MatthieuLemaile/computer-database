@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.mlemaile.cdb.model.Company;
-import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
+import com.excilys.mlemaile.cdb.persistence.DaoFactory;
 
 public enum ServiceCompany {
 	INSTANCE();
@@ -16,7 +16,7 @@ public enum ServiceCompany {
 	public List<Company> listcompanies(int number,long idFirst){
 		List<Company> companies = new ArrayList<Company>();
 		try{
-			companies = CompanyDao.INSTANCE.listSomeCompanies(number, idFirst);
+			companies = DaoFactory.INSTANCE.getCompanyDao().listSomeCompanies(number, idFirst);
 		}catch(DaoException e){
 			logger.warn("Can't list companies",e);
 		}
@@ -26,7 +26,7 @@ public enum ServiceCompany {
 	public Company getCompany(long id){
 		Company company = new Company.Builder().build();
 		try{
-			company = CompanyDao.INSTANCE.getCompany(id);
+			company = DaoFactory.INSTANCE.getCompanyDao().getCompany(id);
 		}catch(DaoException e){
 			logger.warn("Can't find company",e);
 		}

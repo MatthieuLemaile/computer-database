@@ -1,7 +1,6 @@
 Before next Impl :
 
 Opt mais important: 
-* interface entre DAOs et Service. DaoFactory.
 * Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
 
 Opt :

@@ -4,6 +4,4 @@ Opt mais important:
 * Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
 
 Opt :
-* Mettre des statement au lieu de prepared statement là où il faut (dans les get)
-* Modification du properties, pour séparer hôte de type de co ("jdbc"). Recopier ce fichier dans test/resource pour plus tard
 * une classe Secureinput qui vérifie lesdits inputs

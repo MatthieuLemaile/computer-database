@@ -33,6 +33,7 @@ enum DatabaseConnection{
 					.configure(params.properties().setFileName("src/main/resources/database.properties"));
 			Configuration config = builder.getConfiguration();
 			String startUrl =config.getString("start-url");
+			String host = config.getString("host");
 			String database =config.getString("database");
 			String user = config.getString("user");
 			String password = config.getString("password");
@@ -40,7 +41,7 @@ enum DatabaseConnection{
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			connection = DriverManager
-			        .getConnection(startUrl+database+"?user="+user
+			        .getConnection(startUrl+host+"/"+database+"?user="+user
 			                        + "&password="+password
 			                        + "&zeroDateTimeBehavior="+zeroDataTimeBehavior);
 		} catch (SQLException | ClassNotFoundException | ConfigurationException e) {

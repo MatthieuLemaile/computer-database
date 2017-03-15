@@ -1,5 +1,4 @@
 Before next Impl :
-* right before Impl next Sprint, make test success
 
 Opt mais important: 
 * interface entre DAOs et Service. DaoFactory.

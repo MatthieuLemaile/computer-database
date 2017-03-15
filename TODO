@@ -1,4 +1,5 @@
 Before next Impl :
+* Refaire Connexion en singleton enum, faire les DAOs en singleton enum
 * Séparer Service et Presentation
 * Faire des exceptions perso, au mini une par couche pour faire remonter les exceptions. (permet d'éviter de tout changer si changement de db par ex.)
 * close prepared statement et result set.
@@ -7,8 +8,8 @@ Before next Impl :
 Opt mais important: 
 * interface entre DAOs et Service. DaoFactory.
 * Intégrer company dans computer
-* Refaire Connexion en singleton enum, faire les DAOs en singleton enum
 
 Opt :
 * Mettre des statement au lieu de prepared statement là où il faut (dans les get)
 * Modification du properties, pour séparer hôte de type de co ("jdbc"). Recopier ce fichier dans test/resource pour plus tard
+* une classe Secureinput qui vérifie lesdits inputs

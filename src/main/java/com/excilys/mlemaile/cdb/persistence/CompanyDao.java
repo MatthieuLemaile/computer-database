@@ -57,18 +57,19 @@ public class CompanyDao {
 	 */
 	public static Company getCompany(int id) {
 		ArrayList<Company> companies = new ArrayList<>(); // initialising
-															// companies
-		try {
-			Connection connection = DatabaseConnection.getConnection();
-			PreparedStatement preparedStatement;
-			preparedStatement = connection.prepareStatement("select * from company where id=?");
+		Connection connection = DatabaseConnection.getManager.getConnection();													// companies
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {preparedStatement = connection.prepareStatement("select * from company where id=?");
 			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
 			logger.error("Can't find company :", e);
 		} finally {
-			DatabaseConnection.closeConnection();
+			DatabaseConnection.getManager.closeConnection(connection);
+			DatabaseConnection.getManager.closeStatement(preparedStatement);
+			DatabaseConnection.getManager.closeResulSet(resultSet);
 		}
 		Company c = new Company.Builder().build();
 		if (companies.size() == 1) {
@@ -77,43 +78,23 @@ public class CompanyDao {
 		return c;
 	}
 
-	/**
-	 * This method list all companies
-	 * 
-	 * @return An ArrayList of all companies
-	 */
-	public static List<Company> listCompanies() {
-		ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
-															// retourner null
-		try {
-			Connection connection = DatabaseConnection.getConnection();
-			PreparedStatement preparedStatement;
-			preparedStatement = connection.prepareStatement("select * from company");
-			ResultSet resultSet = preparedStatement.executeQuery();
-			companies = (ArrayList<Company>) bindingCompany(resultSet);
-		} catch (SQLException e) {
-			logger.error("Can't list companies : ", e);
-		} finally {
-			DatabaseConnection.closeConnection();
-		}
-		return companies;
-	}
-
 	public static List<Company> listSomeCompanies(int number, int idFirst) {
 		ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
 															// retourner null
-		try {
-			Connection connection = DatabaseConnection.getConnection();
-			PreparedStatement preparedStatement;
-			preparedStatement = connection.prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
+		Connection connection = DatabaseConnection.getManager.getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		try {preparedStatement = connection.prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
 			preparedStatement.setInt(1, idFirst);
 			preparedStatement.setInt(2, number);
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) bindingCompany(resultSet);
 		} catch (SQLException e) {
 			logger.error("Can't list companies : ", e);
 		} finally {
-			DatabaseConnection.closeConnection();
+			DatabaseConnection.getManager.closeConnection(connection);
+			DatabaseConnection.getManager.closeStatement(preparedStatement);
+			DatabaseConnection.getManager.closeResulSet(resultSet);
 		}
 		return companies;
 	}

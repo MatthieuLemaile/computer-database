@@ -1,5 +1,4 @@
 package com.excilys.mlemaile.cdb;
-import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
 
 public class MainClass {
 

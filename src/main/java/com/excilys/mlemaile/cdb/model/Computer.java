@@ -9,7 +9,7 @@ import java.util.Objects;
  * 
  */
 public class Computer {
-	private int id;
+	private long id;
 	private String name;
 	private LocalDate introduced;
 	private LocalDate discontinued;
@@ -17,7 +17,7 @@ public class Computer {
 	
 	private Computer(){};
 	
-	private Computer(String name,LocalDate introduced, LocalDate discontinued,int id, int companyId){
+	private Computer(String name,LocalDate introduced, LocalDate discontinued,long id, int companyId){
 		setName(name);
 		setIntroduced(introduced);
 		setDiscontinued(discontinued);
@@ -32,14 +32,14 @@ public class Computer {
 		setCompany_id(companyId);
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		if(id>0){
 			this.id = id;
 		}else{
-			throw new IllegalArgumentException("The Id of a computer must be an interger greater than or equal to 1.");
+			throw new IllegalArgumentException("The Id of a computer must be an integer greater than or equal to 1.");
 		}
 	}
 	public String getName() {
@@ -112,7 +112,7 @@ public class Computer {
 	}
 	
 	public static class Builder{
-		private int id;
+		private long id;
 		private LocalDate introduced;
 		private LocalDate discontinued;
 		private String name;
@@ -122,7 +122,7 @@ public class Computer {
 			this.name = name;
 		}
 		
-		public Builder id(int id){
+		public Builder id(long id){
 			this.id = id;
 			return this;
 		}

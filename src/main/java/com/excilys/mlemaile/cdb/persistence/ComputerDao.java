@@ -42,7 +42,7 @@ public enum ComputerDao{
 		
 		try {
 			while (resultSet.next()) {
-				Computer.Builder builder = new Computer.Builder(resultSet.getString("name")).id(resultSet.getInt("id"));
+				Computer.Builder builder = new Computer.Builder(resultSet.getString("name")).id(resultSet.getLong("id"));
 				Timestamp tsIntro = resultSet.getTimestamp("introduced");
 				if (tsIntro != null) {
 					builder = builder.introduced(tsIntro.toLocalDateTime().toLocalDate());
@@ -109,7 +109,7 @@ public enum ComputerDao{
 			if (preparedStatement.executeUpdate() > 0) {
 				generatedKey = preparedStatement.getGeneratedKeys();
 				if (generatedKey.next()) {
-					computer.setId((int) generatedKey.getLong(1));
+					computer.setId(generatedKey.getLong(1));
 					executed = true;
 					logger.info("Computer created : " + computer.toString());
 				}
@@ -162,7 +162,7 @@ public enum ComputerDao{
 	 * @param id
 	 * @return
 	 */
-	public Computer getComputer(int id) {
+	public Computer getComputer(long id) {
 		ArrayList<Computer> computers = new ArrayList<>(); // initialising
 															// computers
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
@@ -170,7 +170,7 @@ public enum ComputerDao{
 		ResultSet resultSet = null;
 		try {
 			preparedStatement = connection.prepareStatement("select * from computer where id=?");
-			preparedStatement.setInt(1, id);
+			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) ComputerDao.INSTANCE.bindingComputer(resultSet);
 		} catch (SQLException e) {
@@ -223,7 +223,7 @@ public enum ComputerDao{
 			} else {
 				preparedStatement.setNull(4, Types.BIGINT);
 			}
-			preparedStatement.setInt(5, computer.getId());
+			preparedStatement.setLong(5, computer.getId());
 			if (preparedStatement.executeUpdate() != 0) {
 				executed = true;
 				logger.info("updated computer to : " + computer.toString());
@@ -251,7 +251,7 @@ public enum ComputerDao{
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
-			preparedStatement.setInt(1, computer.getId());
+			preparedStatement.setLong(1, computer.getId());
 			if (preparedStatement.executeUpdate() != 0) {
 				executed = true;
 				logger.info("computer deleted : " + computer.toString());

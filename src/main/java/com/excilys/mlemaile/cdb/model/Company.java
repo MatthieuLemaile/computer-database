@@ -6,20 +6,20 @@ package com.excilys.mlemaile.cdb.model;
  *
  */
 public class Company {
-	private int id;
+	private long id;
 	private String name;
 	
 	private Company(){}
 	
-	private Company(int id,String name){
+	private Company(long id,String name){
 		setId(id);
 		setName(name);
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -35,10 +35,10 @@ public class Company {
 	}
 	
 	public static class Builder{
-		private int id;
+		private long id;
 		private String name;
 		
-		public Builder id(int id){
+		public Builder id(long id){
 			this.id = id;
 			return this;
 		}

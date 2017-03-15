@@ -34,7 +34,7 @@ public enum CompanyDao{
 		ArrayList<Company> companies = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				Company company = new Company.Builder().id(resultSet.getInt("id")).name(resultSet.getString("name"))
+				Company company = new Company.Builder().id(resultSet.getLong("id")).name(resultSet.getString("name"))
 						.build();
 				companies.add(company);
 			}
@@ -51,13 +51,13 @@ public enum CompanyDao{
 	 *            the id of the company to retrieve
 	 * @return the company identified by the id
 	 */
-	public Company getCompany(int id) {
+	public Company getCompany(long id) {
 		ArrayList<Company> companies = new ArrayList<>(); // initialising
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();													// companies
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {preparedStatement = connection.prepareStatement("select * from company where id=?");
-			preparedStatement.setInt(1, id);
+			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) CompanyDao.INSTANCE.bindingCompany(resultSet);
 		} catch (SQLException e) {

@@ -1,7 +1,6 @@
 Before next Impl :
 * Séparer Service et Presentation
 * Faire des exceptions perso, au mini une par couche pour faire remonter les exceptions. (permet d'éviter de tout changer si changement de db par ex.)
-* id en long
 
 Opt mais important: 
 * interface entre DAOs et Service. DaoFactory.

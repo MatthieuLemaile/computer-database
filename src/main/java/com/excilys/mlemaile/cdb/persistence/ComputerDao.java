@@ -136,7 +136,7 @@ public enum ComputerDao {
 	 *            The id of the first computer to list
 	 * @return a List of Computer
 	 */
-	public List<Computer> listSomecomputer(int number, int idFirst) {
+	public List<Computer> listSomecomputer(int number, long idFirst) {
 		ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de
 															// retourner null
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
@@ -145,7 +145,7 @@ public enum ComputerDao {
 		try {
 			preparedStatement = connection.prepareStatement(
 					"SELECT c.id as id ,c.name as name ,c.introduced as introduced ,c.discontinued as discontinued ,company.id as company_id ,company.name as company_name FROM computer as c LEFT JOIN company ON c.company_id=company.id ORDER BY c.id ASC LIMIT ?,?");
-			preparedStatement.setInt(1, idFirst);
+			preparedStatement.setLong(1, idFirst);
 			preparedStatement.setInt(2, number);
 			resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) ComputerDao.INSTANCE.bindingComputer(resultSet);

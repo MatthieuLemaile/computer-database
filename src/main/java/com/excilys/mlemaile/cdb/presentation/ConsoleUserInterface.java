@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb;
+package com.excilys.mlemaile.cdb.presentation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,8 +9,7 @@ import java.util.ArrayList;
 
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
-import com.excilys.mlemaile.cdb.persistence.CompanyDao;
-import com.excilys.mlemaile.cdb.persistence.ComputerDao;
+import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 
 public class ConsoleUserInterface {
@@ -31,7 +30,7 @@ public class ConsoleUserInterface {
 			System.out.println("4 : create a computer");
 			System.out.println("5 : update a computer");
 			System.out.println("6 : delete a computer");
-			System.out.println("7 : Exit");
+			System.out.println("0 : Exit");
 			try {
 				entry = br.readLine();
 				optionNumber = Integer.parseInt(entry);
@@ -40,7 +39,7 @@ public class ConsoleUserInterface {
 			} catch (NumberFormatException e){
 				System.out.println("You must enter an integer");
 			}
-		}while(optionNumber<1 || optionNumber>7);
+		}while(optionNumber<0 || optionNumber>6);
 		
 		switch(optionNumber){
 			case 1:
@@ -61,7 +60,7 @@ public class ConsoleUserInterface {
 			case 6:
 				deleteComputer(br);
 				break;
-			case 7:
+			default:
 				continuProgramm = false;
 				
 		}
@@ -83,11 +82,11 @@ public class ConsoleUserInterface {
 				entry = br.readLine();
 				pageNumber = Integer.parseInt(entry);
 				if(pageNumber>0){
-					Page<Computer> page = new Page<Computer>(pageNumber);
 					int indexMin =(pageNumber-1)*Page.number_per_page;
-					computers = (ArrayList<Computer>) ComputerDao.INSTANCE.listSomecomputer(Page.number_per_page, indexMin);
-					page.setList(computers);
-					page.displayPage();
+					computers = (ArrayList<Computer>) ServiceComputer.INSTANCE.listComputer(Page.number_per_page, indexMin);
+					for(Computer computer : computers){
+						System.out.println(computer.toString());
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -111,11 +110,11 @@ public class ConsoleUserInterface {
 				entry = br.readLine();
 				pageNumber = Integer.parseInt(entry);
 				if(pageNumber>0){
-					Page<Company> page = new Page<Company>(pageNumber);
-					int indexMin =(pageNumber-1)*Page.number_per_page;
-					companies = (ArrayList<Company>) CompanyDao.INSTANCE.listSomeCompanies(Page.number_per_page, indexMin);
-					page.setList(companies);
-					page.displayPage();
+					int indexMin =(pageNumber-1)*Page.number_per_page; //TODO
+					companies = (ArrayList<Company>) ServiceCompany.INSTANCE.listcompanies(Page.number_per_page, indexMin);
+					for(Company company : companies){
+						System.out.println(company.toString());
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -144,7 +143,7 @@ public class ConsoleUserInterface {
 				System.out.println("You must enter an integer");
 			}
 		}while(id<1);
-		Computer c = ComputerDao.INSTANCE.getComputer(id);
+		Computer c = ServiceComputer.INSTANCE.getComputer(id);
 		Company company = c.getCompany();
 		System.out.println("\tid : "+c.getId()+" name : "+c.getName());
 		System.out.println("\tintroduced : "+c.getIntroduced()+" discontinued : "+c.getDiscontinued());
@@ -189,7 +188,7 @@ public class ConsoleUserInterface {
 			if(ldDisco.isEqual(defaultDate)){
 				ldDisco = null;
 			}
-			if(ServiceComputer.createComputer(name, ldIntro, ldDisco, company_id)){
+			if(ServiceComputer.INSTANCE.createComputer(name, ldIntro, ldDisco, company_id)){
 				System.out.println("computer successfully created !");
 			}else{
 				System.out.println("Something went wrong. Ensure the order of date if entered, and eventually check log file.");
@@ -218,7 +217,7 @@ public class ConsoleUserInterface {
 			entry = br.readLine();
 			String[] args = entry.split("( -|=)");
 			id = Integer.parseInt(args[0]);
-			Computer c = ComputerDao.INSTANCE.getComputer(id);
+			Computer c = ServiceComputer.INSTANCE.getComputer(id);
 			for(int i=1;i<args.length;i=i+2){
 				if("name".equals(args[i])){
 					c.setName(args[i+1]);
@@ -235,15 +234,15 @@ public class ConsoleUserInterface {
 				}else if("company-id".equals(args[i])){
 					String strId = args[i+1];
 					if(strId!=null && !strId.trim().isEmpty()){
-						int companyId = Integer.parseInt(strId);
+						long companyId = Long.parseLong(strId);
 						if(companyId>1){
-							Company company = CompanyDao.INSTANCE.getCompany(companyId);
+							Company company = ServiceCompany.INSTANCE.getCompany(companyId);
 							c.setCompany(company);
 						}
 					}
 				}
 			}
-			if(ServiceComputer.updatecomputer(c)){
+			if(ServiceComputer.INSTANCE.updatecomputer(c)){
 				System.out.println("computer successfully updated");
 			}
 		} catch (IOException e) {
@@ -274,8 +273,8 @@ public class ConsoleUserInterface {
 				System.out.println("You must enter an integer");
 			}
 		}while(id<1);
-		Computer c = ComputerDao.INSTANCE.getComputer(id); 
-		if(ComputerDao.INSTANCE.deleteComputer(c)){
+		Computer c = ServiceComputer.INSTANCE.getComputer(id); 
+		if(ServiceComputer.INSTANCE.deleteComputer(c)){
 			System.out.println("Computer successfully deleted !");
 		}
 	}

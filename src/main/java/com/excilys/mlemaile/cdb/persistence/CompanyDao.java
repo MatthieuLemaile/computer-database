@@ -80,14 +80,14 @@ public enum CompanyDao{
 	 * @param idFirst l'index du premier à retourner
 	 * @return
 	 */
-	public List<Company> listSomeCompanies(int number, int idFirst) {
+	public List<Company> listSomeCompanies(int number, long idFirst) {
 		ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
 															// retourner null
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {preparedStatement = connection.prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
-			preparedStatement.setInt(1, idFirst);
+			preparedStatement.setLong(1, idFirst);
 			preparedStatement.setInt(2, number);
 			resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) CompanyDao.INSTANCE.bindingCompany(resultSet);

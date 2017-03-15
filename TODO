@@ -1,8 +1,9 @@
 Before next Impl :
-* Faire des exceptions perso, au mini une par couche pour faire remonter les exceptions. (permet d'éviter de tout changer si changement de db par ex.)
+* right before Impl next Sprint, make test success
 
 Opt mais important: 
 * interface entre DAOs et Service. DaoFactory.
+* Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
 
 Opt :
 * Mettre des statement au lieu de prepared statement là où il faut (dans les get)

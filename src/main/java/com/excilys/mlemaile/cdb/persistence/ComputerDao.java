@@ -12,9 +12,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.mysql.jdbc.Statement;
@@ -28,7 +25,7 @@ import com.mysql.jdbc.Statement;
  */
 public enum ComputerDao {
 	INSTANCE();
-	private final static Logger logger = LoggerFactory.getLogger(ComputerDao.class);
+	//private final static Logger logger = LoggerFactory.getLogger(ComputerDao.class);
 
 	/**
 	 * this method map the result of a request (in the ResultSet) with the
@@ -68,7 +65,7 @@ public enum ComputerDao {
 				computers.add(builder.build());
 			}
 		} catch (SQLException e) {
-			logger.error("can't dinf computer : ", e);
+			throw new DaoException("can't dinf computer : ", e);
 		}
 		return computers;
 	}
@@ -114,11 +111,10 @@ public enum ComputerDao {
 				if (generatedKey.next()) {
 					computer.setId(generatedKey.getLong(1));
 					executed = true;
-					logger.info("Computer created : " + computer.toString());
 				}
 			}
 		} catch (SQLException e) {
-			logger.error("Error storing the computer : ", e);
+			throw new DaoException("Error storing the computer : ", e);
 		} finally {
 			DatabaseConnection.INSTANCE.closeConnection(connection);
 			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
@@ -150,7 +146,7 @@ public enum ComputerDao {
 			resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) ComputerDao.INSTANCE.bindingComputer(resultSet);
 		} catch (SQLException e) {
-			logger.error("Can't list computers : ", e);
+			throw new DaoException("Can't list computers : ", e);
 		} finally {
 			DatabaseConnection.INSTANCE.closeConnection(connection);
 			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
@@ -178,7 +174,7 @@ public enum ComputerDao {
 			resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) ComputerDao.INSTANCE.bindingComputer(resultSet);
 		} catch (SQLException e) {
-			logger.error("Can't retrieve computer : ", e);
+			throw new DaoException("Can't retrieve computer : ", e);
 		} finally {
 			DatabaseConnection.INSTANCE.closeConnection(connection);
 			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
@@ -230,10 +226,9 @@ public enum ComputerDao {
 			preparedStatement.setLong(5, computer.getId());
 			if (preparedStatement.executeUpdate() != 0) {
 				executed = true;
-				logger.info("updated computer to : " + computer.toString());
 			}
 		} catch (SQLException e) {
-			logger.error("Can't update computer : ", e);
+			throw new DaoException("Can't update computer : ", e);
 		} finally {
 			DatabaseConnection.INSTANCE.closeConnection(connection);
 			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
@@ -258,10 +253,9 @@ public enum ComputerDao {
 			preparedStatement.setLong(1, computer.getId());
 			if (preparedStatement.executeUpdate() != 0) {
 				executed = true;
-				logger.info("computer deleted : " + computer.toString());
 			}
 		} catch (SQLException e) {
-			logger.error("Can't delete computer : ", e);
+			throw new DaoException("Can't delete computer : ", e);
 		} finally {
 			DatabaseConnection.INSTANCE.closeConnection(connection);
 			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);

@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.mlemaile.cdb.model.Company;
 
 /**
@@ -21,7 +18,6 @@ import com.excilys.mlemaile.cdb.model.Company;
  */
 public enum CompanyDao{
 	INSTANCE;
-	private final static Logger logger = LoggerFactory.getLogger(CompanyDao.class);
 	/**
 	 * This method map the result of a request (in the result set) to a company
 	 * object
@@ -39,7 +35,7 @@ public enum CompanyDao{
 				companies.add(company);
 			}
 		} catch (SQLException e) {
-			logger.error("Can't bind company :", e);
+			throw new DaoException("Can't bind company :", e);
 		}
 		return companies;
 	}
@@ -61,7 +57,7 @@ public enum CompanyDao{
 			resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) CompanyDao.INSTANCE.bindingCompany(resultSet);
 		} catch (SQLException e) {
-			logger.error("Can't find company :", e);
+			throw new DaoException("Can't find company :", e);
 		} finally {
 			DatabaseConnection.INSTANCE.closeConnection(connection);
 			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
@@ -92,7 +88,7 @@ public enum CompanyDao{
 			resultSet = preparedStatement.executeQuery();
 			companies = (ArrayList<Company>) CompanyDao.INSTANCE.bindingCompany(resultSet);
 		} catch (SQLException e) {
-			logger.error("Can't list companies : ", e);
+			throw new DaoException("Can't list companies : ", e);
 		} finally {
 			DatabaseConnection.INSTANCE.closeConnection(connection);
 			DatabaseConnection.INSTANCE.closeStatement(preparedStatement);

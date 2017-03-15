@@ -44,8 +44,7 @@ enum DatabaseConnection{
 			                        + "&password="+password
 			                        + "&zeroDateTimeBehavior="+zeroDataTimeBehavior);
 		} catch (SQLException | ClassNotFoundException | ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new DaoException("Exception while connecting to the database",e);
 		}
 		return connection;
 	}
@@ -61,7 +60,7 @@ enum DatabaseConnection{
 				connection = null;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DaoException("Exception while closing the connection",e);
 		}
 	}
 	
@@ -74,7 +73,7 @@ enum DatabaseConnection{
 			try {
 				st.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new DaoException("Exception while closing a statement",e);
 			}
 		}
 	}
@@ -88,7 +87,7 @@ enum DatabaseConnection{
 			try {
 				rs.close();
 			} catch (SQLException e) {
-				e.printStackTrace();
+				throw new DaoException("Exception while closing a result set",e);
 			}
 		}
 	}

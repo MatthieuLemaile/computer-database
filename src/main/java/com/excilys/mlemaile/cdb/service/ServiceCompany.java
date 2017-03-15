@@ -1,18 +1,35 @@
 package com.excilys.mlemaile.cdb.service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
+import com.excilys.mlemaile.cdb.persistence.DaoException;
 
 public enum ServiceCompany {
 	INSTANCE();
-	
+	private static final Logger logger = LoggerFactory.getLogger(ServiceCompany.class);
 	public List<Company> listcompanies(int number,long idFirst){
-		return CompanyDao.INSTANCE.listSomeCompanies(number, idFirst);
+		List<Company> companies = new ArrayList<Company>();
+		try{
+			companies = CompanyDao.INSTANCE.listSomeCompanies(number, idFirst);
+		}catch(DaoException e){
+			logger.warn("Can't list companies",e);
+		}
+		return companies;
 	}
 	
 	public Company getCompany(long id){
-		return CompanyDao.INSTANCE.getCompany(id);
+		Company company = new Company.Builder().build();
+		try{
+			company = CompanyDao.INSTANCE.getCompany(id);
+		}catch(DaoException e){
+			logger.warn("Can't find company",e);
+		}
+		return company;
 	}
 }

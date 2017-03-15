@@ -4,7 +4,6 @@ Before next Impl :
 
 Opt mais important: 
 * interface entre DAOs et Service. DaoFactory.
-* Intégrer company dans computer
 
 Opt :
 * Mettre des statement au lieu de prepared statement là où il faut (dans les get)

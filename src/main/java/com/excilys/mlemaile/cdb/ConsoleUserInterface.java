@@ -145,7 +145,7 @@ public class ConsoleUserInterface {
 			}
 		}while(id<1);
 		Computer c = ComputerDao.INSTANCE.getComputer(id);
-		Company company = CompanyDao.INSTANCE.getCompany(c.getCompany_id());
+		Company company = c.getCompany();
 		System.out.println("\tid : "+c.getId()+" name : "+c.getName());
 		System.out.println("\tintroduced : "+c.getIntroduced()+" discontinued : "+c.getDiscontinued());
 		System.out.println("\tmanufacturer : "+company.getName());
@@ -237,7 +237,8 @@ public class ConsoleUserInterface {
 					if(strId!=null && !strId.trim().isEmpty()){
 						int companyId = Integer.parseInt(strId);
 						if(companyId>1){
-							c.setCompany_id(companyId);
+							Company company = CompanyDao.INSTANCE.getCompany(companyId);
+							c.setCompany(company);
 						}
 					}
 				}

@@ -13,23 +13,20 @@ public class Computer {
 	private String name;
 	private LocalDate introduced;
 	private LocalDate discontinued;
-	private int company_id;
+	private Company company;
 	
 	private Computer(){};
 	
-	private Computer(String name,LocalDate introduced, LocalDate discontinued,long id, int companyId){
-		setName(name);
-		setIntroduced(introduced);
-		setDiscontinued(discontinued);
+	private Computer(String name,LocalDate introduced, LocalDate discontinued,long id, Company company){
+		this(name,introduced,discontinued,company);
 		setId(id);
-		setCompany_id(companyId);
 	}
 	
-	private Computer(String name,LocalDate introduced, LocalDate discontinued, int companyId){
+	private Computer(String name,LocalDate introduced, LocalDate discontinued, Company company){
 		setName(name);
 		setIntroduced(introduced);
 		setDiscontinued(discontinued);
-		setCompany_id(companyId);
+		setCompany(company);
 	}
 	
 	public long getId() {
@@ -69,16 +66,18 @@ public class Computer {
 			throw new IllegalArgumentException("The discontinued date must be after the introduced date.");
 		}
 	}
-	public int getCompany_id() {
-		return company_id;
+	public Company getCompany() {
+		return company;
 	}
-	public void setCompany_id(int company_id) {
-		this.company_id = company_id;
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
+	
 	
 	@Override
 	public String toString(){
-		return "ID : "+getId()+" name : "+getName()+" manufacturer : "+getCompany_id()+" introduced : "+getIntroduced()+" Discontinued : "+getDiscontinued();
+		return "ID : "+getId()+" name : "+getName()+" manufacturer ["+getCompany().toString()+"] introduced : "+getIntroduced()+" Discontinued : "+getDiscontinued();
 	}
 	
 	@Override
@@ -89,7 +88,7 @@ public class Computer {
 			boolean nameEqual =false;
 			boolean introEqual = false;
 			boolean discoEqual = false;
-			
+			boolean companyEqual = false;
 			if((name!=null && name.equals(c.getName())) || name==null && c.getName()==null){
 				nameEqual = true;
 			}
@@ -99,7 +98,10 @@ public class Computer {
 			if((this.getDiscontinued()!=null && this.getDiscontinued().equals(c.getDiscontinued())) || this.getDiscontinued()==null &&  c.getDiscontinued()==null){
 				discoEqual = true;
 			}
-			if(nameEqual && introEqual && discoEqual && id == c.getId() && company_id == c.getCompany_id()){
+			if( (this.getCompany()!=null && this.getCompany().equals(c.getCompany()) || this.getCompany()==null && c.getCompany()==null)){
+				companyEqual = true;
+			}
+			if(nameEqual && introEqual && discoEqual && id == c.getId() && companyEqual){
 				equal = true;
 			}
 		}
@@ -108,15 +110,15 @@ public class Computer {
 	
 	@Override
 	public int hashCode(){
-		return Objects.hash(id,name,introduced,discontinued,company_id);
+		return Objects.hash(id,name,introduced,discontinued,company);
 	}
-	
+
 	public static class Builder{
 		private long id;
 		private LocalDate introduced;
 		private LocalDate discontinued;
 		private String name;
-		private int companyIdBuilder;
+		private Company company;
 		
 		public Builder(String name){
 			this.name = name;
@@ -137,16 +139,16 @@ public class Computer {
 			return this;
 		}
 		
-		public Builder companyId(int companyId){
-			this.companyIdBuilder = companyId;
+		public Builder company(Company company){
+			this.company = company;
 			return this;
 		}
 		
 		public Computer build(){
 			if(id!=0){
-				return new Computer(name,introduced,discontinued,id,companyIdBuilder  );
+				return new Computer(name,introduced,discontinued,id,company);
 			}else{
-				return new Computer(name,introduced,discontinued,companyIdBuilder  );
+				return new Computer(name,introduced,discontinued,company);
 			}
 		}
 	}

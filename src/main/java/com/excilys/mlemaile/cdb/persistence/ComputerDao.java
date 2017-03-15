@@ -15,6 +15,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.mysql.jdbc.Statement;
 
@@ -25,10 +26,10 @@ import com.mysql.jdbc.Statement;
  * @author Matthieu Lemaile
  *
  */
-public enum ComputerDao{
+public enum ComputerDao {
 	INSTANCE();
 	private final static Logger logger = LoggerFactory.getLogger(ComputerDao.class);
-	
+
 	/**
 	 * this method map the result of a request (in the ResultSet) with the
 	 * computer object
@@ -39,10 +40,11 @@ public enum ComputerDao{
 	 */
 	private List<Computer> bindingComputer(ResultSet resultSet) {
 		ArrayList<Computer> computers = new ArrayList<>();
-		
+
 		try {
 			while (resultSet.next()) {
-				Computer.Builder builder = new Computer.Builder(resultSet.getString("name")).id(resultSet.getLong("id"));
+				Computer.Builder builder = new Computer.Builder(resultSet.getString("name"))
+						.id(resultSet.getLong("id"));
 				Timestamp tsIntro = resultSet.getTimestamp("introduced");
 				if (tsIntro != null) {
 					builder = builder.introduced(tsIntro.toLocalDateTime().toLocalDate());
@@ -54,14 +56,15 @@ public enum ComputerDao{
 					} else {
 						throw new RuntimeException(
 								"discontinued date not used  it was before the introduced date.\n ID : "
-										+ resultSet.getInt("id") + "Introduced "
+										+ resultSet.getLong("id") + "Introduced "
 										+ tsIntro.toLocalDateTime().toLocalDate() + " discontinued :"
 										+ tsDiscontinued.toLocalDateTime().toLocalDate());
 					}
 				} else if (tsDiscontinued != null) {
 					builder = builder.discontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
 				}
-				builder = builder.companyId(resultSet.getInt("company_id"));
+				Company company = new Company.Builder().id(resultSet.getLong("company_id")).name(resultSet.getString("company_name")).build();
+				builder = builder.company(company);
 				computers.add(builder.build());
 			}
 		} catch (SQLException e) {
@@ -69,7 +72,7 @@ public enum ComputerDao{
 		}
 		return computers;
 	}
-	
+
 	/**
 	 * This method store the given computer in the database
 	 * 
@@ -101,8 +104,8 @@ public enum ComputerDao{
 			} else {
 				preparedStatement.setNull(3, Types.TIMESTAMP);
 			}
-			if (computer.getCompany_id() > 0) {
-				preparedStatement.setInt(4, computer.getCompany_id());
+			if (computer.getCompany() != null && computer.getCompany().getId() > 0) {
+				preparedStatement.setLong(4, computer.getCompany().getId());
 			} else {
 				preparedStatement.setNull(4, Types.BIGINT);
 			}
@@ -123,7 +126,7 @@ public enum ComputerDao{
 		}
 		return executed;
 	}
-	
+
 	/**
 	 * This method list a number of computer.
 	 * 
@@ -140,7 +143,8 @@ public enum ComputerDao{
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT * FROM computer ORDER BY id ASC LIMIT ?,?");
+			preparedStatement = connection.prepareStatement(
+					"SELECT c.id as id ,c.name as name ,c.introduced as introduced ,c.discontinued as discontinued ,company.id as company_id ,company.name as company_name FROM computer as c LEFT JOIN company ON c.company_id=company.id ORDER BY c.id ASC LIMIT ?,?");
 			preparedStatement.setInt(1, idFirst);
 			preparedStatement.setInt(2, number);
 			resultSet = preparedStatement.executeQuery();
@@ -154,7 +158,7 @@ public enum ComputerDao{
 		}
 		return computers;
 	}
-	
+
 	/**
 	 * This method return the computer identified by the id. If it doesn't
 	 * exist, it return a computer with an empty name.
@@ -169,7 +173,7 @@ public enum ComputerDao{
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 		try {
-			preparedStatement = connection.prepareStatement("select * from computer where id=?");
+			preparedStatement = connection.prepareStatement("SELECT c.id as id ,c.name as name ,c.introduced as introduced ,c.discontinued as discontinued ,company.id as company_id ,company.name as company_name FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.id=?");
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			computers = (ArrayList<Computer>) ComputerDao.INSTANCE.bindingComputer(resultSet);
@@ -186,7 +190,7 @@ public enum ComputerDao{
 		}
 		return c;
 	}
-	
+
 	/**
 	 * This method change all the attribute of the computer identified by the id
 	 * to those in the given computer
@@ -218,8 +222,8 @@ public enum ComputerDao{
 			} else {
 				preparedStatement.setNull(3, Types.TIMESTAMP);
 			}
-			if (computer.getCompany_id() > 0) {
-				preparedStatement.setInt(4, computer.getCompany_id());
+			if (computer.getCompany() != null && computer.getCompany().getId() > 0) {
+				preparedStatement.setLong(4, computer.getCompany().getId());
 			} else {
 				preparedStatement.setNull(4, Types.BIGINT);
 			}
@@ -236,7 +240,7 @@ public enum ComputerDao{
 		}
 		return executed;
 	}
-	
+
 	/**
 	 * This method delete the computer identified by the id of the given
 	 * computer

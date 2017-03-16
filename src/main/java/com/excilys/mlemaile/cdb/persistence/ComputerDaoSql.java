@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
-import com.mysql.jdbc.Statement;
 
 /**
  * This enum communicate with the database to store, update and read computers
@@ -70,7 +70,7 @@ enum ComputerDaoSql implements ComputerDao {
 		return computers;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#createComputer(com.excilys.mlemaile.cdb.model.Computer)
 	 */
 	@Override
@@ -120,7 +120,7 @@ enum ComputerDaoSql implements ComputerDao {
 		return executed;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#listSomecomputer(int, long)
 	 */
 	@Override
@@ -147,7 +147,7 @@ enum ComputerDaoSql implements ComputerDao {
 		return computers;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#getComputer(long)
 	 */
 	@Override
@@ -176,7 +176,7 @@ enum ComputerDaoSql implements ComputerDao {
 		return c;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#updateComputer(com.excilys.mlemaile.cdb.model.Computer)
 	 */
 	@Override
@@ -220,7 +220,7 @@ enum ComputerDaoSql implements ComputerDao {
 		return executed;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#deleteComputer(com.excilys.mlemaile.cdb.model.Computer)
 	 */
 	@Override

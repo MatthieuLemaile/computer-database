@@ -30,7 +30,7 @@ enum DatabaseConnection{
 			Parameters params = new Parameters();
 			FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
 					new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
-					.configure(params.properties().setFileName("src/main/resources/database.properties"));
+					.configure(params.properties().setFileName("database.properties"));
 			Configuration config = builder.getConfiguration();
 			String startUrl =config.getString("start-url");
 			String host = config.getString("host");
@@ -58,7 +58,6 @@ enum DatabaseConnection{
 		try {
 			if(connection!=null && !connection.isClosed()){
 				connection.close();
-				connection = null;
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Exception while closing the connection",e);

@@ -110,7 +110,7 @@ public class ConsoleUserInterface {
 				entry = br.readLine();
 				pageNumber = Integer.parseInt(entry);
 				if(pageNumber>0){
-					int indexMin =(pageNumber-1)*Page.number_per_page; //TODO
+					int indexMin =(pageNumber-1)*Page.number_per_page;
 					companies = (ArrayList<Company>) ServiceCompany.INSTANCE.listcompanies(Page.number_per_page, indexMin);
 					for(Company company : companies){
 						System.out.println(company.toString());

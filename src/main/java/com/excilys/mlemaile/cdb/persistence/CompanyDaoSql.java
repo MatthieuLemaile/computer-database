@@ -40,7 +40,7 @@ enum CompanyDaoSql implements CompanyDao{
 		return companies;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#getCompany(long)
 	 */
 	@Override
@@ -67,7 +67,7 @@ enum CompanyDaoSql implements CompanyDao{
 		return c;
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#listSomeCompanies(int, long)
 	 */
 	@Override

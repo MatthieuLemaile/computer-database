@@ -9,6 +9,7 @@ public class MainClass {
 	public static void main(String [] args){
 		System.out.println("Hello, what do you want to do ?");
 		while(ConsoleUserInterface.menu());
+		
 	}
 	
 	

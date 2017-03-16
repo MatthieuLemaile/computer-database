@@ -83,7 +83,7 @@ public class Computer {
 	@Override
 	public boolean equals(Object computer){
 		boolean equal = false;
-		if(computer!=null){
+		if(computer!=null && computer instanceof Computer){
 			Computer c = (Computer)computer;
 			boolean nameEqual =false;
 			boolean introEqual = false;

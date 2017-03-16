@@ -1,8 +1,8 @@
 Before next Impl :
-* hashCode et equals dans Company !
 
 Opt mais important: 
 * Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
+* Jar généré par maven executable et fonctionnel !
 
 Opt :
 * une classe Secureinput qui vérifie lesdits inputs

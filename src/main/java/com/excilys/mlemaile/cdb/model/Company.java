@@ -1,5 +1,7 @@
 package com.excilys.mlemaile.cdb.model;
 
+import java.util.Objects;
+
 /**
  * This class represent a company as in database
  * @author Matthieu Lemaile
@@ -32,6 +34,27 @@ public class Company {
 	@Override
 	public String toString(){
 		return "ID : "+getId()+" name : "+getName();
+	}
+	
+	@Override
+	public int hashCode(){
+		return Objects.hash(id,name);
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		boolean equal = false;
+		if(o!=null && o instanceof Company){
+			Company company = (Company)o;
+			boolean nameEqual = false;
+			if(this.name!=null && this.name.equals(company.name) || (this.name==null && company.name==null)){
+				nameEqual = true;
+			}
+			if(this.id == company.id && nameEqual){
+				equal = true;
+			}
+		}
+		return equal;
 	}
 	
 	public static class Builder{

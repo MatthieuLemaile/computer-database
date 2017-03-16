@@ -25,4 +25,5 @@
   <root level="debug">
     <appender-ref ref="RollingFile" />
   </root>
+  
 </configuration>

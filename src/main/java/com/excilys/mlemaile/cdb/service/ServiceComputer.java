@@ -18,8 +18,11 @@ public enum ServiceComputer{
 	
 	public boolean createComputer(String name,LocalDate introduced,LocalDate discontinued,int company_id){
 		boolean computerCreated = false;
+		Company company =null;
 		try{
-			Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(company_id);
+			if(company_id>0){
+				company = DaoFactory.INSTANCE.getCompanyDao().getCompany(company_id);
+			}
 			Computer c = new Computer.Builder(name).introduced(introduced).discontinued(discontinued).company(company).build();
 			if(DaoFactory.INSTANCE.getComputerDao().createComputer(c)){
 				computerCreated = true;

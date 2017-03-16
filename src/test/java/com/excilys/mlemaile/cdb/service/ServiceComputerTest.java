@@ -18,14 +18,36 @@ import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ComputerDao.class,DaoFactory.class})
+@PrepareForTest({ComputerDao.class,DaoFactory.class,Computer.Builder.class})
 public class ServiceComputerTest {
 
 	@Test
 	public void testCreateComputer() {
-		
+		//TODO comment réellement mocke le Builder ??
+		Computer computer = new Computer.Builder("").build();
+		//Computer.Builder computerBuilder = mock(Computer.Builder.class);
+		ComputerDao mockComputerDao = mock(ComputerDao.class);
+		DaoFactory mockFactory = mock(DaoFactory.class);
+		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
+		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
+		when(mockComputerDao.createComputer(computer)).thenReturn(true);
+		//when(computerBuilder.build()).thenReturn(computer);
+		assertEquals("create computer does not work as intended",true,ServiceComputer.INSTANCE.createComputer("", null, null, 0));
 	}
-
+	/*
+	@Test
+	public void testCreateComputerIllegalArgument() {
+		Computer computer = new Computer.Builder("").build();
+		Computer.Builder computerBuilder = mock(Computer.Builder.class);
+		ComputerDao mockComputerDao = mock(ComputerDao.class);
+		DaoFactory mockFactory = mock(DaoFactory.class);
+		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
+		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
+		when(mockComputerDao.createComputer(computer)).thenReturn(true);
+		when(computerBuilder.build()).thenThrow(new IllegalArgumentException(""));
+		assertEquals("create computer does not work as intended",false,ServiceComputer.INSTANCE.createComputer("", null, null, 0));
+	}
+	*/
 	@Test
 	public void testUpdatecomputer() {
 		Computer computer = new Computer.Builder("").build();

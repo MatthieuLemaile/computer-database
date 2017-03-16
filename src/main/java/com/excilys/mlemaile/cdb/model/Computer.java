@@ -77,7 +77,11 @@ public class Computer {
 	
 	@Override
 	public String toString(){
-		return "ID : "+getId()+" name : "+getName()+" manufacturer ["+getCompany().toString()+"] introduced : "+getIntroduced()+" Discontinued : "+getDiscontinued();
+		if(getCompany()!=null){
+			return "ID : "+getId()+" name : "+getName()+" manufacturer ["+getCompany().toString()+"] introduced : "+getIntroduced()+" Discontinued : "+getDiscontinued();
+		}else{
+			return "ID : "+getId()+" name : "+getName()+" manufacturer [unknow] introduced : "+getIntroduced()+" Discontinued : "+getDiscontinued();
+		}
 	}
 	
 	@Override

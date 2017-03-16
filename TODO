@@ -1,9 +1,9 @@
 Before next Impl :
+* test service ?
 
 Opt mais important: 
 * Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
 * Jar généré par maven executable et fonctionnel !
-* Library scope, properties (version number)
 * Unit test coverage
 
 Opt :
@@ -11,6 +11,5 @@ Opt :
 
 
 Big Step :
-* Unit testing
 * Web
 * Multiple point

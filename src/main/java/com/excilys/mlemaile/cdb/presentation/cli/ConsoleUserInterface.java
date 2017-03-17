@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.presentation;
+package com.excilys.mlemaile.cdb.presentation.cli;
 
 import java.io.BufferedReader;
 import java.io.IOException;

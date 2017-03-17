@@ -1,6 +1,6 @@
 package com.excilys.mlemaile.cdb;
 
-import com.excilys.mlemaile.cdb.presentation.ConsoleUserInterface;
+import com.excilys.mlemaile.cdb.presentation.cli.ConsoleUserInterface;
 
 public class MainClass {
 

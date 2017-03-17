@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.presentation;
+package com.excilys.mlemaile.cdb.presentation.cli;
 
 public class Page<T> {
 	public static int number_per_page = 50;

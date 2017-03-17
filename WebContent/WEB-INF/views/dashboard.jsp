@@ -1,4 +1,64 @@
-<<jsp:include page="head.jsp"/>
+<%@ include file="head.jsp" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+	
+	<p>${requestScope.coyote}</p>
+	
+	<div class="container" style="margin-top: 10px;">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <!-- Variable declarations for passing labels as parameters -->
+                        <!-- Table header for Computer Name -->
+
+                        <th class="editMode" style="width: 60px; height: 22px;">
+                            <input type="checkbox" id="selectall" /> 
+                            <span style="vertical-align: top;">
+                                 -  <a href="#" id="deleteSelected" onclick="$.fn.deleteSelected();">
+                                        <i class="fa fa-trash-o fa-lg"></i>
+                                    </a>
+                            </span>
+                        </th>
+                        <th>
+                            Computer name
+                        </th>
+                        <th>
+                            Introduced date
+                        </th>
+                        <!-- Table header for Discontinued Date -->
+                        <th>
+                            Discontinued date
+                        </th>
+                        <!-- Table header for Company -->
+                        <th>
+                            Company
+                        </th>
+
+                    </tr>
+                </thead>
+                <!-- Browse attribute computers -->
+                <tbody id="results">
+                <c:forEach var="computer" items="${requestScope.listComputers}">
+                	<tr>
+                        <td class="editMode">
+                            <input type="checkbox" name="cb" class="cb" value="0">
+                        </td>
+                        <td>
+                            <a href="editComputer.html" onclick=""><c:out value="${computer.name}"/></a>
+                        </td>
+                        <td><c:out value="${computer.introduced}"/></td>
+                        <td><c:out value="${computer.discontinued}"/></td>
+                        <td><c:out value="${computer.company.name}"/></td>
+
+                    </tr>
+                </c:forEach>
+                </tbody>
+
+		</table>
+	</div>
+                    
+	
+	
+	
 	<footer class="navbar-fixed-bottom">
         <div class="container text-center">
             <ul class="pagination">

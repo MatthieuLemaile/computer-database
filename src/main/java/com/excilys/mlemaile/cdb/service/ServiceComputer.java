@@ -14,7 +14,7 @@ import com.excilys.mlemaile.cdb.persistence.DaoFactory;
 
 public enum ServiceComputer {
     INSTANCE();
-    public static final Logger LOGER = LoggerFactory.getLogger(ServiceComputer.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceComputer.class);
 
     /**
      * Permet de créer un computer à partir des informations suivantes.
@@ -35,10 +35,10 @@ public enum ServiceComputer {
                     .build();
             if (DaoFactory.INSTANCE.getComputerDao().createComputer(c)) {
                 computerCreated = true;
-                LOGER.info("Computer created : " + c.toString());
+                LOGGER.info("Computer created : " + c.toString());
             }
         } catch (IllegalArgumentException | DaoException e) {
-            LOGER.warn("Can't create the computer :", e);
+            LOGGER.warn("Can't create the computer :", e);
         }
         return computerCreated;
     }
@@ -52,9 +52,9 @@ public enum ServiceComputer {
         boolean execution = false;
         try {
             execution = DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
-            LOGER.info("updated computer to : " + c.toString());
+            LOGGER.info("updated computer to : " + c.toString());
         } catch (DaoException e) {
-            LOGER.warn("cant' update the computer", e);
+            LOGGER.warn("cant' update the computer", e);
         }
         return execution;
     }
@@ -70,7 +70,7 @@ public enum ServiceComputer {
         try {
             computers = DaoFactory.INSTANCE.getComputerDao().listSomecomputer(number, idFirst);
         } catch (DaoException e) {
-            LOGER.warn("cant' list computers", e);
+            LOGGER.warn("cant' list computers", e);
         }
         return computers;
     }
@@ -85,7 +85,7 @@ public enum ServiceComputer {
         try {
             computer = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
         } catch (DaoException e) {
-            LOGER.warn("cant' find the computer", e);
+            LOGGER.warn("cant' find the computer", e);
         }
         return computer;
     }
@@ -99,9 +99,9 @@ public enum ServiceComputer {
         boolean execution = false;
         try {
             execution = DaoFactory.INSTANCE.getComputerDao().deleteComputer(c);
-            LOGER.info("computer deleted : " + c.toString());
+            LOGGER.info("computer deleted : " + c.toString());
         } catch (DaoException e) {
-            LOGER.warn("cant' update the computer", e);
+            LOGGER.warn("cant' update the computer", e);
         }
         return execution;
     }

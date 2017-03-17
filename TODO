@@ -1,14 +1,18 @@
+WIP :
+* dashboard vraiment fonctionnel : choix du nombre/page et choix de la page, affichage des numéros de pages ?
+* Faire les autres pages
+
 Before next Impl :
-* test presentation ?
 
 Opt mais important: 
 * Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
 * Unit test coverage
+* test presentation ?
 
 Opt :
 * une classe Secureinput qui vérifie lesdits inputs
 
 
 Big Step :
-* Web
+* Web - WIP
 * Multiple point

@@ -23,20 +23,18 @@ public class ServiceComputerTest {
 
 	@Test
 	public void testCreateComputer() {
-		//TODO comment réellement mocke le Builder ??
 		Computer computer = new Computer.Builder("").build();
-		//Computer.Builder computerBuilder = mock(Computer.Builder.class);
 		ComputerDao mockComputerDao = mock(ComputerDao.class);
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
 		when(mockComputerDao.createComputer(computer)).thenReturn(true);
-		//when(computerBuilder.build()).thenReturn(computer);
 		assertEquals("create computer does not work as intended",true,ServiceComputer.INSTANCE.createComputer("", null, null, 0));
 	}
 	/*
 	@Test
 	public void testCreateComputerIllegalArgument() {
+		//TODO comment réellement mocke le Builder ??
 		Computer computer = new Computer.Builder("").build();
 		Computer.Builder computerBuilder = mock(Computer.Builder.class);
 		ComputerDao mockComputerDao = mock(ComputerDao.class);

@@ -79,6 +79,9 @@ enum ComputerDaoSql implements ComputerDao {
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet generatedKey = null;
+		if(computer ==null){
+			return false;
+		}
 		try {
 			preparedStatement = connection.prepareStatement(
 					"INSERT INTO computer (name,introduced,discontinued,company_id) values(?,?,?,?)",
@@ -184,6 +187,9 @@ enum ComputerDaoSql implements ComputerDao {
 		boolean executed = false;
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
+		if(computer ==null){
+			return false;
+		}
 		try {
 			preparedStatement = connection.prepareStatement(
 					"UPDATE computer SET name=?, introduced=?,discontinued=?,company_id=? where id = ?");
@@ -228,6 +234,9 @@ enum ComputerDaoSql implements ComputerDao {
 		boolean executed = false;
 		Connection connection = DatabaseConnection.INSTANCE.getConnection();
 		PreparedStatement preparedStatement = null;
+		if(computer ==null){
+			return false;
+		}
 		try {
 			preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
 			preparedStatement.setLong(1, computer.getId());

@@ -18,7 +18,10 @@ import com.excilys.mlemaile.cdb.service.ServiceComputer;
  */
 @WebServlet("/homepage")
 public class Homepage extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    private static final long   serialVersionUID = 1L;
+    private static final String DASHBOARD_VIEW   = "/WEB-INF/views/dashboard.jsp";
+    private static final String LIST_COMPUTERS   = "listComputers";
+    private static final String PAGE             = "page";
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -30,22 +33,31 @@ public class Homepage extends HttpServlet {
 
     @Override
     /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-     *      response)
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Page<Computer> page = new Page<Computer>(1);
-        List<Computer> computers = ServiceComputer.INSTANCE.listComputer(Page.numberPerPage, 0);
-        request.setAttribute("listComputers", computers);
-        request.setAttribute("coyote", "bip");
-        request.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
+        // TODO sécuriser les input pour éviter XSS
+        int numPage = 1;
+        if (request.getParameter("page") != null) {
+            numPage = Integer.parseInt(request.getParameter("page"));
+        }
+        int limit = 50;
+        if (request.getParameter("limit") != null) {
+            limit = Integer.parseInt(request.getParameter("limit"));
+        }
+        Page.numberPerPage = limit;
+        Page<Computer> page = new Page<>(numPage);
+        List<Computer> computers = ServiceComputer.INSTANCE.listComputer(Page.numberPerPage,
+                (page.getPageNumber() - 1) * Page.numberPerPage);
+        request.setAttribute(LIST_COMPUTERS, computers);
+        request.setAttribute(PAGE, page);
+        request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request, response);
     }
 
     @Override
     /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-     *      response)
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

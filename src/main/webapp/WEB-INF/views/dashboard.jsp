@@ -1,7 +1,8 @@
 <%@ include file="head.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/myTagLib.tld" prefix="myLib"%>
 	
-	<p>${requestScope.coyote}</p>
+	
 	
 	<div class="container" style="margin-top: 10px;">
             <table class="table table-striped table-bordered">
@@ -62,27 +63,31 @@
 	<footer class="navbar-fixed-bottom">
         <div class="container text-center">
             <ul class="pagination">
+              <c:if test="${requestScope.page.pageNumber-1 > 0}">
               <li>
-                 <a href="#" aria-label="Previous">
+                 <a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,50)}" />" aria-label="Previous">
                  	<span aria-hidden="true">&laquo;</span>
                  </a>
               </li>
-	          <li><a href="#">1</a></li>
-	          <li><a href="#">2</a></li>
-	          <li><a href="#">3</a></li>
-	          <li><a href="#">4</a></li>
-	          <li><a href="#">5</a></li>
+              </c:if>
+	          <c:if test="${requestScope.page.pageNumber-2 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-2,50)}" />">${requestScope.page.pageNumber-2}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber-1 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,50)}" />">${requestScope.page.pageNumber-1}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber+0 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,50)}" />">${requestScope.page.pageNumber+0}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber+1 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,50)}" />">${requestScope.page.pageNumber+1}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber+2 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+2,50)}" />">${requestScope.page.pageNumber+2}</a></li></c:if>
+              <c:if test="${requestScope.page.pageNumber+1 > 0}">
               <li>
-              	<a href="#" aria-label="Next">
+              	<a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,50)}" />" aria-label="Next">
                 	<span aria-hidden="true">&raquo;</span>
                 </a>
            	  </li>
+           	  </c:if>
         	</ul>
 		
         <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default">10</button>
-            <button type="button" class="btn btn-default">50</button>
-            <button type="button" class="btn btn-default">100</button>
+            <button type="button" class="btn btn-default numberPerPage">10</button>
+            <button type="button" class="btn btn-default numberPerPage">50</button>
+            <button type="button" class="btn btn-default numberPerPage">100</button>
         </div>
 	</div>
     </footer>

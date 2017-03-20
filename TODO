@@ -1,17 +1,18 @@
 WIP :
-* dashboard vraiment fonctionnel : choix du nombre/page et choix de la page, affichage des numéros de pages ?
-* Faire les autres pages
+* Dashboard, what is pagination exactly ?
+* Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
+* add computer, interactif
+* page de deleteComputer / edit computer
 
 Before next Impl :
 
 Opt mais important: 
-* Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
-* num version jstl en parameter
+* num version jstl en parameter (??)
 * Unit test coverage
-* test presentation ?
 
 Opt :
 * une classe Secureinput qui vérifie lesdits inputs
+* bug icône delete en mode edit sur le dashboard (ok sous eclipse, nok war)
 
 
 Big Step :

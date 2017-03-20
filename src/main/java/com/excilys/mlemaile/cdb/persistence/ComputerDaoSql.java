@@ -17,8 +17,7 @@ import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 
 /**
- * This enum communicate with the database to store, update and read computers
- * in the database.
+ * This enum communicate with the database to store, update and read computers in the database.
  * @author Matthieu Lemaile
  */
 enum ComputerDaoSql implements ComputerDao {
@@ -27,8 +26,7 @@ enum ComputerDaoSql implements ComputerDao {
     // LoggerFactory.getLogger(ComputerDao.class);
 
     /**
-     * this method map the result of a request (in the ResultSet) with the
-     * computer object.
+     * this method map the result of a request (in the ResultSet) with the computer object.
      * @param resultSet the result of the request
      * @return a List of computers
      */
@@ -46,12 +44,14 @@ enum ComputerDaoSql implements ComputerDao {
                 Timestamp tsDiscontinued = resultSet.getTimestamp("discontinued");
                 if (tsDiscontinued != null && tsIntro != null) {
                     if (tsDiscontinued.after(tsIntro) || tsDiscontinued.equals(tsIntro)) {
-                        builder = builder.discontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
+                        builder = builder
+                                .discontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
                     } else {
                         throw new RuntimeException(
                                 "discontinued date not used  it was before the introduced date.\n ID : "
                                         + resultSet.getLong("id") + "Introduced "
-                                        + tsIntro.toLocalDateTime().toLocalDate() + " discontinued :"
+                                        + tsIntro.toLocalDateTime().toLocalDate()
+                                        + " discontinued :"
                                         + tsDiscontinued.toLocalDateTime().toLocalDate());
                     }
                 } else if (tsDiscontinued != null) {
@@ -87,15 +87,15 @@ enum ComputerDaoSql implements ComputerDao {
             preparedStatement.setString(1, computer.getName());
             LocalDate introduced = computer.getIntroduced();
             if (introduced != null) {
-                preparedStatement.setTimestamp(2,
-                        Timestamp.valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
+                preparedStatement.setTimestamp(2, Timestamp
+                        .valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
             } else {
                 preparedStatement.setNull(2, Types.TIMESTAMP);
             }
             LocalDate discontinued = computer.getDiscontinued();
             if (discontinued != null) {
-                preparedStatement.setTimestamp(3,
-                        Timestamp.valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
+                preparedStatement.setTimestamp(3, Timestamp
+                        .valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
             } else {
                 preparedStatement.setNull(3, Types.TIMESTAMP);
             }
@@ -122,8 +122,7 @@ enum ComputerDaoSql implements ComputerDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#listSomecomputer(int,
-     *      long)
+     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#listSomecomputer(int, long)
      */
     @Override
     public List<Computer> listSomecomputer(int number, long idFirst) {
@@ -196,15 +195,15 @@ enum ComputerDaoSql implements ComputerDao {
             preparedStatement.setString(1, computer.getName());
             LocalDate introduced = computer.getIntroduced();
             if (introduced != null) {
-                preparedStatement.setTimestamp(2,
-                        Timestamp.valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
+                preparedStatement.setTimestamp(2, Timestamp
+                        .valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
             } else {
                 preparedStatement.setNull(2, Types.TIMESTAMP);
             }
             LocalDate discontinued = computer.getDiscontinued();
             if (discontinued != null) {
-                preparedStatement.setTimestamp(3,
-                        Timestamp.valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
+                preparedStatement.setTimestamp(3, Timestamp
+                        .valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
             } else {
                 preparedStatement.setNull(3, Types.TIMESTAMP);
             }
@@ -250,5 +249,27 @@ enum ComputerDaoSql implements ComputerDao {
             DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
         }
         return executed;
+    }
+
+    @Override
+    public int countComputer() {
+        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Statement st = null;
+        ResultSet rs = null;
+        int numberOfComputers = 0;
+        try {
+            st = connection.createStatement();
+            rs = st.executeQuery("SELECT count(*) as numberOfComputers from computer");
+            if (rs.next()) {
+                numberOfComputers = rs.getInt("numberOfComputers");
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Can't count computer : ", e);
+        } finally {
+            DatabaseConnection.INSTANCE.closeConnection(connection);
+            DatabaseConnection.INSTANCE.closeStatement(st);
+            DatabaseConnection.INSTANCE.closeResulSet(rs);
+        }
+        return numberOfComputers;
     }
 }

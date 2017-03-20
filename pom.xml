@@ -4,9 +4,9 @@
  
   <groupId>com.excilys.mlemaile.cdb</groupId>
   <artifactId>ComputerDatabase</artifactId>
-  <version>1.1-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <version>1.2-SNAPSHOT</version>
   <name>Computer Database</name>
+  <packaging>war</packaging>
   
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>

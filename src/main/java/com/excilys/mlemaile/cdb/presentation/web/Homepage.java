@@ -18,33 +18,35 @@ import com.excilys.mlemaile.cdb.service.ServiceComputer;
  */
 @WebServlet("/homepage")
 public class Homepage extends HttpServlet {
-    private static final long   serialVersionUID = 1L;
-    private static final String DASHBOARD_VIEW   = "/WEB-INF/views/dashboard.jsp";
-    private static final String LIST_COMPUTERS   = "listComputers";
-    private static final String PAGE             = "page";
+    private static final long   serialVersionUID      = 1L;
+    private static final String DASHBOARD_VIEW        = "/WEB-INF/views/dashboard.jsp";
+    private static final String LIST_COMPUTERS        = "listComputers";
+    private static final String PAGE                  = "page";
+    private static final String TOTAL_NUMBER_COMPUTER = "totalNumberComputers";
+    private static final String PARAM_PAGE_NUMBER     = "page";
+    private static final String PARAM_PAGE_LIMIT      = "limit";
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Homepage() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // TODO sécuriser les input pour éviter XSS
         int numPage = 1;
-        if (request.getParameter("page") != null) {
-            numPage = Integer.parseInt(request.getParameter("page"));
+        if (request.getParameter(PARAM_PAGE_NUMBER) != null) {
+            numPage = Integer.parseInt(request.getParameter(PARAM_PAGE_NUMBER));
         }
         int limit = 50;
-        if (request.getParameter("limit") != null) {
-            limit = Integer.parseInt(request.getParameter("limit"));
+        if (request.getParameter(PARAM_PAGE_LIMIT) != null) {
+            limit = Integer.parseInt(request.getParameter(PARAM_PAGE_LIMIT));
         }
         Page.numberPerPage = limit;
         Page<Computer> page = new Page<>(numPage);
@@ -52,16 +54,8 @@ public class Homepage extends HttpServlet {
                 (page.getPageNumber() - 1) * Page.numberPerPage);
         request.setAttribute(LIST_COMPUTERS, computers);
         request.setAttribute(PAGE, page);
+        request.setAttribute(TOTAL_NUMBER_COMPUTER, ServiceComputer.INSTANCE.countComputers());
         request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request, response);
-    }
-
-    @Override
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
     }
 
 }

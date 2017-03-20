@@ -24,15 +24,16 @@ public enum ServiceComputer {
      * @param companyId l'identifiant de la company fabricante.
      * @return un booléen indiquant si l'opération s'est bien passée.
      */
-    public boolean createComputer(String name, LocalDate introduced, LocalDate discontinued, int companyId) {
+    public boolean createComputer(String name, LocalDate introduced, LocalDate discontinued,
+            long companyId) {
         boolean computerCreated = false;
         Company company = null;
         try {
             if (companyId > 0) {
                 company = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
             }
-            Computer c = new Computer.Builder(name).introduced(introduced).discontinued(discontinued).company(company)
-                    .build();
+            Computer c = new Computer.Builder(name).introduced(introduced)
+                    .discontinued(discontinued).company(company).build();
             if (DaoFactory.INSTANCE.getComputerDao().createComputer(c)) {
                 computerCreated = true;
                 LOGGER.info("Computer created : " + c.toString());
@@ -44,7 +45,8 @@ public enum ServiceComputer {
     }
 
     /**
-     * Permet de mettre à jour un Computer. L'id est la référence de l'ordinateur, il ne doit pas changer.
+     * Permet de mettre à jour un Computer. L'id est la référence de l'ordinateur, il ne doit pas
+     * changer.
      * @param c le computer à mettreà jour
      * @return un boolééen indiquant si l'opération s'est bien déroulée (true);
      */
@@ -104,5 +106,19 @@ public enum ServiceComputer {
             LOGGER.warn("cant' update the computer", e);
         }
         return execution;
+    }
+
+    /**
+     * Cette méthode permet de compter le nombre d'ordinateur.
+     * @return le nombre d'ordinateur
+     */
+    public int countComputers() {
+        int numberOfComputers = 0;
+        try {
+            numberOfComputers = DaoFactory.INSTANCE.getComputerDao().countComputer();
+        } catch (DaoException e) {
+            LOGGER.warn("can't count computers", e);
+        }
+        return numberOfComputers;
     }
 }

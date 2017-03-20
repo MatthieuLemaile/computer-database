@@ -6,6 +6,7 @@ Before next Impl :
 
 Opt mais important: 
 * Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
+* num version jstl en parameter
 * Unit test coverage
 * test presentation ?
 

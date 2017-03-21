@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.presentation.cli;
+package com.excilys.mlemaile.cdb.presentation;
 
 public class Page<T> {
     public static int numberPerPage = 50;
@@ -14,6 +14,10 @@ public class Page<T> {
 
     public int getPageNumber() {
         return pageNumber;
+    }
+
+    public int getNumberPerPage() {
+        return numberPerPage;
     }
 
     /**

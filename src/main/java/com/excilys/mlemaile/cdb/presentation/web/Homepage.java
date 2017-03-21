@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.mlemaile.cdb.model.Computer;
-import com.excilys.mlemaile.cdb.presentation.cli.Page;
+import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 
 /**
@@ -20,8 +20,8 @@ import com.excilys.mlemaile.cdb.service.ServiceComputer;
 public class Homepage extends HttpServlet {
     private static final long   serialVersionUID      = 1L;
     private static final String DASHBOARD_VIEW        = "/WEB-INF/views/dashboard.jsp";
-    private static final String LIST_COMPUTERS        = "listComputers";
-    private static final String PAGE                  = "page";
+    private static final String ATT_LIST_COMPUTERS    = "listComputers";
+    private static final String ATT_PAGE              = "page";
     private static final String TOTAL_NUMBER_COMPUTER = "totalNumberComputers";
     private static final String PARAM_PAGE_NUMBER     = "page";
     private static final String PARAM_PAGE_LIMIT      = "limit";
@@ -52,8 +52,8 @@ public class Homepage extends HttpServlet {
         Page<Computer> page = new Page<>(numPage);
         List<Computer> computers = ServiceComputer.INSTANCE.listComputer(Page.numberPerPage,
                 (page.getPageNumber() - 1) * Page.numberPerPage);
-        request.setAttribute(LIST_COMPUTERS, computers);
-        request.setAttribute(PAGE, page);
+        request.setAttribute(ATT_LIST_COMPUTERS, computers);
+        request.setAttribute(ATT_PAGE, page);
         request.setAttribute(TOTAL_NUMBER_COMPUTER, ServiceComputer.INSTANCE.countComputers());
         request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request, response);
     }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
+import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 

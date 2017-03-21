@@ -93,11 +93,11 @@
                  </a>
               </li>
               </c:if>
-	          <c:if test="${requestScope.page.pageNumber-2 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-2,50)}" />">${requestScope.page.pageNumber-2}</a></li></c:if>
-	          <c:if test="${requestScope.page.pageNumber-1 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,50)}" />">${requestScope.page.pageNumber-1}</a></li></c:if>
-	          <c:if test="${requestScope.page.pageNumber+0 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,50)}" />">${requestScope.page.pageNumber+0}</a></li></c:if>
-	          <c:if test="${requestScope.page.pageNumber+1 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,50)}" />">${requestScope.page.pageNumber+1}</a></li></c:if>
-	          <c:if test="${requestScope.page.pageNumber+2 > 0}"><li><a class="pageNumber" href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+2,50)}" />">${requestScope.page.pageNumber+2}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber-2 > 0}"><li><a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-2,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber-2}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber-1 > 0}"><li><a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber-1}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber+0 > 0}"><li><a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+0}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber+1 > 0}"><li><a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+1}</a></li></c:if>
+	          <c:if test="${requestScope.page.pageNumber+2 > 0}"><li><a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+2,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+2}</a></li></c:if>
               <c:if test="${requestScope.page.pageNumber+1 > 0}">
               <li>
               	<a href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,50)}" />" aria-label="Next">
@@ -108,9 +108,14 @@
         	</ul>
 		
         <div class="btn-group btn-group-sm pull-right" role="group" >
-            <button type="button" class="btn btn-default numberPerPage">10</button>
-            <button type="button" class="btn btn-default numberPerPage">50</button>
-            <button type="button" class="btn btn-default numberPerPage">100</button>
+        	<ul>
+        		<li class="btn btn-default"><a href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,10)}" />">10</a></li>
+        		<li class="btn btn-default"><a href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,50)}" />">50</a></li>
+        		<li class="btn btn-default"><a href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,100)}" />">100</a></li>
+        	</ul>
+            <!-- <button type="button" class="btn btn-default">10</button>
+            <button type="button" class="btn btn-default">50</button>
+            <button type="button" class="btn btn-default">100</button-->
         </div>
 	</div>
     </footer>

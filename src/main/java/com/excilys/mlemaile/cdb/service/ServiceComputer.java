@@ -62,6 +62,36 @@ public enum ServiceComputer {
     }
 
     /**
+     * This method update the computer given the following details.
+     * @param id the id of the computer to update
+     * @param name The new name of the computer
+     * @param introduced The new introduced date of the computer
+     * @param discontinued The new discontinued date of the computer
+     * @param companyId the new Company of the computer
+     * @return a boolean, which is true of the execution went well
+     */
+    public boolean updatecomputer(long id, String name, LocalDate introduced,
+            LocalDate discontinued, long companyId) {
+        boolean execution = false;
+        Computer c = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
+        c.setName(name);
+        c.setDiscontinued(discontinued);
+        c.setIntroduced(introduced);
+        Company company = null;
+        if (companyId > 0) {
+            company = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+        }
+        c.setCompany(company);
+        try {
+            execution = DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
+            LOGGER.info("updated computer to : " + c.toString());
+        } catch (DaoException e) {
+            LOGGER.warn("cant' update the computer", e);
+        }
+        return execution;
+    }
+
+    /**
      * liste number Computer à partir du computer idFirst, s'il y en a suffisamment.
      * @param number le nombre de computer à lister
      * @param idFirst l'id du premier computer à lister

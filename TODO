@@ -1,10 +1,12 @@
 WIP :
 * Dashboard, what is pagination exactly ?
 * Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
-* add computer, interactif
-* page de deleteComputer / edit computer
+* add computer, interactif avant validation, et affiché l'erreur après validation
+* page de deleteComputer
+* Liste des companies dans ajout/edit computer
 
 Before next Impl :
+* Error.html => .jsp inclusion dynamique css, à changer dans le web.xml
 
 Opt mais important: 
 * num version jstl en parameter (??)
@@ -13,6 +15,8 @@ Opt mais important:
 Opt :
 * une classe Secureinput qui vérifie lesdits inputs
 * bug icône delete en mode edit sur le dashboard (ok sous eclipse, nok war)
+* <c:out ..></c:out> à diminuer
+* Uniformiser la langue des javadocs
 
 
 Big Step :

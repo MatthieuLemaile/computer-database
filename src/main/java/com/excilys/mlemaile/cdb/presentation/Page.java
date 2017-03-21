@@ -5,8 +5,8 @@ public class Page<T> {
     private int       pageNumber;
 
     /**
-     * Constructeur de page, avec le numero de page.
-     * @param page numero de la page créé.
+     * Page's constructor.
+     * @param page The numero of the page
      */
     public Page(int page) {
         setPageNumber(page);
@@ -21,8 +21,8 @@ public class Page<T> {
     }
 
     /**
-     * Change le numéro de page. Ce dernier doit être supérieur à 0.
-     * @param pageNumber le numéro de page.
+     * Change the page number. It must be greater than 0.
+     * @param pageNumber the new page number.
      */
     public void setPageNumber(int pageNumber) {
         if (pageNumber > 0) {

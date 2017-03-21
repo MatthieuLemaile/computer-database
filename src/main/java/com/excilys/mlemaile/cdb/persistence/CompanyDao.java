@@ -14,10 +14,10 @@ public interface CompanyDao {
     Company getCompany(long id);
 
     /**
-     * Retourne number Companies, dans l'ordre des index, triés par ordre ascendant d'index.
-     * @param number le nombre de Company à retourner
-     * @param idFirst l'index du premier à retourner
-     * @return une List de Company
+     * This method return number companies, ordered by id, in ascendent order.
+     * @param number The number of companies to return
+     * @param idFirst The id of the first company to return
+     * @return a List of Company
      */
     List<Company> listSomeCompanies(int number, long idFirst);
 

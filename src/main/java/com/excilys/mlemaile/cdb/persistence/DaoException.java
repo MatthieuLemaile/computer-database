@@ -9,25 +9,25 @@ public class DaoException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructeur de l'erreur.
-     * @param message message de l'erreur.
+     * Exception constructor.
+     * @param message exception's message.
      */
     public DaoException(String message) {
         super(message);
     }
 
     /**
-     * Constructeur de l'erreur.
-     * @param message message de l'erreur
-     * @param e l'erreur générant cette erreur.
+     * Exception constructor.
+     * @param message exception's message
+     * @param e root Exception.
      */
     public DaoException(String message, Throwable e) {
         super(message, e);
     }
 
     /**
-     * Constructeur de l'erreur.
-     * @param e l'erreur générant cette erreur.
+     * Exception constructor.
+     * @param e root Exception.
      */
     public DaoException(Throwable e) {
         super(e);

@@ -17,12 +17,12 @@ public enum ServiceComputer {
     public static final Logger LOGGER = LoggerFactory.getLogger(ServiceComputer.class);
 
     /**
-     * Permet de créer un computer à partir des informations suivantes.
-     * @param name son nom
-     * @param introduced sa date de mise sur le marché
-     * @param discontinued sa date d'arrêt
-     * @param companyId l'identifiant de la company fabricante.
-     * @return un booléen indiquant si l'opération s'est bien passée.
+     * Create a computer from following informations.
+     * @param name his name
+     * @param introduced his introduced date
+     * @param discontinued his discontinued date
+     * @param companyId the manufacturer id
+     * @return a boolean, which is true if the execution went well
      */
     public boolean createComputer(String name, LocalDate introduced, LocalDate discontinued,
             long companyId) {
@@ -57,10 +57,9 @@ public enum ServiceComputer {
     }
 
     /**
-     * Permet de mettre à jour un Computer. L'id est la référence de l'ordinateur, il ne doit pas
-     * changer.
-     * @param c le computer à mettreà jour
-     * @return un boolééen indiquant si l'opération s'est bien déroulée (true);
+     * Update a computer. The id must not change.
+     * @param c the computer to update
+     * @return a boolean which is true if the execution went well.
      */
     public boolean updatecomputer(Computer c) {
         boolean execution = false;
@@ -108,10 +107,10 @@ public enum ServiceComputer {
     }
 
     /**
-     * liste number Computer à partir du computer idFirst, s'il y en a suffisamment.
-     * @param number le nombre de computer à lister
-     * @param idFirst l'id du premier computer à lister
-     * @return un List de Computer
+     * list number computer from idFirst, if there is enough in the db.
+     * @param number The number of computer to list
+     * @param idFirst the id of the first computer to list
+     * @return a List of Computer
      */
     public List<Computer> listComputer(int number, long idFirst) {
         List<Computer> computers = new ArrayList<>();
@@ -125,9 +124,9 @@ public enum ServiceComputer {
     }
 
     /**
-     * Retourne le computer d'id id.
-     * @param id l'id du computer à retourner
-     * @return un Computer
+     * return the computer whose id is id.
+     * @param id The id of the computer to return
+     * @return a Computer
      */
     public Computer getComputer(long id) {
         Computer computer = new Computer.Builder("").build();
@@ -141,9 +140,9 @@ public enum ServiceComputer {
     }
 
     /**
-     * Supprime un computer.
-     * @param c le Computer à supprimer
-     * @return un booléen indiquant si l'opération s'est bien passé (true).
+     * Delete a computer.
+     * @param c The computer to delete
+     * @return a boolean which is true if the execution went well
      */
     public boolean deleteComputer(Computer c) {
         boolean execution = false;
@@ -176,8 +175,8 @@ public enum ServiceComputer {
     }
 
     /**
-     * Cette méthode permet de compter le nombre d'ordinateur.
-     * @return le nombre d'ordinateur
+     * This method count the number of computer in the database.
+     * @return The number of computer.
      */
     public int countComputers() {
         int numberOfComputers = 0;

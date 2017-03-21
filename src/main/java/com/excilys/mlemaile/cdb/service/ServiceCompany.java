@@ -15,11 +15,10 @@ public enum ServiceCompany {
     public static final Logger LOGGER = LoggerFactory.getLogger(ServiceCompany.class);
 
     /**
-     * restourne une liste de number companies, commençant par la numéro idFirst, s'il y en a
-     * suffisamment après idFirst.
-     * @param number le nombre de company à retourner
-     * @param idFirst le numéro de la première à retourner
-     * @return une List de company
+     * return number companie, from idFirst, if there is enough.
+     * @param number The number of companies to return.
+     * @param idFirst The numero of the first company to return
+     * @return a List of Company
      */
     public List<Company> listcompanies(int number, long idFirst) {
         List<Company> companies = new ArrayList<Company>();
@@ -33,9 +32,9 @@ public enum ServiceCompany {
     }
 
     /**
-     * retourne la company d'id id.
-     * @param id le numéro de la company à retourner
-     * @return une Company
+     * Return the company whose id is id.
+     * @param id The id of the company to return.
+     * @return a Company
      */
     public Company getCompany(long id) {
         Company company = new Company.Builder().build();

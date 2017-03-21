@@ -15,20 +15,21 @@ public class Computer {
     private Company   company;
 
     /**
-     * Constructeur vide du computer, caché.
+     * Hidden empty constructor.
      */
     private Computer() {
     };
 
     /**
-     * Constructeur complet du computer.
-     * @param name Son nom.
-     * @param introduced Sa date de mise sur le marché.
-     * @param discontinued Sa date d'arrêt.
-     * @param id Son id.
+     * Complete constructor of the computer.
+     * @param name name of the computer.
+     * @param introduced The introduced date
+     * @param discontinued The discontinued data
+     * @param id The id.
      * @param company Sa company.
      */
-    private Computer(String name, LocalDate introduced, LocalDate discontinued, long id, Company company) {
+    private Computer(String name, LocalDate introduced, LocalDate discontinued, long id,
+            Company company) {
         this(name, introduced, discontinued, company);
         setId(id);
     }
@@ -38,7 +39,7 @@ public class Computer {
      * @param name le nom du computer
      * @param introduced Sa date de mise sur le marché
      * @param discontinued Sa date d'arrêt
-     * @param company Sa company
+     * @param company The company
      */
     private Computer(String name, LocalDate introduced, LocalDate discontinued, Company company) {
         setName(name);
@@ -52,14 +53,15 @@ public class Computer {
     }
 
     /**
-     * permet de choisir l'id du computer. Ce dernier doit être strictement supérieur à 0.
-     * @param id l'id du computer
+     * setter, which check if it's greater than 0.
+     * @param id The computer id
      */
     public void setId(long id) {
         if (id > 0) {
             this.id = id;
         } else {
-            throw new IllegalArgumentException("The Id of a computer must be an integer greater than or equal to 1.");
+            throw new IllegalArgumentException(
+                    "The Id of a computer must be an integer greater than or equal to 1.");
         }
     }
 
@@ -84,19 +86,21 @@ public class Computer {
     }
 
     /**
-     * Permet de choisir la date d'arrêt du computer. Cette dernière doit être après la date de mise sur le marché (introduced).
-     * @param discontinued date d'arrêt du computer.
+     * Setter of the discontinued date. Must be after the introduced date if set.
+     * @param discontinued The new discontinued date
      */
     public void setDiscontinued(LocalDate discontinued) {
         // Pour pouvoir remettre à zéro cette propriété
         if (discontinued == null) {
             this.discontinued = discontinued;
-        } else if (introduced != null && (discontinued.isAfter(introduced) || discontinued.isEqual(introduced))) {
+        } else if (introduced != null
+                && (discontinued.isAfter(introduced) || discontinued.isEqual(introduced))) {
             this.discontinued = discontinued;
         } else if (introduced == null) {
             this.discontinued = discontinued;
         } else {
-            throw new IllegalArgumentException("The discontinued date must be after the introduced date.");
+            throw new IllegalArgumentException(
+                    "The discontinued date must be after the introduced date.");
         }
     }
 
@@ -111,11 +115,13 @@ public class Computer {
     @Override
     public String toString() {
         if (getCompany() != null) {
-            return "ID : " + getId() + " name : " + getName() + " manufacturer [" + getCompany().toString()
-                    + "] introduced : " + getIntroduced() + " Discontinued : " + getDiscontinued();
-        } else {
-            return "ID : " + getId() + " name : " + getName() + " manufacturer [unknow] introduced : " + getIntroduced()
+            return "ID : " + getId() + " name : " + getName() + " manufacturer ["
+                    + getCompany().toString() + "] introduced : " + getIntroduced()
                     + " Discontinued : " + getDiscontinued();
+        } else {
+            return "ID : " + getId() + " name : " + getName()
+                    + " manufacturer [unknow] introduced : " + getIntroduced() + " Discontinued : "
+                    + getDiscontinued();
         }
     }
 
@@ -135,7 +141,8 @@ public class Computer {
                     || this.getIntroduced() == null && c.getIntroduced() == null) {
                 introEqual = true;
             }
-            if ((this.getDiscontinued() != null && this.getDiscontinued().equals(c.getDiscontinued()))
+            if ((this.getDiscontinued() != null
+                    && this.getDiscontinued().equals(c.getDiscontinued()))
                     || this.getDiscontinued() == null && c.getDiscontinued() == null) {
                 discoEqual = true;
             }
@@ -163,17 +170,17 @@ public class Computer {
         private Company   company;
 
         /**
-         * constructeur du builder. Le nom du computer est obligatoire.
-         * @param name le nom du computer
+         * Builder constructor. The name of the computer is required.
+         * @param name The name of the computer
          */
         public Builder(String name) {
             this.name = name;
         }
 
         /**
-         * permet de choisir l'id du computer.
-         * @param id l'id du computer.
-         * @return l'instance du builder.
+         * Setter of the computer id.
+         * @param id the id of the computer.
+         * @return The instance of the builder
          */
         public Builder id(long id) {
             this.id = id;
@@ -181,9 +188,9 @@ public class Computer {
         }
 
         /**
-         * permet de choisir la date de mise sur le marché du computer.
-         * @param introduced la date de mise sur le marché du computer.
-         * @return l'instance du builder.
+         * setter of the introduced date.
+         * @param introduced the introduced date
+         * @return The instance of the builder
          */
         public Builder introduced(LocalDate introduced) {
             this.introduced = introduced;
@@ -191,9 +198,9 @@ public class Computer {
         }
 
         /**
-         * permet de choisir la date d'arrêt du computer.
-         * @param discontinued date d'arrêt du computer.
-         * @return l'instance du builder.
+         * Setter of the discontinued date.
+         * @param discontinued The computer's discontinued date
+         * @return The instance of the builder
          */
         public Builder discontinued(LocalDate discontinued) {
             this.discontinued = discontinued;
@@ -201,9 +208,9 @@ public class Computer {
         }
 
         /**
-         * permet de choisir la company du computer.
-         * @param company la company du computer.
-         * @return une instance du builder.
+         * The setter of the computer's company.
+         * @param company The computer's company
+         * @return The instance of the builder
          */
         public Builder company(Company company) {
             this.company = company;
@@ -211,8 +218,8 @@ public class Computer {
         }
 
         /**
-         * Construit l'instance du computer avec les paramètres donnés.
-         * @return une instance de computer
+         * Build the computer with given argument.
+         * @return The new computer
          */
         public Computer build() {
             if (id != 0) {

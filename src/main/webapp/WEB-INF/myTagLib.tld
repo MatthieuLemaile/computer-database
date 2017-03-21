@@ -6,12 +6,12 @@
 	<short-name>link</short-name>
 	<function>
 		<name>link</name>
-		<function-class>com.excilys.mlemaile.cdb.presentation.web.tag.TagLib</function-class>
+		<function-class>com.excilys.mlemaile.cdb.presentation.web.TagLib</function-class>
 		<function-signature>java.lang.String link(java.lang.String,int,int)</function-signature>
 	</function>
 	<function>
 		<name>pagination</name>
-		<function-class>com.excilys.mlemaile.cdb.presentation.web.tag.TagLib</function-class>
+		<function-class>com.excilys.mlemaile.cdb.presentation.web.TagLib</function-class>
 		<function-signature>java.lang.String pagination(int,int)</function-signature>
 	</function>
 	<!-- tag> <name>link</name> <tag-class>com.excilys.mlemaile.cdb.presentation.web.tag.LinkTag</tag-class> 

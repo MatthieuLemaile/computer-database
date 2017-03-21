@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.presentation.web.tag;
+package com.excilys.mlemaile.cdb.presentation.web;
 
 import javax.servlet.jsp.tagext.TagSupport;
 

@@ -8,7 +8,9 @@
 
 	<c:if test="${not empty exception}">
 		<div class="container">
-			<div class="alert alert-danger">${exception}</div>
+			<div class="alert alert-danger">
+				<c:out value="${exception}" />
+			</div>
 		</div>
 	</c:if>
 
@@ -23,15 +25,16 @@
 				<form action="editComputer" method="POST">
 					<input type="hidden" name="computerId"
 						value='<c:out value="${requestScope.computer.id}"/>' id="id" />
-					<!-- TODO: Change this value with the computer id -->
 					<fieldset>
 						<div class="form-group">
 							<label for="computerName"><c:out value="Computer name"></c:out></label>
 							<input type="text" class="form-control" name="computerName"
-								id="computerName" value="${requestScope.computer.name}">
+								id="computerName"
+								value='<c:out value="${requestScope.computer.name}"/>'>
 						</div>
 						<div class="form-group">
-							<fmt:parseDate value="${requestScope.computer.introduced}"
+							<fmt:parseDate
+								value="${requestScope.computer.introduced}"
 								pattern="yyyy-MM-dd" var="parsedIntroDate" type="date" />
 							<fmt:formatDate value="${parsedIntroDate}" var="intro"
 								pattern="yyyy-MM-dd" />
@@ -41,7 +44,8 @@
 
 						</div>
 						<div class="form-group">
-							<fmt:parseDate value="${requestScope.computer.discontinued}"
+							<fmt:parseDate
+								value="${requestScope.computer.discontinued}"
 								pattern="yyyy-MM-dd" var="parsedDiscoDate" type="date" />
 							<fmt:formatDate value="${parsedDiscoDate}" var="disco"
 								pattern="yyyy-MM-dd" />
@@ -54,15 +58,17 @@
 								class="form-control" name="companyId" id="companyId">
 								<option value="0">--</option>
 								<c:forEach var="company" items="${requestScope.companies}">
-									<option value="${company.id}"
-										<c:if test="${requestScope.computer.company.id==company.id}">selected</c:if>>${company.name}</option>
+
+									<option value="<c:out value="${company.id}"/>"
+										<c:if test="${requestScope.computer.company.id==company.id}">selected</c:if>><c:out value="${company.name}"/></option>
 								</c:forEach>
 							</select>
 						</div>
 					</fieldset>
 					<div class="actions pull-right">
-						<input type="submit" id="submit" value="Edit" class="btn btn-primary">
-						or <a href="dashboard.html" class="btn btn-default">Cancel</a>
+						<input type="submit" id="submit" value="Edit"
+							class="btn btn-primary"> or <a href="dashboard.html"
+							class="btn btn-default">Cancel</a>
 					</div>
 				</form>
 			</div>

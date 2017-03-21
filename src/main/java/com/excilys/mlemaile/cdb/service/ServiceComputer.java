@@ -47,8 +47,10 @@ public enum ServiceComputer {
                 LOGGER.info("Computer created : " + c.toString());
             }
         } catch (DaoException e) {
+            LOGGER.warn("Can't create the computer", e);
             throw new ServiceException("Can't create the computer", e);
         } catch (IllegalArgumentException e) {
+            LOGGER.warn("Can't create the computer : " + e.getMessage(), e);
             throw new ServiceException("Can't create the computer : " + e.getMessage(), e);
         }
         return computerCreated;
@@ -68,6 +70,7 @@ public enum ServiceComputer {
                 LOGGER.info("updated computer to : " + c.toString());
             }
         } catch (DaoException e) {
+            LOGGER.warn("cant' update the computer", e);
             throw new ServiceException("cant' update the computer", e);
         }
         return execution;
@@ -98,6 +101,7 @@ public enum ServiceComputer {
             execution = DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
             LOGGER.info("updated computer to : " + c.toString());
         } catch (DaoException e) {
+            LOGGER.warn("cant' update the computer", e);
             throw new ServiceException("cant' update the computer", e);
         }
         return execution;
@@ -114,6 +118,7 @@ public enum ServiceComputer {
         try {
             computers = DaoFactory.INSTANCE.getComputerDao().listSomecomputer(number, idFirst);
         } catch (DaoException e) {
+            LOGGER.warn("cant' list computers", e);
             throw new ServiceException("cant' list computers", e);
         }
         return computers;
@@ -129,6 +134,7 @@ public enum ServiceComputer {
         try {
             computer = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
         } catch (DaoException e) {
+            LOGGER.warn("cant' find the computer", e);
             throw new ServiceException("cant' find the computer", e);
         }
         return computer;
@@ -145,6 +151,7 @@ public enum ServiceComputer {
             execution = DaoFactory.INSTANCE.getComputerDao().deleteComputer(c.getId());
             LOGGER.info("computer deleted : " + c.toString());
         } catch (DaoException e) {
+            LOGGER.warn("cant' delete the computer", e);
             throw new ServiceException("cant' delete the computer", e);
         }
         return execution;
@@ -158,13 +165,11 @@ public enum ServiceComputer {
     public boolean deleteComputer(long id) {
         boolean execution = false;
         try {
-            if (DaoFactory.INSTANCE.getComputerDao().deleteComputer(id)) {
-                execution = true;
-                LOGGER.info("computer deleted : computer n°" + id);
-            } else {
-                throw new ServiceException("cant' delete the computer");
-            }
+            DaoFactory.INSTANCE.getComputerDao().deleteComputer(id);
+            execution = true;
+            LOGGER.info("computer deleted : computer n°" + id);
         } catch (DaoException e) {
+            LOGGER.warn("cant' delete the computer", e);
             throw new ServiceException("cant' delete the computer", e);
         }
         return execution;
@@ -179,6 +184,7 @@ public enum ServiceComputer {
         try {
             numberOfComputers = DaoFactory.INSTANCE.getComputerDao().countComputer();
         } catch (DaoException e) {
+            LOGGER.warn("can't count computers", e);
             throw new ServiceException("can't count computers", e);
         }
         return numberOfComputers;

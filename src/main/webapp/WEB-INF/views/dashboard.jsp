@@ -1,18 +1,25 @@
 <%@ include file="head.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/myTagLib.tld" prefix="myLib"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <section id="main">
 
 	<c:if test="${not empty exception}">
 		<div class="container">
-			<div class="alert alert-danger">${exception}</div>
+			<div class="alert alert-danger">
+				<c:out value="${exception}" />
+			</div>
 		</div>
 	</c:if>
+	<fmt:formatNumber var="numberPageMax"
+		value="${requestScope.totalNumberComputers/requestScope.page.numberPerPage}"
+		maxFractionDigits="0" />
+	<c:out value="${numberPageMax}"></c:out>
 
 	<div class="container">
 		<h1 id="homeTitle">
-			<c:out value="${requestScope.totalNumberComputers} Computers found"></c:out>
+			<c:out value="${requestScope.totalNumberComputers} Computers found" />
 		</h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
@@ -66,8 +73,9 @@
 				<c:forEach var="computer" items="${requestScope.listComputers}">
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
-							class="cb" value="${computer.id}"></td>
-						<td><a href="editComputer?computerId=${computer.id}"
+							class="cb" value='<c:out value="${computer.id}"/>'></td>
+						<td><a
+							href='editComputer?computerId=<c:out value="${computer.id}"/>'
 							onclick=""><c:out value="${computer.name}" /></a></td>
 						<td><c:out value="${computer.introduced}" /></td>
 						<td><c:out value="${computer.discontinued}" /></td>
@@ -86,10 +94,16 @@
 <footer class="navbar-fixed-bottom">
 	<div class="container text-center">
 		<ul class="pagination">
+			<c:if test="${requestScope.page.pageNumber > 1}">
+				<li><a
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',1,requestScope.page.numberPerPage)}" />"
+					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+				</a></li>
+			</c:if>
 			<c:if test="${requestScope.page.pageNumber-1 > 0}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,50)}" />"
-					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}" />"
+					aria-label="Previous"> <span aria-hidden="true">&lt;</span>
 				</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber-2 > 0}">
@@ -100,21 +114,28 @@
 				<li><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber-1}</a></li>
 			</c:if>
-			<c:if test="${requestScope.page.pageNumber+0 > 0}">
+			<c:if
+				test="${requestScope.page.pageNumber+0 > 0 && requestScope.page.pageNumber+0 < numberPageMax+1}">
 				<li><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+0}</a></li>
 			</c:if>
-			<c:if test="${requestScope.page.pageNumber+1 > 0}">
+			<c:if test="${requestScope.page.pageNumber+1 < numberPageMax+1}">
 				<li><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+1}</a></li>
 			</c:if>
-			<c:if test="${requestScope.page.pageNumber+2 > 0}">
+			<c:if test="${requestScope.page.pageNumber+2 < numberPageMax+1}">
 				<li><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+2,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+2}</a></li>
 			</c:if>
-			<c:if test="${requestScope.page.pageNumber+1 > 0}">
+			<c:if test="${requestScope.page.pageNumber+1 < numberPageMax+1}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,50)}" />"
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}" />"
+					aria-label="Next"> <span aria-hidden="true">&gt;</span>
+				</a></li>
+			</c:if>
+			<c:if test="${requestScope.page.pageNumber < numberPageMax}">
+				<li><a
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',numberPageMax,requestScope.page.numberPerPage)}" />"
 					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</c:if>

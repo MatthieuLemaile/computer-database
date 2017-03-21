@@ -1,18 +1,13 @@
 WIP :
-* add computer, interactif avant validation.
-* remettre des logger dans la couche de service
 
 Before next Impl :
-* Error.html => .jsp inclusion dynamique css, à changer dans le web.xml
 
 Opt mais important: 
 * num version jstl en parameter (??)
-* Limiter le nombre de page accessible via lien en fonction du nombre max. Page 1/Last.
 
 Opt :
 * une classe Secureinput qui vérifie lesdits inputs
 * bug icône delete en mode edit sur le dashboard (ok sous eclipse, nok war)
-* <c:out ..></c:out> à diminuer
 * Unit test coverage
 * Uniformiser la langue des javadocs
 * Optional<Computer> ??

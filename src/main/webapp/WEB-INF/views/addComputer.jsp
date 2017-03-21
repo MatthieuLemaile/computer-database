@@ -7,7 +7,7 @@
 	<c:if test="${not empty exception}">
 		<div class="container">
 			<div class="alert alert-danger">
-				${exception}
+				<c:out value="${exception}" />
 			</div>
 		</div>
 	</c:if>
@@ -38,14 +38,16 @@
 								class="form-control" id="companyId" name="companyId">
 								<option value="0">--</option>
 								<c:forEach var="company" items="${requestScope.companies}">
-									<option value="${company.id}">${company.name}</option>
+									<option value='<c:out value="${company.id}"/>'><c:out
+											value="${company.name}" /></option>
 								</c:forEach>
 							</select>
 						</div>
 					</fieldset>
 					<div class="actions pull-right">
-						<input type="submit" value="Add" id="submit" class="btn btn-primary">
-						or <a href="dashboard.html" class="btn btn-default">Cancel</a>
+						<input type="submit" value="Add" id="submit"
+							class="btn btn-primary"> or <a href="dashboard.html"
+							class="btn btn-default">Cancel</a>
 					</div>
 				</form>
 			</div>

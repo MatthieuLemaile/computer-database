@@ -24,7 +24,7 @@ import com.excilys.mlemaile.cdb.service.ServiceException;
 public class EditComputer extends HttpServlet {
     private static final long   serialVersionUID     = 1L;
     private static final String PARAM_COMPUTER_ID    = "computerId";
-    private static final String ATT_COMPUTER_ID      = "computer";
+    private static final String ATT_COMPUTER         = "computer";
     private static final String ATT_COMPANIES        = "companies";
     private static final String ATT_EXCEPTION        = "exception";
     private static final String EDIT_COMPUTER_VIEW   = "/WEB-INF/views/editComputer.jsp";
@@ -54,7 +54,7 @@ public class EditComputer extends HttpServlet {
             Computer c = ServiceComputer.INSTANCE.getComputer(computerId);
             List<Company> companies = DaoFactory.INSTANCE.getCompanyDao().listCompanies();
             request.setAttribute(ATT_COMPANIES, companies);
-            request.setAttribute(ATT_COMPUTER_ID, c);
+            request.setAttribute(ATT_COMPUTER, c);
         } catch (NumberFormatException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
         } finally {

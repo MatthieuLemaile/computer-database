@@ -2,6 +2,7 @@ package com.excilys.mlemaile.cdb.presentation.web;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
+import com.excilys.mlemaile.cdb.persistence.DaoFactory;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 
 /**
@@ -20,6 +23,7 @@ public class EditComputer extends HttpServlet {
     private static final long   serialVersionUID     = 1L;
     private static final String PARAM_COMPUTER_ID    = "computerId";
     private static final String ATT_COMPUTER_ID      = "computer";
+    private static final String ATT_COMPANIES        = "companies";
     private static final String EDIT_COMPUTER_VIEW   = "/WEB-INF/views/editComputer.jsp";
     private static final String PARAM_COMPUTER_NAME  = "computerName";
     private static final String PARAM_COMPUTER_INTRO = "introduced";
@@ -44,6 +48,8 @@ public class EditComputer extends HttpServlet {
             computerId = Long.parseLong(request.getParameter(PARAM_COMPUTER_ID));
         }
         Computer c = ServiceComputer.INSTANCE.getComputer(computerId);
+        List<Company> companies = DaoFactory.INSTANCE.getCompanyDao().listCompanies();
+        request.setAttribute(ATT_COMPANIES, companies);
         request.setAttribute(ATT_COMPUTER_ID, c);
         request.getServletContext().getRequestDispatcher(EDIT_COMPUTER_VIEW).forward(request,
                 response);

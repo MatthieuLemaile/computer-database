@@ -4,22 +4,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.mlemaile.cdb.model.Company;
 
 /**
- * This enum communicate with the database to store, update, and read companies.
- * in the database
+ * This enum communicate with the database to store, update, and read companies. in the database
  * @author Matthieu Lemaile
  *
  */
 enum CompanyDaoSql implements CompanyDao {
     INSTANCE;
     /**
-     * This method map the result of a request (in the result set) to a company
-     * object.
+     * This method map the result of a request (in the result set) to a company object.
      * @param resultSet the ResultSet of the request
      * @return A List of companies
      */
@@ -27,8 +26,8 @@ enum CompanyDaoSql implements CompanyDao {
         ArrayList<Company> companies = new ArrayList<>();
         try {
             while (resultSet.next()) {
-                Company company = new Company.Builder().id(resultSet.getLong("id")).name(resultSet.getString("name"))
-                        .build();
+                Company company = new Company.Builder().id(resultSet.getLong("id"))
+                        .name(resultSet.getString("name")).build();
                 companies.add(company);
             }
         } catch (SQLException e) {
@@ -66,8 +65,7 @@ enum CompanyDaoSql implements CompanyDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#listSomeCompanies(int,
-     *      long)
+     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#listSomeCompanies(int, long)
      */
     @Override
     public List<Company> listSomeCompanies(int number, long idFirst) {
@@ -77,7 +75,8 @@ enum CompanyDaoSql implements CompanyDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
+            preparedStatement = connection
+                    .prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
             preparedStatement.setLong(1, idFirst);
             preparedStatement.setInt(2, number);
             resultSet = preparedStatement.executeQuery();
@@ -87,6 +86,30 @@ enum CompanyDaoSql implements CompanyDao {
         } finally {
             DatabaseConnection.INSTANCE.closeConnection(connection);
             DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
+            DatabaseConnection.INSTANCE.closeResulSet(resultSet);
+        }
+        return companies;
+    }
+
+    /**
+     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#listCompanies()
+     */
+    @Override
+    public List<Company> listCompanies() {
+        ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
+        // retourner null
+        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM company ORDER BY id ASC");
+            companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+        } catch (SQLException e) {
+            throw new DaoException("Can't list companies : ", e);
+        } finally {
+            DatabaseConnection.INSTANCE.closeConnection(connection);
+            DatabaseConnection.INSTANCE.closeStatement(statement);
             DatabaseConnection.INSTANCE.closeResulSet(resultSet);
         }
         return companies;

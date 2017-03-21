@@ -2,6 +2,7 @@ package com.excilys.mlemaile.cdb.presentation.web;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.mlemaile.cdb.model.Company;
+import com.excilys.mlemaile.cdb.persistence.DaoFactory;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 
 /**
@@ -18,6 +21,7 @@ import com.excilys.mlemaile.cdb.service.ServiceComputer;
 public class AddComputer extends HttpServlet {
     private static final long   serialVersionUID     = 1L;
     private static final String ADD_COMPUTER_VIEW    = "/WEB-INF/views/addComputer.jsp";
+    private static final String ATT_COMPANIES        = "companies";
     private static final String PARAM_COMPUTER_NAME  = "computerName";
     private static final String PARAM_COMPUTER_INTRO = "introduced";
     private static final String PARAM_COMPUTER_DISCO = "discontinued";
@@ -36,6 +40,8 @@ public class AddComputer extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        List<Company> companies = DaoFactory.INSTANCE.getCompanyDao().listCompanies();
+        request.setAttribute(ATT_COMPANIES, companies);
         request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
                 response);
     }
@@ -69,7 +75,7 @@ public class AddComputer extends HttpServlet {
         } else {
             request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
                     response);
-            //TODO Warn the user of the error
+            // TODO Warn the user of the error
         }
 
     }

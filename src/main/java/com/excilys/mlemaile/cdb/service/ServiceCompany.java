@@ -15,7 +15,8 @@ public enum ServiceCompany {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceCompany.class);
 
     /**
-     * restourne une liste de number companies, commençant par la numéro idFirst, s'il y en a suffisamment après idFirst.
+     * restourne une liste de number companies, commençant par la numéro idFirst, s'il y en a
+     * suffisamment après idFirst.
      * @param number le nombre de company à retourner
      * @param idFirst le numéro de la première à retourner
      * @return une List de company
@@ -43,5 +44,19 @@ public enum ServiceCompany {
             LOGGER.warn("Can't find company", e);
         }
         return company;
+    }
+
+    /**
+     * List all companies in the database.
+     * @return a List of Companies
+     */
+    public List<Company> listCompanies() {
+        List<Company> companies = new ArrayList<Company>();
+        try {
+            companies = DaoFactory.INSTANCE.getCompanyDao().listCompanies();
+        } catch (DaoException e) {
+            LOGGER.warn("Can't list companies", e);
+        }
+        return companies;
     }
 }

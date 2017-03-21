@@ -229,16 +229,16 @@ enum ComputerDaoSql implements ComputerDao {
      * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#deleteComputer(com.excilys.mlemaile.cdb.model.Computer)
      */
     @Override
-    public boolean deleteComputer(Computer computer) {
+    public boolean deleteComputer(long id) {
         boolean executed = false;
         Connection connection = DatabaseConnection.INSTANCE.getConnection();
         PreparedStatement preparedStatement = null;
-        if (computer == null) {
+        if (id <= 0) {
             return false;
         }
         try {
             preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
-            preparedStatement.setLong(1, computer.getId());
+            preparedStatement.setLong(1, id);
             if (preparedStatement.executeUpdate() != 0) {
                 executed = true;
             }

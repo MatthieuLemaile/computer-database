@@ -130,10 +130,30 @@ public enum ServiceComputer {
     public boolean deleteComputer(Computer c) {
         boolean execution = false;
         try {
-            execution = DaoFactory.INSTANCE.getComputerDao().deleteComputer(c);
+            execution = DaoFactory.INSTANCE.getComputerDao().deleteComputer(c.getId());
             LOGGER.info("computer deleted : " + c.toString());
         } catch (DaoException e) {
-            LOGGER.warn("cant' update the computer", e);
+            LOGGER.warn("cant' delete the computer", e);
+        }
+        return execution;
+    }
+
+    /**
+     * Delete a computer.
+     * @param id The id of the computer
+     * @return a boolean which is true if the execution went well
+     */
+    public boolean deleteComputer(long id) {
+        boolean execution = false;
+        try {
+            if (DaoFactory.INSTANCE.getComputerDao().deleteComputer(id)) {
+                execution = true;
+                LOGGER.info("computer deleted : computer n°" + id);
+            } else {
+                LOGGER.warn("cant' delete the computer" + id);
+            }
+        } catch (DaoException e) {
+            LOGGER.warn("cant' delete the computer", e);
         }
         return execution;
     }

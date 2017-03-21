@@ -83,12 +83,12 @@ public class ServiceComputerTest {
 
 	@Test
 	public void testDeleteComputer() {
-		Computer computer = new Computer.Builder("").build();
+		Computer computer = new Computer.Builder("").id(2).build();
 		ComputerDao mockComputerDao = mock(ComputerDao.class);
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.deleteComputer(computer)).thenReturn(true);
+		when(mockComputerDao.deleteComputer(2)).thenReturn(true);
 		assertEquals("Update Computer does not work as intended",true,ServiceComputer.INSTANCE.deleteComputer(computer));
 	}
 

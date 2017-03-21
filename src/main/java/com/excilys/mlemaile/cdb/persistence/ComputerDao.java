@@ -45,9 +45,9 @@ public interface ComputerDao {
 
     /**
      * This method delete the computer identified by the id of the given computer.
-     * @param computer the computer to delete
+     * @param id The id of the computer to delete
      * @return A boolean which is true if the execution went well
      */
-    boolean deleteComputer(Computer computer);
+    boolean deleteComputer(long id);
 
 }

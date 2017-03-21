@@ -42,10 +42,11 @@ enum CompanyDaoSql implements CompanyDao {
     @Override
     public Company getCompany(long id) {
         ArrayList<Company> companies = new ArrayList<>(); // initialising
-        Connection connection = DatabaseConnection.INSTANCE.getConnection(); // companies
+        Connection connection = null; // companies
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement("select * from company where id=?");
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
@@ -71,10 +72,11 @@ enum CompanyDaoSql implements CompanyDao {
     public List<Company> listSomeCompanies(int number, long idFirst) {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
                                                           // retourner null
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection
                     .prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
             preparedStatement.setLong(1, idFirst);
@@ -98,10 +100,11 @@ enum CompanyDaoSql implements CompanyDao {
     public List<Company> listCompanies() {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
         // retourner null
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM company ORDER BY id ASC");
             companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);

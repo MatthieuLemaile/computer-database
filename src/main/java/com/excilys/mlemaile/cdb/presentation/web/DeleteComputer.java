@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
+import com.excilys.mlemaile.cdb.service.ServiceException;
 
 /**
  * Servlet implementation class DeleteComputer.
@@ -16,23 +17,15 @@ import com.excilys.mlemaile.cdb.service.ServiceComputer;
 public class DeleteComputer extends HttpServlet {
     private static final long   serialVersionUID = 1L;
     private static final String DASHBOARD        = "/homepage";
+    private static final String DASHBOARD_VIEW   = "/WEB-INF/views/dashboard.jsp";
     private static final String PARAM_ID_LIST    = "selection";
+    private static final String ATT_EXCEPTION    = "exception";
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public DeleteComputer() {
         super();
-    }
-
-    @Override
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        response.getWriter().append("Served at: ").append(request.getContextPath());
     }
 
     @Override
@@ -51,8 +44,10 @@ public class DeleteComputer extends HttpServlet {
                 long id = Long.parseLong(idStr);
                 ServiceComputer.INSTANCE.deleteComputer(id);
             }
-        } catch (NumberFormatException e) {
-            // TODO WARN BAD REQUEST
+        } catch (NumberFormatException | ServiceException e) {
+            request.setAttribute(ATT_EXCEPTION, e.getMessage());
+            request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request,
+                    response);
         }
         response.sendRedirect(getServletContext().getContextPath() + DASHBOARD);
     }

@@ -12,6 +12,7 @@ import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
+import com.excilys.mlemaile.cdb.service.ServiceException;
 
 public class ConsoleUserInterface {
 
@@ -84,8 +85,8 @@ public class ConsoleUserInterface {
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
                     int indexMin = (pageNumber - 1) * Page.numberPerPage;
-                    computers = (ArrayList<Computer>) ServiceComputer.INSTANCE.listComputer(Page.numberPerPage,
-                            indexMin);
+                    computers = (ArrayList<Computer>) ServiceComputer.INSTANCE
+                            .listComputer(Page.numberPerPage, indexMin);
                     for (Computer computer : computers) {
                         System.out.println(computer.toString());
                     }
@@ -94,6 +95,8 @@ public class ConsoleUserInterface {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
                 System.out.println("You must enter an integer");
+            } catch (ServiceException e) {
+                System.out.println("a problem occur" + e.getMessage());
             }
         } while (pageNumber > 0); // Le cas négatif n'est pa géré ici, mais
                                   // c'est un bug mineur.
@@ -114,8 +117,8 @@ public class ConsoleUserInterface {
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
                     int indexMin = (pageNumber - 1) * Page.numberPerPage;
-                    companies = (ArrayList<Company>) ServiceCompany.INSTANCE.listcompanies(Page.numberPerPage,
-                            indexMin);
+                    companies = (ArrayList<Company>) ServiceCompany.INSTANCE
+                            .listcompanies(Page.numberPerPage, indexMin);
                     for (Company company : companies) {
                         System.out.println(company.toString());
                     }
@@ -124,6 +127,8 @@ public class ConsoleUserInterface {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
                 System.out.println("You must enter an integer");
+            } catch (ServiceException e) {
+                System.out.println("a problem occur" + e.getMessage());
             }
         } while (pageNumber > 0); // Le cas négatif n'est pa géré ici, mais
                                   // c'est un bug mineur.
@@ -137,21 +142,25 @@ public class ConsoleUserInterface {
         System.out.println("enter the id of the computer of which you want to see the details");
         String entry;
         int id = 0;
+        Computer c = null;
         do {
             System.out.println("Enter a number greater or equal to 1");
             try {
                 entry = br.readLine();
                 id = Integer.parseInt(entry);
+                c = ServiceComputer.INSTANCE.getComputer(id);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
                 System.out.println("You must enter an integer");
+            } catch (ServiceException e) {
+                System.out.println("a problem occur" + e.getMessage());
             }
         } while (id < 1);
-        Computer c = ServiceComputer.INSTANCE.getComputer(id);
         Company company = c.getCompany();
         System.out.println("\tid : " + c.getId() + " name : " + c.getName());
-        System.out.println("\tintroduced : " + c.getIntroduced() + " discontinued : " + c.getDiscontinued());
+        System.out.println(
+                "\tintroduced : " + c.getIntroduced() + " discontinued : " + c.getDiscontinued());
         System.out.println("\tmanufacturer : " + company.getName());
     }
 
@@ -194,18 +203,18 @@ public class ConsoleUserInterface {
             if (ldDisco.isEqual(defaultDate)) {
                 ldDisco = null;
             }
-            if (ServiceComputer.INSTANCE.createComputer(name, ldIntro, ldDisco, companyId)) {
-                System.out.println("computer successfully created !");
-            } else {
-                System.out.println(
-                        "Something went wrong. Ensure the order of date if entered, and eventually check log file.");
-            }
+            ServiceComputer.INSTANCE.createComputer(name, ldIntro, ldDisco, companyId);
+            System.out.println("computer successfully created !");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (DateTimeParseException e) {
             System.out.println("please try again formatting your date the way indicated");
         } catch (NumberFormatException e) {
             System.out.println("please try again entering a good company id");
+        } catch (ServiceException e) {
+            System.out.println(
+                    "Something went wrong. Ensure the order of date if entered, and eventually check log file.");
+            System.out.println("a problem occur creating the computer : " + e.getMessage());
         }
     }
 
@@ -250,14 +259,15 @@ public class ConsoleUserInterface {
                     }
                 }
             }
-            if (ServiceComputer.INSTANCE.updatecomputer(c)) {
-                System.out.println("computer successfully updated");
-            }
+            ServiceComputer.INSTANCE.updatecomputer(c);
+            System.out.println("computer successfully updated");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NumberFormatException e) {
             System.out.println(
                     "you must identify the computer by an id(number). The company-id parameter require an interger too.");
+        } catch (ServiceException e) {
+            System.out.println("a problem occur" + e.getMessage());
         }
 
     }
@@ -275,15 +285,19 @@ public class ConsoleUserInterface {
             try {
                 entry = br.readLine();
                 id = Integer.parseInt(entry);
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
                 System.out.println("You must enter an integer");
             }
         } while (id < 1);
-        Computer c = ServiceComputer.INSTANCE.getComputer(id);
-        if (ServiceComputer.INSTANCE.deleteComputer(c)) {
+        try {
+            Computer c = ServiceComputer.INSTANCE.getComputer(id);
+            ServiceComputer.INSTANCE.deleteComputer(c);
             System.out.println("Computer successfully deleted !");
+        } catch (ServiceException e) {
+            System.out.println("a problem occur" + e.getMessage());
         }
     }
 }

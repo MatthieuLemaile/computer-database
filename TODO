@@ -1,6 +1,5 @@
 WIP :
-* Exception de la couche Service, a catch dans la presentation pour savoir si success (à la place de booléen)
-* add computer, interactif avant validation, et affiché l'erreur après validation
+* add computer, interactif avant validation.
 
 Before next Impl :
 * Error.html => .jsp inclusion dynamique css, à changer dans le web.xml

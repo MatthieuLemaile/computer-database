@@ -74,13 +74,14 @@ enum ComputerDaoSql implements ComputerDao {
     @Override
     public boolean createComputer(Computer computer) {
         boolean executed = false;
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet generatedKey = null;
         if (computer == null) {
             return false;
         }
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(
                     "INSERT INTO computer (name,introduced,discontinued,company_id) values(?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
@@ -128,10 +129,11 @@ enum ComputerDaoSql implements ComputerDao {
     public List<Computer> listSomecomputer(int number, long idFirst) {
         ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de
                                                            // retourner null
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(
                     "SELECT c.id as id ,c.name as name ,c.introduced as introduced ,c.discontinued as discontinued ,company.id as company_id ,company.name as company_name FROM computer as c LEFT JOIN company ON c.company_id=company.id ORDER BY c.id ASC LIMIT ?,?");
             preparedStatement.setLong(1, idFirst);
@@ -153,12 +155,12 @@ enum ComputerDaoSql implements ComputerDao {
      */
     @Override
     public Computer getComputer(long id) {
-        ArrayList<Computer> computers = new ArrayList<>(); // initialising
-                                                           // computers
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        ArrayList<Computer> computers = new ArrayList<>(); // initialising computers
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(
                     "SELECT c.id as id ,c.name as name ,c.introduced as introduced ,c.discontinued as discontinued ,company.id as company_id ,company.name as company_name FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.id=?");
             preparedStatement.setLong(1, id);
@@ -184,12 +186,13 @@ enum ComputerDaoSql implements ComputerDao {
     @Override
     public boolean updateComputer(Computer computer) {
         boolean executed = false;
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         if (computer == null) {
             return false;
         }
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement(
                     "UPDATE computer SET name=?, introduced=?,discontinued=?,company_id=? where id = ?");
             preparedStatement.setString(1, computer.getName());
@@ -231,12 +234,13 @@ enum ComputerDaoSql implements ComputerDao {
     @Override
     public boolean deleteComputer(long id) {
         boolean executed = false;
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         if (id <= 0) {
             return false;
         }
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
             preparedStatement.setLong(1, id);
             if (preparedStatement.executeUpdate() != 0) {
@@ -253,11 +257,12 @@ enum ComputerDaoSql implements ComputerDao {
 
     @Override
     public int countComputer() {
-        Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        Connection connection = null;
         Statement st = null;
         ResultSet rs = null;
         int numberOfComputers = 0;
         try {
+            connection = DatabaseConnection.INSTANCE.getConnection();
             st = connection.createStatement();
             rs = st.executeQuery("SELECT count(*) as numberOfComputers from computer");
             if (rs.next()) {

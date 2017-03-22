@@ -42,10 +42,9 @@ public enum ServiceComputer {
             }
             Computer c = new Computer.Builder(name).introduced(introduced)
                     .discontinued(discontinued).company(company).build();
-            if (DaoFactory.INSTANCE.getComputerDao().createComputer(c)) {
-                computerCreated = true;
-                LOGGER.info("Computer created : " + c.toString());
-            }
+            DaoFactory.INSTANCE.getComputerDao().createComputer(c);
+            computerCreated = true;
+            LOGGER.info("Computer created : " + c.toString());
         } catch (DaoException e) {
             LOGGER.warn("Can't create the computer", e);
             throw new ServiceException("Can't create the computer", e);
@@ -64,10 +63,9 @@ public enum ServiceComputer {
     public boolean updatecomputer(Computer c) {
         boolean execution = false;
         try {
-            if (DaoFactory.INSTANCE.getComputerDao().updateComputer(c)) {
-                execution = true;
-                LOGGER.info("updated computer to : " + c.toString());
-            }
+            DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
+            execution = true;
+            LOGGER.info("updated computer to : " + c.toString());
         } catch (DaoException e) {
             LOGGER.warn("cant' update the computer", e);
             throw new ServiceException("cant' update the computer", e);
@@ -97,8 +95,9 @@ public enum ServiceComputer {
         }
         c.setCompany(company);
         try {
-            execution = DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
+            DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
             LOGGER.info("updated computer to : " + c.toString());
+            execution = true;
         } catch (DaoException e) {
             LOGGER.warn("cant' update the computer", e);
             throw new ServiceException("cant' update the computer", e);
@@ -147,8 +146,9 @@ public enum ServiceComputer {
     public boolean deleteComputer(Computer c) {
         boolean execution = false;
         try {
-            execution = DaoFactory.INSTANCE.getComputerDao().deleteComputer(c.getId());
+            DaoFactory.INSTANCE.getComputerDao().deleteComputer(c.getId());
             LOGGER.info("computer deleted : " + c.toString());
+            execution = true;
         } catch (DaoException e) {
             LOGGER.warn("cant' delete the computer", e);
             throw new ServiceException("cant' delete the computer", e);

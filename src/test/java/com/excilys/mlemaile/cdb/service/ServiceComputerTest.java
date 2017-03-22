@@ -23,12 +23,10 @@ public class ServiceComputerTest {
 
 	@Test
 	public void testCreateComputer() {
-		Computer computer = new Computer.Builder("").build();
 		ComputerDao mockComputerDao = mock(ComputerDao.class);
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.createComputer(computer)).thenReturn(true);
 		assertEquals("create computer does not work as intended",true,ServiceComputer.INSTANCE.createComputer("", null, null, 0));
 	}
 	/*
@@ -53,7 +51,6 @@ public class ServiceComputerTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.updateComputer(computer)).thenReturn(true);
 		assertEquals("Update Computer does not work as intended",true,ServiceComputer.INSTANCE.updatecomputer(computer));
 	}
 
@@ -88,7 +85,6 @@ public class ServiceComputerTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.deleteComputer(2)).thenReturn(true);
 		assertEquals("Update Computer does not work as intended",true,ServiceComputer.INSTANCE.deleteComputer(computer));
 	}
 

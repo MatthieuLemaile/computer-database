@@ -9,9 +9,8 @@ public interface ComputerDao {
     /**
      * This method store the given computer in the database.
      * @param computer the computer to store
-     * @return A boolean which is true if the execution went well
      */
-    boolean createComputer(Computer computer);
+    void createComputer(Computer computer);
 
     /**
      * This method list a number of computer.
@@ -41,13 +40,13 @@ public interface ComputerDao {
      * @param computer The id is the computer to change, other field are value to be stored
      * @return A boolean which is true if the execution went well
      */
-    boolean updateComputer(Computer computer);
+    void updateComputer(Computer computer);
 
     /**
      * This method delete the computer identified by the id of the given computer.
      * @param id The id of the computer to delete
      * @return A boolean which is true if the execution went well
      */
-    boolean deleteComputer(long id);
+    void deleteComputer(long id);
 
 }

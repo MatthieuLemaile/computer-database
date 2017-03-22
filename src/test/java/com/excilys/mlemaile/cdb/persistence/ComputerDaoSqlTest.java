@@ -3,6 +3,7 @@ package com.excilys.mlemaile.cdb.persistence;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.commons.configuration2.Configuration;
@@ -19,6 +20,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 
 public class ComputerDaoSqlTest {
@@ -68,14 +70,11 @@ public class ComputerDaoSqlTest {
 	
 	@Test
 	public void testCreateComputer() {
-		/*//TODO reset the auto id before that test
 		LocalDate date = LocalDate.now();
 		Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1);
 		Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
 		computerDao.createComputer(c);
-		System.out.println(c);
-		assertEquals("Creation of a computer is not working",c.toString(),computerDao.getComputer(14).toString());
-		*/
+		assertEquals("Creation of a computer is not working",c.toString(),computerDao.getComputer(c.getId()).toString());
 	}
 
 	@Test
@@ -119,7 +118,12 @@ public class ComputerDaoSqlTest {
 
 	@Test
 	public void testDeleteComputer() {
-		//TODO Don't know how to implement
+		LocalDate date = LocalDate.now();
+        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1);
+        Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
+        computerDao.createComputer(c);
+        computerDao.deleteComputer(c.getId());
+        assertEquals("Deletion of a computer is not working","",computerDao.getComputer(c.getId()).getName());
 	}
 
 }

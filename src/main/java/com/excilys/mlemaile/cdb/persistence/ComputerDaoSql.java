@@ -72,13 +72,12 @@ enum ComputerDaoSql implements ComputerDao {
      * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#createComputer(com.excilys.mlemaile.cdb.model.Computer)
      */
     @Override
-    public boolean createComputer(Computer computer) {
-        boolean executed = false;
+    public void createComputer(Computer computer) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet generatedKey = null;
         if (computer == null) {
-            return false;
+            return;
         }
         try {
             connection = DatabaseConnection.INSTANCE.getConnection();
@@ -109,7 +108,6 @@ enum ComputerDaoSql implements ComputerDao {
                 generatedKey = preparedStatement.getGeneratedKeys();
                 if (generatedKey.next()) {
                     computer.setId(generatedKey.getLong(1));
-                    executed = true;
                 }
             }
         } catch (SQLException e) {
@@ -119,7 +117,6 @@ enum ComputerDaoSql implements ComputerDao {
             DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
             DatabaseConnection.INSTANCE.closeResulSet(generatedKey);
         }
-        return executed;
     }
 
     /**
@@ -184,12 +181,11 @@ enum ComputerDaoSql implements ComputerDao {
      * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#updateComputer(com.excilys.mlemaile.cdb.model.Computer)
      */
     @Override
-    public boolean updateComputer(Computer computer) {
-        boolean executed = false;
+    public void updateComputer(Computer computer) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         if (computer == null) {
-            return false;
+            return;
         }
         try {
             connection = DatabaseConnection.INSTANCE.getConnection();
@@ -216,8 +212,8 @@ enum ComputerDaoSql implements ComputerDao {
                 preparedStatement.setNull(4, Types.BIGINT);
             }
             preparedStatement.setLong(5, computer.getId());
-            if (preparedStatement.executeUpdate() != 0) {
-                executed = true;
+            if (preparedStatement.executeUpdate() == 0) {
+                throw new DaoException("No operation executed");
             }
         } catch (SQLException e) {
             throw new DaoException("Can't update computer : ", e);
@@ -225,26 +221,24 @@ enum ComputerDaoSql implements ComputerDao {
             DatabaseConnection.INSTANCE.closeConnection(connection);
             DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
         }
-        return executed;
     }
 
     /**
      * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#deleteComputer(com.excilys.mlemaile.cdb.model.Computer)
      */
     @Override
-    public boolean deleteComputer(long id) {
-        boolean executed = false;
+    public void deleteComputer(long id) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         if (id <= 0) {
-            return false;
+            return;
         }
         try {
             connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
             preparedStatement.setLong(1, id);
             if (preparedStatement.executeUpdate() != 0) {
-                executed = true;
+                throw new DaoException("No operation executed");
             }
         } catch (SQLException e) {
             throw new DaoException("Can't delete computer : ", e);
@@ -252,7 +246,6 @@ enum ComputerDaoSql implements ComputerDao {
             DatabaseConnection.INSTANCE.closeConnection(connection);
             DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
         }
-        return executed;
     }
 
     @Override

@@ -1,8 +1,23 @@
 //on load
 
 $(function() {
-	$( "#introduced" ).datepicker({ dateFormat: 'yy-mm-dd'});
-	$( "#discontinued" ).datepicker({ dateFormat: 'yy-mm-dd'});
+	$( "#introduced" ).datepicker({
+		dateFormat: 'yy-mm-dd',
+		onSelect:function(){validateDate();}
+	});
+	$( "#discontinued" ).datepicker({
+		dateFormat: 'yy-mm-dd',
+		onSelect:function(){validateDate();}
+	});
+	
+	/*$("#introduced").datepicker({
+		  onSelect: function() {
+		    validateDate();
+		  }
+	});
+	
+	$("#discontinued").datepicker(
+	});*/
 	
 	$('#discontinued').on('input', function() {
 		validateDate();

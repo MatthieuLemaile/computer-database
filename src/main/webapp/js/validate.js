@@ -10,15 +10,6 @@ $(function() {
 		onSelect:function(){validateDate();}
 	});
 	
-	/*$("#introduced").datepicker({
-		  onSelect: function() {
-		    validateDate();
-		  }
-	});
-	
-	$("#discontinued").datepicker(
-	});*/
-	
 	$('#discontinued').on('input', function() {
 		validateDate();
 	});

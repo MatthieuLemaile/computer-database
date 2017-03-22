@@ -94,7 +94,7 @@
 	<div class="container text-center">
 		<ul class="pagination">
 			<c:if test="${requestScope.page.pageNumber > 1}">
-				<li><a
+				<li><a id="firstPage"
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',1,requestScope.page.numberPerPage)}" />"
 					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 				</a></li>
@@ -133,7 +133,7 @@
 				</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber < numberPageMax}">
-				<li><a
+				<li><a id="lastPage"
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',numberPageMax,requestScope.page.numberPerPage)}" />"
 					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a></li>
@@ -146,7 +146,7 @@
 					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,10)}" />">10</a></li>
 				<li class="btn btn-default"><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,50)}" />">50</a></li>
-				<li class="btn btn-default"><a
+				<li class="btn btn-defalastult"><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,100)}" />">100</a></li>
 			</ul>
 			<!-- <button type="button" class="btn btn-default">10</button>

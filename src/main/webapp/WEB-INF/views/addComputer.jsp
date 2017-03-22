@@ -46,7 +46,7 @@
 					</fieldset>
 					<div class="actions pull-right">
 						<input type="submit" value="Add" id="submit"
-							class="btn btn-primary"> or <a href="dashboard.html"
+							class="btn btn-primary"> or <a href="${pageContext.request.contextPath}/homepage"
 							class="btn btn-default">Cancel</a>
 					</div>
 				</form>

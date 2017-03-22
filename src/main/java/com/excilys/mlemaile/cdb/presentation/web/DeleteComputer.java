@@ -44,12 +44,12 @@ public class DeleteComputer extends HttpServlet {
                 long id = Long.parseLong(idStr);
                 ServiceComputer.INSTANCE.deleteComputer(id);
             }
+            response.sendRedirect(getServletContext().getContextPath() + DASHBOARD);
         } catch (NumberFormatException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
             request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request,
                     response);
         }
-        response.sendRedirect(getServletContext().getContextPath() + DASHBOARD);
     }
 
 }

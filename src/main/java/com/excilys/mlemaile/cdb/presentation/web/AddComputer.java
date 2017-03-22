@@ -81,8 +81,12 @@ public class AddComputer extends HttpServlet {
             }
             ServiceComputer.INSTANCE.createComputer(name, introduced, discontinued, companyId);
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
-        } catch (NumberFormatException | ServiceException | DateTimeParseException e) {
+        } catch (NumberFormatException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
+            request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
+                    response);
+        } catch (DateTimeParseException e){
+            request.setAttribute(ATT_EXCEPTION, "The date must follow the pattern : yyyy-mm-dd");
             request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
                     response);
         }

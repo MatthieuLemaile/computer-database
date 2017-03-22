@@ -1,6 +1,9 @@
 //on load
 
 $(function() {
+	$( "#introduced" ).datepicker({ dateFormat: 'yy-mm-dd'});
+	$( "#discontinued" ).datepicker({ dateFormat: 'yy-mm-dd'});
+	
 	$('#discontinued').on('input', function() {
 		validateDate();
 	});
@@ -15,7 +18,10 @@ $(function() {
 		}
 	});
 	
+	
 });
+
+
 
 function validateDate(){
 	var disco=$('#discontinued').val();
@@ -30,7 +36,7 @@ function validateDate(){
 }
 
 function validateName(){
-	var name=$('computerName').val();
+	var name=$('#computerName').val();
 	if(typeof name === "undefined" || name.trim()==""){
 		alert("You must suply a name");
 		return false;

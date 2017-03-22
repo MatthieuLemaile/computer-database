@@ -56,6 +56,7 @@
 </section>
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/validate.js"></script>
 </body>
 </html>

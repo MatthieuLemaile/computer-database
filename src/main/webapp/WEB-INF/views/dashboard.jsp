@@ -15,7 +15,6 @@
 	<fmt:formatNumber var="numberPageMax"
 		value="${requestScope.totalNumberComputers/requestScope.page.numberPerPage}"
 		maxFractionDigits="0" />
-	<c:out value="${numberPageMax}"></c:out>
 
 	<div class="container">
 		<h1 id="homeTitle">

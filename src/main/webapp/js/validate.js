@@ -10,7 +10,7 @@ $(function() {
 	});
 	
 	$('#submit').click(function(event) {
-		if(!validateDate()){
+		if(!validateDate() || !validateName()){
 			event.preventDefault();
 		}
 	});
@@ -26,5 +26,15 @@ function validateDate(){
 	}else{
 		$('#discontinued').parent().addClass("alert alert-danger");
 		return false;
+	}
+}
+
+function validateName(){
+	var name=$('computerName').val();
+	if(typeof name === "undefined" || name.trim()==""){
+		alert("You must suply a name");
+		return false;
+	}else{
+		return true;
 	}
 }

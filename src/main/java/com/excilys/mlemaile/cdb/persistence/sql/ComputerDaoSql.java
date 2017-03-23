@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.persistence;
+package com.excilys.mlemaile.cdb.persistence.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,14 +13,17 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.excilys.mlemaile.cdb.model.Company;
-import com.excilys.mlemaile.cdb.model.Computer;
+import com.excilys.mlemaile.cdb.persistence.ComputerDao;
+import com.excilys.mlemaile.cdb.persistence.DaoException;
+import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
+import com.excilys.mlemaile.cdb.service.model.Company;
+import com.excilys.mlemaile.cdb.service.model.Computer;
 
 /**
  * This enum communicate with the database to store, update and read computers in the database.
  * @author Matthieu Lemaile
  */
-enum ComputerDaoSql implements ComputerDao {
+public enum ComputerDaoSql implements ComputerDao {
     INSTANCE();
     private static final String ID           = "id";
     private static final String NAME         = "name";
@@ -72,6 +75,12 @@ enum ComputerDaoSql implements ComputerDao {
         return computers;
     }
 
+    /**
+     * This method set parameter of the given prepared statement with the given computer.
+     * @param preparedStatement The preparedStatement to set
+     * @param computer The computer which contains params
+     * @throws SQLException Throw an SQLException if misused
+     */
     private void setPreparedStatementCreateUpdate(PreparedStatement preparedStatement,
             Computer computer) throws SQLException {
         preparedStatement.setString(1, computer.getName());
@@ -97,7 +106,7 @@ enum ComputerDaoSql implements ComputerDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#createComputer(com.excilys.mlemaile.cdb.model.Computer)
+     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#createComputer(com.excilys.mlemaile.cdb.service.model.Computer)
      */
     @Override
     public void createComputer(Computer computer) {
@@ -174,7 +183,7 @@ enum ComputerDaoSql implements ComputerDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#updateComputer(com.excilys.mlemaile.cdb.model.Computer)
+     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#updateComputer(com.excilys.mlemaile.cdb.service.model.Computer)
      */
     @Override
     public void updateComputer(Computer computer) {
@@ -196,7 +205,7 @@ enum ComputerDaoSql implements ComputerDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#deleteComputer(com.excilys.mlemaile.cdb.model.Computer)
+     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#deleteComputer(com.excilys.mlemaile.cdb.service.model.Computer)
      */
     @Override
     public void deleteComputer(long id) {

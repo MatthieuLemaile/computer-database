@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.presentation.Page;
+import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
+import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
 
@@ -52,8 +53,9 @@ public class Homepage extends HttpServlet {
             }
             Page.numberPerPage = limit;
             Page page = new Page(numPage);
-            List<Computer> computers = ServiceComputer.INSTANCE.listComputer(Page.numberPerPage,
-                    (page.getPageNumber() - 1) * Page.numberPerPage);
+            List<ComputerDto> computers = MapperDtoToModel.INSTANCE.modelListToComputerDto(
+                    ServiceComputer.INSTANCE.listComputer(Page.numberPerPage,
+                            (page.getPageNumber() - 1) * Page.numberPerPage));
             request.setAttribute(ATT_LIST_COMPUTERS, computers);
             request.setAttribute(ATT_PAGE, page);
             request.setAttribute(TOTAL_NUMBER_COMPUTER, ServiceComputer.INSTANCE.countComputers());

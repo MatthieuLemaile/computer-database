@@ -13,9 +13,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
+import com.excilys.mlemaile.cdb.service.model.Company;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CompanyDao.class,DaoFactory.class})

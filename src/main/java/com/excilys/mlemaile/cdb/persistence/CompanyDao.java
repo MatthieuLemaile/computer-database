@@ -2,7 +2,7 @@ package com.excilys.mlemaile.cdb.persistence;
 
 import java.util.List;
 
-import com.excilys.mlemaile.cdb.model.Company;
+import com.excilys.mlemaile.cdb.service.model.Company;
 
 public interface CompanyDao {
 

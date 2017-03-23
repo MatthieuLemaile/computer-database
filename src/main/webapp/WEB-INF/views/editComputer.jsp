@@ -58,7 +58,7 @@
 								<c:forEach var="company" items="${requestScope.companies}">
 
 									<option value="<c:out value="${company.id}"/>"
-										<c:if test="${requestScope.computer.company.id==company.id}">selected</c:if>><c:out
+										<c:if test="${requestScope.computer.companyId==company.id}">selected</c:if>><c:out
 											value="${company.name}" /></option>
 								</c:forEach>
 							</select>

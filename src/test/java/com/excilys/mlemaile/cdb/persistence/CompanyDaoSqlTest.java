@@ -21,7 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.excilys.mlemaile.cdb.model.Company;
+import com.excilys.mlemaile.cdb.service.model.Company;
 
 public class CompanyDaoSqlTest {
 	private CompanyDao companyDao;

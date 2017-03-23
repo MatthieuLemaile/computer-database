@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
-import com.excilys.mlemaile.cdb.model.Computer;
+import com.excilys.mlemaile.cdb.service.model.Company;
+import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public class TestComputer {
 	@Test

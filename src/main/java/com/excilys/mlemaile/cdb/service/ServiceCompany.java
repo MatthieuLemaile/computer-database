@@ -6,9 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
+import com.excilys.mlemaile.cdb.service.model.Company;
 
 public enum ServiceCompany {
     INSTANCE();

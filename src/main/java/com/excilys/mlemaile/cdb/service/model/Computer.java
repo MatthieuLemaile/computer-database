@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.model;
+package com.excilys.mlemaile.cdb.service.model;
 
 import java.time.LocalDate;
 import java.util.Objects;

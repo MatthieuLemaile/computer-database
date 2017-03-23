@@ -1,5 +1,8 @@
 package com.excilys.mlemaile.cdb.persistence;
 
+import com.excilys.mlemaile.cdb.persistence.sql.CompanyDaoSql;
+import com.excilys.mlemaile.cdb.persistence.sql.ComputerDaoSql;
+
 public enum DaoFactory {
     INSTANCE();
     /**

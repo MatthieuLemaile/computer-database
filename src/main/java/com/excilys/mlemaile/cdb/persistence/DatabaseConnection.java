@@ -18,7 +18,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @author Matthieu Lemaile
  *
  */
-enum DatabaseConnection {
+public enum DatabaseConnection {
     INSTANCE();
     /**
      * Create and return a database connection.

@@ -7,10 +7,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.mlemaile.cdb.model.Company;
-import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
+import com.excilys.mlemaile.cdb.service.model.Company;
+import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public enum ServiceComputer {
     INSTANCE();
@@ -53,6 +53,20 @@ public enum ServiceComputer {
             throw new ServiceException("Can't create the computer : " + e.getMessage(), e);
         }
         return computerCreated;
+    }
+
+    /**
+     * Create the given computer in the database.
+     * @param c the Computer to create
+     * @return a boolean which is true if the execution went well
+     */
+    public boolean createComputer(Computer c) {
+        if (c.getCompany() != null) {
+            return this.createComputer(c.getName(), c.getIntroduced(), c.getDiscontinued(),
+                    c.getCompany().getId());
+        } else {
+            return this.createComputer(c.getName(), c.getIntroduced(), c.getDiscontinued(), 0);
+        }
     }
 
     /**

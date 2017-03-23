@@ -7,7 +7,11 @@ WIP :
 
 Before next Impl :
 
+ASK :
+* DaoSql en sous package => visibilité ??
+
 Opt mais important: 
+* DTOs en CLI
 
 Opt :
 * une classe Secureinput qui vérifie lesdits inputs

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.excilys.mlemaile.cdb.model.Company;
+import com.excilys.mlemaile.cdb.service.model.Company;
 
 public class TestCompany {
 	@Test

@@ -2,7 +2,7 @@ package com.excilys.mlemaile.cdb.persistence;
 
 import java.util.List;
 
-import com.excilys.mlemaile.cdb.model.Computer;
+import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public interface ComputerDao {
 
@@ -38,14 +38,12 @@ public interface ComputerDao {
      * This method change all the attribute of the computer identified by the id to those in the
      * given computer.
      * @param computer The id is the computer to change, other field are value to be stored
-     * @return A boolean which is true if the execution went well
      */
     void updateComputer(Computer computer);
 
     /**
      * This method delete the computer identified by the id of the given computer.
      * @param id The id of the computer to delete
-     * @return A boolean which is true if the execution went well
      */
     void deleteComputer(long id);
 

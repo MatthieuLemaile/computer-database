@@ -1,20 +1,18 @@
-package com.excilys.mlemaile.cdb.model;
-
-import java.util.Objects;
+package com.excilys.mlemaile.cdb.presentation.model;
 
 /**
  * This class represent a company as in database.
  * @author Matthieu Lemaile
  *
  */
-public class Company {
-    private long   id;
+public class CompanyDto {
+    private String   id;
     private String name;
 
     /**
      * Constructeur par défaut.
      */
-    private Company() {
+    private CompanyDto() {
     }
 
     /**
@@ -22,16 +20,16 @@ public class Company {
      * @param id l'id de la company.
      * @param name le nom de la compagnie.
      */
-    private Company(long id, String name) {
+    private CompanyDto(String id, String name) {
         setId(id);
         setName(name);
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -48,29 +46,8 @@ public class Company {
         return "ID : " + getId() + " name : " + getName();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        boolean equal = false;
-        if (o != null && o instanceof Company) {
-            Company company = (Company) o;
-            boolean nameEqual = false;
-            if (this.name != null && this.name.equals(company.name) || (this.name == null && company.name == null)) {
-                nameEqual = true;
-            }
-            if (this.id == company.id && nameEqual) {
-                equal = true;
-            }
-        }
-        return equal;
-    }
-
     public static class Builder {
-        private long   id;
+        private String   id;
         private String name;
 
         /**
@@ -78,7 +55,7 @@ public class Company {
          * @param id id de la company à céer.
          * @return l'instance du builder.
          */
-        public Builder id(long id) {
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
@@ -98,8 +75,8 @@ public class Company {
          * précédemment.
          * @return l'instance de la company
          */
-        public Company build() {
-            return new Company(id, name);
+        public CompanyDto build() {
+            return new CompanyDto(id, name);
         }
     }
 }

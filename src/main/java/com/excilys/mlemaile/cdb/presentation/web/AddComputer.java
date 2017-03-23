@@ -1,8 +1,6 @@
 package com.excilys.mlemaile.cdb.presentation.web;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,7 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.mlemaile.cdb.model.Company;
+import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
+import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
+import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
+import com.excilys.mlemaile.cdb.presentation.model.MapperException;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
@@ -44,7 +45,8 @@ public class AddComputer extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<Company> companies = ServiceCompany.INSTANCE.listCompanies();
+            List<CompanyDto> companies = MapperDtoToModel.INSTANCE
+                    .modelListToCompanyDto(ServiceCompany.INSTANCE.listCompanies());
             request.setAttribute(ATT_COMPANIES, companies);
         } catch (ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
@@ -60,33 +62,16 @@ public class AddComputer extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = "";
+        ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
+                .introduced(request.getParameter(PARAM_COMPUTER_INTRO))
+                .discontinued(request.getParameter(PARAM_COMPUTER_DISCO))
+                .companyId(request.getParameter(PARAM_COMPANY_ID)).build();
         try {
-            if (request.getParameter(PARAM_COMPUTER_NAME) != null) {
-                name = request.getParameter(PARAM_COMPUTER_NAME);
-            }
-            LocalDate introduced = null;
-            if (request.getParameter(PARAM_COMPUTER_INTRO) != null
-                    && !request.getParameter(PARAM_COMPUTER_INTRO).trim().isEmpty()) {
-                introduced = LocalDate.parse(request.getParameter(PARAM_COMPUTER_INTRO));
-            }
-            LocalDate discontinued = null;
-            if (request.getParameter(PARAM_COMPUTER_DISCO) != null
-                    && !request.getParameter(PARAM_COMPUTER_DISCO).trim().isEmpty()) {
-                discontinued = LocalDate.parse(request.getParameter(PARAM_COMPUTER_DISCO));
-            }
-            long companyId = 0;
-            if (request.getParameter(PARAM_COMPANY_ID) != null) {
-                companyId = Long.parseLong(request.getParameter(PARAM_COMPANY_ID));
-            }
-            ServiceComputer.INSTANCE.createComputer(name, introduced, discontinued, companyId);
+            ServiceComputer.INSTANCE
+                    .createComputer(MapperDtoToModel.INSTANCE.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
-        } catch (NumberFormatException | ServiceException e) {
+        } catch (MapperException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
-            request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
-                    response);
-        } catch (DateTimeParseException e) {
-            request.setAttribute(ATT_EXCEPTION, "The date must follow the pattern : yyyy-mm-dd");
             request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
                     response);
         }

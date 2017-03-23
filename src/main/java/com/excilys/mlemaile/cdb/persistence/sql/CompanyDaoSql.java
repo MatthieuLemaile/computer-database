@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.persistence;
+package com.excilys.mlemaile.cdb.persistence.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,17 +8,21 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.excilys.mlemaile.cdb.model.Company;
+import com.excilys.mlemaile.cdb.persistence.CompanyDao;
+import com.excilys.mlemaile.cdb.persistence.DaoException;
+import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
+import com.excilys.mlemaile.cdb.service.model.Company;
 
 /**
  * This enum communicate with the database to store, update, and read companies. in the database
  * @author Matthieu Lemaile
  *
  */
-enum CompanyDaoSql implements CompanyDao {
+public enum CompanyDaoSql implements CompanyDao {
     INSTANCE;
-    private static final String ID = "id";
+    private static final String ID   = "id";
     private static final String NAME = "name";
+
     /**
      * This method map the result of a request (in the result set) to a company object.
      * @param resultSet the ResultSet of the request
@@ -45,8 +49,8 @@ enum CompanyDaoSql implements CompanyDao {
     public Company getCompany(long id) {
         ArrayList<Company> companies = new ArrayList<>(); // initialising
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection
-                        .prepareStatement("select "+ID+","+NAME+" from company where id=?");) {
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        "select " + ID + "," + NAME + " from company where id=?");) {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
 
@@ -70,11 +74,11 @@ enum CompanyDaoSql implements CompanyDao {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
                                                           // retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection
-                        .prepareStatement("SELECT "+ID+","+NAME+" FROM company ORDER BY id ASC LIMIT ?,?");){
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        "SELECT " + ID + "," + NAME + " FROM company ORDER BY id ASC LIMIT ?,?");) {
             preparedStatement.setLong(1, idFirst);
             preparedStatement.setInt(2, number);
-            try(ResultSet resultSet = preparedStatement.executeQuery();){
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
                 companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
             }
         } catch (SQLException e) {
@@ -92,7 +96,8 @@ enum CompanyDaoSql implements CompanyDao {
         // retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("SELECT "+ID+","+NAME+" FROM company ORDER BY id ASC");){
+                ResultSet resultSet = statement.executeQuery(
+                        "SELECT " + ID + "," + NAME + " FROM company ORDER BY id ASC");) {
             companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
         } catch (SQLException e) {
             throw new DaoException("Can't list companies : ", e);

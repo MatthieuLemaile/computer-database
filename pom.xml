@@ -138,16 +138,6 @@
 
 	</dependencies>
 
-	<!-- to generate an executable jar file -->
-	<!-- <build> <plugins> packaging de l'application <plugin> NOTE: We don't 
-		need a groupId specification because the group is org.apache.maven.plugins 
-		...which is assumed by default. <artifactId>maven-assembly-plugin</artifactId> 
-		<version>2.3</version> <configuration> <descriptors> <descriptor>src/main/jar.xml</descriptor> 
-		</descriptors> <archive> <manifest> <mainClass>com.excilys.mlemaile.cdb.MainClass</mainClass> 
-		</manifest> </archive> </configuration> <executions> <execution> <id>executable</id> 
-		<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
-		</executions> </plugin> </plugins> </build> -->
-
 	<build>
 		<plugins>
 			<plugin>

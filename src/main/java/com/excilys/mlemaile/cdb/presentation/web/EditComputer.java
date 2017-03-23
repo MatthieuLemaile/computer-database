@@ -2,6 +2,7 @@ package com.excilys.mlemaile.cdb.presentation.web;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +17,7 @@ import com.excilys.mlemaile.cdb.presentation.model.MapperException;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
+import com.excilys.mlemaile.cdb.service.model.Computer;
 
 /**
  * Servlet implementation class EditComputer.
@@ -51,12 +53,14 @@ public class EditComputer extends HttpServlet {
             if (request.getParameter(PARAM_COMPUTER_ID) != null) {
                 computerId = Long.parseLong(request.getParameter(PARAM_COMPUTER_ID));
             }
-            ComputerDto c = MapperDtoToModel.INSTANCE
-                    .modelToComputerDto(ServiceComputer.INSTANCE.getComputer(computerId));
+            Optional<Computer> optComputer = ServiceComputer.INSTANCE.getComputer(computerId);
+            if (optComputer.isPresent()) {
+                ComputerDto c = MapperDtoToModel.INSTANCE.modelToComputerDto(optComputer.get());
+                request.setAttribute(ATT_COMPUTER, c);
+            }
             List<CompanyDto> companies = MapperDtoToModel.INSTANCE
                     .modelListToCompanyDto(ServiceCompany.INSTANCE.listCompanies());
             request.setAttribute(ATT_COMPANIES, companies);
-            request.setAttribute(ATT_COMPUTER, c);
         } catch (NumberFormatException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
         } finally {

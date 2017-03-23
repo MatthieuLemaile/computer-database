@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
@@ -159,7 +160,7 @@ public enum ComputerDaoSql implements ComputerDao {
      * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#getComputer(long)
      */
     @Override
-    public Computer getComputer(long id) {
+    public Optional<Computer> getComputer(long id) {
         ArrayList<Computer> computers = new ArrayList<>(); // initialising computers
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id as "
@@ -175,11 +176,11 @@ public enum ComputerDaoSql implements ComputerDao {
         } catch (SQLException e) {
             throw new DaoException("Can't retrieve computer : ", e);
         }
-        Computer c = new Computer.Builder("").build();
+        Computer c = null;
         if (computers.size() == 1) {
             c = computers.get(0);
         }
-        return c;
+        return Optional.ofNullable(c);
     }
 
     /**

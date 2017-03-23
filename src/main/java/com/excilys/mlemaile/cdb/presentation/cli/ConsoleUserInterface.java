@@ -148,7 +148,7 @@ public class ConsoleUserInterface {
             try {
                 entry = br.readLine();
                 id = Integer.parseInt(entry);
-                c = ServiceComputer.INSTANCE.getComputer(id);
+                c = ServiceComputer.INSTANCE.getComputer(id).get();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
@@ -234,7 +234,7 @@ public class ConsoleUserInterface {
             entry = br.readLine();
             String[] args = entry.split("( -|=)");
             id = Integer.parseInt(args[0]);
-            Computer c = ServiceComputer.INSTANCE.getComputer(id);
+            Computer c = ServiceComputer.INSTANCE.getComputer(id).get();
             for (int i = 1; i < args.length; i = i + 2) {
                 if ("name".equals(args[i])) {
                     c.setName(args[i + 1]);
@@ -293,7 +293,7 @@ public class ConsoleUserInterface {
             }
         } while (id < 1);
         try {
-            Computer c = ServiceComputer.INSTANCE.getComputer(id);
+            Computer c = ServiceComputer.INSTANCE.getComputer(id).get();
             ServiceComputer.INSTANCE.deleteComputer(c);
             System.out.println("Computer successfully deleted !");
         } catch (ServiceException e) {

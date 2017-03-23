@@ -2,6 +2,7 @@ package com.excilys.mlemaile.cdb.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,10 @@ public enum ServiceCompany {
     public Company getCompany(long id) {
         Company company = new Company.Builder().build();
         try {
-            company = DaoFactory.INSTANCE.getCompanyDao().getCompany(id);
+            Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(id);
+            if (opt.isPresent()) {
+                company = opt.get();
+            }
         } catch (DaoException e) {
             LOGGER.warn("can't find companies", e);
             throw new ServiceException("can't find companies", e);

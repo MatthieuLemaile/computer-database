@@ -1,14 +1,6 @@
-Refacto :
-* 1 obj / couche
-* dtos dans jsp
-* Optional
-
 WIP :
 
 Before next Impl :
-
-ASK :
-* DaoSql en sous package => visibilité ??
 
 Opt mais important: 
 * DTOs en CLI

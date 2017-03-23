@@ -3,6 +3,7 @@ package com.excilys.mlemaile.cdb.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +32,21 @@ public enum ServiceComputer {
 
         try {
             if (companyId > 0) {
-                company = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+                if (opt.isPresent()) {
+                    company = opt.get();
+                }
             }
         } catch (DaoException e) {
             throw new ServiceException("Can't find the company", e);
         }
         try {
             if (companyId > 0) {
-                company = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+
+                if (opt.isPresent()) {
+                    company = opt.get();
+                }
             }
             Computer c = new Computer.Builder(name).introduced(introduced)
                     .discontinued(discontinued).company(company).build();
@@ -99,23 +107,31 @@ public enum ServiceComputer {
     public boolean updatecomputer(long id, String name, LocalDate introduced,
             LocalDate discontinued, long companyId) {
         boolean execution = false;
-        Computer c = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
-        c.setName(name);
-        c.setDiscontinued(discontinued);
-        c.setIntroduced(introduced);
-        Company company = null;
-        if (companyId > 0) {
-            company = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+        Optional<Computer> optComputer = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
+
+        if (optComputer.isPresent()) {
+            Computer c = optComputer.get();
+            c.setName(name);
+            c.setDiscontinued(discontinued);
+            c.setIntroduced(introduced);
+            Company company = null;
+            if (companyId > 0) {
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+                if (opt.isPresent()) {
+                    company = opt.get();
+                }
+            }
+            c.setCompany(company);
+            try {
+                DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
+                LOGGER.info("updated computer to : " + c.toString());
+                execution = true;
+            } catch (DaoException e) {
+                LOGGER.warn("cant' update the computer", e);
+                throw new ServiceException("cant' update the computer", e);
+            }
         }
-        c.setCompany(company);
-        try {
-            DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
-            LOGGER.info("updated computer to : " + c.toString());
-            execution = true;
-        } catch (DaoException e) {
-            LOGGER.warn("cant' update the computer", e);
-            throw new ServiceException("cant' update the computer", e);
-        }
+
         return execution;
     }
 
@@ -141,15 +157,15 @@ public enum ServiceComputer {
      * @param id The id of the computer to return
      * @return a Computer
      */
-    public Computer getComputer(long id) {
-        Computer computer = new Computer.Builder("").build();
+    public Optional<Computer> getComputer(long id) {
+        Optional<Computer> optComputer;
         try {
-            computer = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
+            optComputer = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
         } catch (DaoException e) {
             LOGGER.warn("cant' find the computer", e);
             throw new ServiceException("cant' find the computer", e);
         }
-        return computer;
+        return optComputer;
     }
 
     /**

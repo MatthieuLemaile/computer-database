@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
@@ -71,10 +72,10 @@ public class ComputerDaoSqlTest {
 	@Test
 	public void testCreateComputer() {
 		LocalDate date = LocalDate.now();
-		Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1);
+		Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1).get();
 		Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
 		computerDao.createComputer(c);
-		assertEquals("Creation of a computer is not working",c.toString(),computerDao.getComputer(c.getId()).toString());
+		assertEquals("Creation of a computer is not working",c.toString(),computerDao.getComputer(c.getId()).get().toString());
 	}
 
 	@Test
@@ -104,26 +105,26 @@ public class ComputerDaoSqlTest {
 
 	@Test
 	public void testGetComputer() {
-		Computer computer = computerDao.getComputer(2);
+		Computer computer = computerDao.getComputer(2).get();
 		assertEquals("Read method is not correct","ID : 2 name : computer2 manufacturer [ID : 1 name : company1] introduced : 2014-05-10 Discontinued : 2016-04-09",computer.toString());
 	}
 
 	@Test
 	public void testUpdateComputer() {
-		Computer computer = computerDao.getComputer(2);
+		Computer computer = computerDao.getComputer(2).get();
 		computer.setName("Test");
 		computerDao.updateComputer(computer);
 		assertEquals("Read method is not correct","ID : 2 name : Test manufacturer [ID : 1 name : company1] introduced : 2014-05-10 Discontinued : 2016-04-09",computer.toString());
 	}
 
-	@Test
+	@Test(expected=NoSuchElementException.class)
 	public void testDeleteComputer() {
 		LocalDate date = LocalDate.now();
-        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1);
+        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1).get();
         Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
         computerDao.createComputer(c);
         computerDao.deleteComputer(c.getId());
-        assertEquals("Deletion of a computer is not working","",computerDao.getComputer(c.getId()).getName());
+        assertEquals("Deletion of a computer is not working","",computerDao.getComputer(c.getId()).get().getName());
 	}
 
 }

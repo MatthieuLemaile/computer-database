@@ -6,6 +6,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,11 +37,12 @@ public class ServiceCompanyTest {
 	@Test
 	public void testGetCompany() {
 		Company company = new Company.Builder().build();
+		Optional<Company> opt = Optional.ofNullable(company);
 		CompanyDao mockCompanyDao = mock(CompanyDao.class);
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-		when(mockCompanyDao.getCompany(1)).thenReturn(company);
+		when(mockCompanyDao.getCompany(1)).thenReturn(opt);
 		assertEquals("Get Company does not work as intended",company,ServiceCompany.INSTANCE.getCompany(1));
 	}
 

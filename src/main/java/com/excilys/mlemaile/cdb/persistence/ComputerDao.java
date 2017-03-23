@@ -1,6 +1,7 @@
 package com.excilys.mlemaile.cdb.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
@@ -26,7 +27,7 @@ public interface ComputerDao {
      * @param id l'id du computer.
      * @return un Computer
      */
-    Computer getComputer(long id);
+    Optional<Computer> getComputer(long id);
 
     /**
      * This method count the total number of computer in the database.

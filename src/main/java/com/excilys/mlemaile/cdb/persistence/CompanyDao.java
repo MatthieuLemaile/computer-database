@@ -1,6 +1,7 @@
 package com.excilys.mlemaile.cdb.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.excilys.mlemaile.cdb.service.model.Company;
 
@@ -11,7 +12,7 @@ public interface CompanyDao {
      * @param id the id of the company to retrieve
      * @return the company identified by the id
      */
-    Company getCompany(long id);
+    Optional<Company> getCompany(long id);
 
     /**
      * This method return number companies, ordered by id, in ascendent order.

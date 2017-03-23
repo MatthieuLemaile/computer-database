@@ -6,6 +6,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,8 +74,8 @@ public class ServiceComputerTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.getComputer(1)).thenReturn(computer);
-		assertEquals("Get computer does not work as intended",computer,ServiceComputer.INSTANCE.getComputer(1));
+		when(mockComputerDao.getComputer(1)).thenReturn(Optional.ofNullable(computer));
+		assertEquals("Get computer does not work as intended",computer,ServiceComputer.INSTANCE.getComputer(1).get());
 		
 	}
 

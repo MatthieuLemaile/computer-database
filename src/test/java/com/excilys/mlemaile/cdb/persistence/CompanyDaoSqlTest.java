@@ -79,7 +79,7 @@ public class CompanyDaoSqlTest {
 	
 	@Test
 	public void testGetCompany() {
-		Company company = companyDao.getCompany(2);
+		Company company = companyDao.getCompany(2).get();
 		assertEquals("Reas method is not correct", "ID : 2 name : company2",company.toString());
 	}
 

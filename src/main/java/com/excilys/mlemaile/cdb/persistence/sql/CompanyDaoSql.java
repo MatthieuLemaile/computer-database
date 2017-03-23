@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
@@ -46,7 +47,7 @@ public enum CompanyDaoSql implements CompanyDao {
      * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#getCompany(long)
      */
     @Override
-    public Company getCompany(long id) {
+    public Optional<Company> getCompany(long id) {
         ArrayList<Company> companies = new ArrayList<>(); // initialising
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
@@ -59,11 +60,12 @@ public enum CompanyDaoSql implements CompanyDao {
         } catch (SQLException e) {
             throw new DaoException("Can't find company :", e);
         }
-        Company c = new Company.Builder().build();
+
+        Company c = null;
         if (companies.size() == 1) {
             c = companies.get(0);
         }
-        return c;
+        return Optional.ofNullable(c);
     }
 
     /**

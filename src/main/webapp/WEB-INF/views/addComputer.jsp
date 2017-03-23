@@ -20,7 +20,7 @@
 					<fieldset>
 						<div class="form-group">
 							<label for="computerName">Computer name</label> <input
-								type="text" class="form-control" name="computerName"
+								type="text" class="form-control" name="computerName" required
 								id="computerName" placeholder="Computer name">
 						</div>
 						<div class="form-group">
@@ -46,7 +46,8 @@
 					</fieldset>
 					<div class="actions pull-right">
 						<input type="submit" value="Add" id="submit"
-							class="btn btn-primary"> or <a href="${pageContext.request.contextPath}/homepage"
+							class="btn btn-primary"> or <a
+							href="${pageContext.request.contextPath}/homepage"
 							class="btn btn-default">Cancel</a>
 					</div>
 				</form>
@@ -56,7 +57,8 @@
 </section>
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<script
+	src="${pageContext.request.contextPath}/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/validate.js"></script>
 </body>
 </html>

@@ -32,7 +32,7 @@ $(function() {
 function validateDate(){
 	var disco=$('#discontinued').val();
 	var intro=$('#introduced').val();
-	if(disco>intro || !intro || !disco){
+	if(!intro || !disco || disco>intro){
 		$('#discontinued').parent().removeClass("alert alert-danger")
 		return true;
 	}else{

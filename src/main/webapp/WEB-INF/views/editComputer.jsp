@@ -29,12 +29,11 @@
 						<div class="form-group">
 							<label for="computerName"><c:out value="Computer name"></c:out></label>
 							<input type="text" class="form-control" name="computerName"
-								id="computerName"
+								id="computerName" required
 								value='<c:out value="${requestScope.computer.name}"/>'>
 						</div>
 						<div class="form-group">
-							<fmt:parseDate
-								value="${requestScope.computer.introduced}"
+							<fmt:parseDate value="${requestScope.computer.introduced}"
 								pattern="yyyy-MM-dd" var="parsedIntroDate" type="date" />
 							<fmt:formatDate value="${parsedIntroDate}" var="intro"
 								pattern="yyyy-MM-dd" />
@@ -44,8 +43,7 @@
 
 						</div>
 						<div class="form-group">
-							<fmt:parseDate
-								value="${requestScope.computer.discontinued}"
+							<fmt:parseDate value="${requestScope.computer.discontinued}"
 								pattern="yyyy-MM-dd" var="parsedDiscoDate" type="date" />
 							<fmt:formatDate value="${parsedDiscoDate}" var="disco"
 								pattern="yyyy-MM-dd" />
@@ -60,14 +58,16 @@
 								<c:forEach var="company" items="${requestScope.companies}">
 
 									<option value="<c:out value="${company.id}"/>"
-										<c:if test="${requestScope.computer.company.id==company.id}">selected</c:if>><c:out value="${company.name}"/></option>
+										<c:if test="${requestScope.computer.company.id==company.id}">selected</c:if>><c:out
+											value="${company.name}" /></option>
 								</c:forEach>
 							</select>
 						</div>
 					</fieldset>
 					<div class="actions pull-right">
 						<input type="submit" id="submit" value="Edit"
-							class="btn btn-primary"> or <a href="${pageContext.request.contextPath}/homepage"
+							class="btn btn-primary"> or <a
+							href="${pageContext.request.contextPath}/homepage"
 							class="btn btn-default">Cancel</a>
 					</div>
 				</form>
@@ -77,7 +77,8 @@
 </section>
 <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<script
+	src="${pageContext.request.contextPath}/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/validate.js"></script>
 </body>
 </html>

@@ -149,7 +149,6 @@ public class Test {
         // confirm the javascript pop up
         Alert alert = driver.switchTo().alert();
         alert.accept();
-
         WebElement lastPage = (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));
         lastPage.click();

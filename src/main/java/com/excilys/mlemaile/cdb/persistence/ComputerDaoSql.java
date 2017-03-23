@@ -237,7 +237,7 @@ enum ComputerDaoSql implements ComputerDao {
             connection = DatabaseConnection.INSTANCE.getConnection();
             preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
             preparedStatement.setLong(1, id);
-            if (preparedStatement.executeUpdate() != 0) {
+            if (preparedStatement.executeUpdate() == 0) {
                 throw new DaoException("No operation executed");
             }
         } catch (SQLException e) {

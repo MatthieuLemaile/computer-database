@@ -17,6 +17,8 @@ import com.excilys.mlemaile.cdb.model.Company;
  */
 enum CompanyDaoSql implements CompanyDao {
     INSTANCE;
+    private static final String ID = "id";
+    private static final String NAME = "name";
     /**
      * This method map the result of a request (in the result set) to a company object.
      * @param resultSet the ResultSet of the request
@@ -26,8 +28,8 @@ enum CompanyDaoSql implements CompanyDao {
         ArrayList<Company> companies = new ArrayList<>();
         try {
             while (resultSet.next()) {
-                Company company = new Company.Builder().id(resultSet.getLong("id"))
-                        .name(resultSet.getString("name")).build();
+                Company company = new Company.Builder().id(resultSet.getLong(ID))
+                        .name(resultSet.getString(NAME)).build();
                 companies.add(company);
             }
         } catch (SQLException e) {
@@ -42,21 +44,16 @@ enum CompanyDaoSql implements CompanyDao {
     @Override
     public Company getCompany(long id) {
         ArrayList<Company> companies = new ArrayList<>(); // initialising
-        Connection connection = null; // companies
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement("select * from company where id=?");
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement("select "+ID+","+NAME+" from company where id=?");) {
             preparedStatement.setLong(1, id);
-            resultSet = preparedStatement.executeQuery();
-            companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+
+                companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+            }
         } catch (SQLException e) {
             throw new DaoException("Can't find company :", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
-            DatabaseConnection.INSTANCE.closeResulSet(resultSet);
         }
         Company c = new Company.Builder().build();
         if (companies.size() == 1) {
@@ -72,23 +69,16 @@ enum CompanyDaoSql implements CompanyDao {
     public List<Company> listSomeCompanies(int number, long idFirst) {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
                                                           // retourner null
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            preparedStatement = connection
-                    .prepareStatement("SELECT * FROM company ORDER BY id ASC LIMIT ?,?");
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement("SELECT "+ID+","+NAME+" FROM company ORDER BY id ASC LIMIT ?,?");){
             preparedStatement.setLong(1, idFirst);
             preparedStatement.setInt(2, number);
-            resultSet = preparedStatement.executeQuery();
-            companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+            try(ResultSet resultSet = preparedStatement.executeQuery();){
+                companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+            }
         } catch (SQLException e) {
             throw new DaoException("Can't list companies : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
-            DatabaseConnection.INSTANCE.closeResulSet(resultSet);
         }
         return companies;
     }
@@ -100,20 +90,12 @@ enum CompanyDaoSql implements CompanyDao {
     public List<Company> listCompanies() {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
         // retourner null
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM company ORDER BY id ASC");
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery("SELECT "+ID+","+NAME+" FROM company ORDER BY id ASC");){
             companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
         } catch (SQLException e) {
             throw new DaoException("Can't list companies : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(statement);
-            DatabaseConnection.INSTANCE.closeResulSet(resultSet);
         }
         return companies;
     }

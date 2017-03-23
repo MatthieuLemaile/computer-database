@@ -22,8 +22,12 @@ import com.excilys.mlemaile.cdb.model.Computer;
  */
 enum ComputerDaoSql implements ComputerDao {
     INSTANCE();
-    // private final static Logger logger =
-    // LoggerFactory.getLogger(ComputerDao.class);
+    private static final String ID           = "id";
+    private static final String NAME         = "name";
+    private static final String INTRODUCED   = "introduced";
+    private static final String DISCONTINUED = "discontinued";
+    private static final String COMPANY_ID   = "company_id";
+    private static final String COMPANY_NAME = "company_name";
 
     /**
      * this method map the result of a request (in the ResultSet) with the computer object.
@@ -35,13 +39,13 @@ enum ComputerDaoSql implements ComputerDao {
 
         try {
             while (resultSet.next()) {
-                Computer.Builder builder = new Computer.Builder(resultSet.getString("name"))
-                        .id(resultSet.getLong("id"));
-                Timestamp tsIntro = resultSet.getTimestamp("introduced");
+                Computer.Builder builder = new Computer.Builder(resultSet.getString(NAME))
+                        .id(resultSet.getLong(ID));
+                Timestamp tsIntro = resultSet.getTimestamp(INTRODUCED);
                 if (tsIntro != null) {
                     builder = builder.introduced(tsIntro.toLocalDateTime().toLocalDate());
                 }
-                Timestamp tsDiscontinued = resultSet.getTimestamp("discontinued");
+                Timestamp tsDiscontinued = resultSet.getTimestamp(DISCONTINUED);
                 if (tsDiscontinued != null && tsIntro != null) {
                     if (tsDiscontinued.after(tsIntro) || tsDiscontinued.equals(tsIntro)) {
                         builder = builder
@@ -49,7 +53,7 @@ enum ComputerDaoSql implements ComputerDao {
                     } else {
                         throw new RuntimeException(
                                 "discontinued date not used  it was before the introduced date.\n ID : "
-                                        + resultSet.getLong("id") + "Introduced "
+                                        + resultSet.getLong(ID) + "Introduced "
                                         + tsIntro.toLocalDateTime().toLocalDate()
                                         + " discontinued :"
                                         + tsDiscontinued.toLocalDateTime().toLocalDate());
@@ -57,15 +61,39 @@ enum ComputerDaoSql implements ComputerDao {
                 } else if (tsDiscontinued != null) {
                     builder = builder.discontinued(tsDiscontinued.toLocalDateTime().toLocalDate());
                 }
-                Company company = new Company.Builder().id(resultSet.getLong("company_id"))
-                        .name(resultSet.getString("company_name")).build();
+                Company company = new Company.Builder().id(resultSet.getLong(COMPANY_ID))
+                        .name(resultSet.getString(COMPANY_NAME)).build();
                 builder = builder.company(company);
                 computers.add(builder.build());
             }
         } catch (SQLException e) {
-            throw new DaoException("can't dinf computer : ", e);
+            throw new DaoException("can't find computer : ", e);
         }
         return computers;
+    }
+
+    private void setPreparedStatementCreateUpdate(PreparedStatement preparedStatement,
+            Computer computer) throws SQLException {
+        preparedStatement.setString(1, computer.getName());
+        LocalDate introduced = computer.getIntroduced();
+        if (introduced != null) {
+            preparedStatement.setTimestamp(2, Timestamp
+                    .valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
+        } else {
+            preparedStatement.setNull(2, Types.TIMESTAMP);
+        }
+        LocalDate discontinued = computer.getDiscontinued();
+        if (discontinued != null) {
+            preparedStatement.setTimestamp(3, Timestamp
+                    .valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
+        } else {
+            preparedStatement.setNull(3, Types.TIMESTAMP);
+        }
+        if (computer.getCompany() != null && computer.getCompany().getId() > 0) {
+            preparedStatement.setLong(4, computer.getCompany().getId());
+        } else {
+            preparedStatement.setNull(4, Types.BIGINT);
+        }
     }
 
     /**
@@ -73,49 +101,24 @@ enum ComputerDaoSql implements ComputerDao {
      */
     @Override
     public void createComputer(Computer computer) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet generatedKey = null;
         if (computer == null) {
             return;
         }
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(
-                    "INSERT INTO computer (name,introduced,discontinued,company_id) values(?,?,?,?)",
-                    Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, computer.getName());
-            LocalDate introduced = computer.getIntroduced();
-            if (introduced != null) {
-                preparedStatement.setTimestamp(2, Timestamp
-                        .valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
-            } else {
-                preparedStatement.setNull(2, Types.TIMESTAMP);
-            }
-            LocalDate discontinued = computer.getDiscontinued();
-            if (discontinued != null) {
-                preparedStatement.setTimestamp(3, Timestamp
-                        .valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
-            } else {
-                preparedStatement.setNull(3, Types.TIMESTAMP);
-            }
-            if (computer.getCompany() != null && computer.getCompany().getId() > 0) {
-                preparedStatement.setLong(4, computer.getCompany().getId());
-            } else {
-                preparedStatement.setNull(4, Types.BIGINT);
-            }
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        "INSERT INTO computer (" + NAME + "," + INTRODUCED + "," + DISCONTINUED
+                                + "," + COMPANY_ID + ") values(?,?,?,?)",
+                        Statement.RETURN_GENERATED_KEYS);) {
+            setPreparedStatementCreateUpdate(preparedStatement, computer);
             if (preparedStatement.executeUpdate() > 0) {
-                generatedKey = preparedStatement.getGeneratedKeys();
-                if (generatedKey.next()) {
-                    computer.setId(generatedKey.getLong(1));
+                try (ResultSet generatedKey = preparedStatement.getGeneratedKeys();) {
+                    if (generatedKey.next()) {
+                        computer.setId(generatedKey.getLong(1));
+                    }
                 }
             }
         } catch (SQLException e) {
             throw new DaoException("Error storing the computer : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
-            DatabaseConnection.INSTANCE.closeResulSet(generatedKey);
         }
     }
 
@@ -125,24 +128,20 @@ enum ComputerDaoSql implements ComputerDao {
     @Override
     public List<Computer> listSomecomputer(int number, long idFirst) {
         ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de
-                                                           // retourner null
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(
-                    "SELECT c.id as id ,c.name as name ,c.introduced as introduced ,c.discontinued as discontinued ,company.id as company_id ,company.name as company_name FROM computer as c LEFT JOIN company ON c.company_id=company.id ORDER BY c.id ASC LIMIT ?,?");
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id as "
+                        + ID + " ,c.name as " + NAME + " ,c.introduced as " + INTRODUCED
+                        + " ,c.discontinued as " + DISCONTINUED + " ,company.id as " + COMPANY_ID
+                        + " ,company.name as " + COMPANY_NAME
+                        + " FROM computer as c LEFT JOIN company ON c.company_id=company.id ORDER BY c.id ASC LIMIT ?,?");) {
             preparedStatement.setLong(1, idFirst);
             preparedStatement.setInt(2, number);
-            resultSet = preparedStatement.executeQuery();
-            computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE.bindingComputer(resultSet);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE
+                        .bindingComputer(resultSet);
+            }
         } catch (SQLException e) {
             throw new DaoException("Can't list computers : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
-            DatabaseConnection.INSTANCE.closeResulSet(resultSet);
         }
         return computers;
     }
@@ -153,22 +152,19 @@ enum ComputerDaoSql implements ComputerDao {
     @Override
     public Computer getComputer(long id) {
         ArrayList<Computer> computers = new ArrayList<>(); // initialising computers
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(
-                    "SELECT c.id as id ,c.name as name ,c.introduced as introduced ,c.discontinued as discontinued ,company.id as company_id ,company.name as company_name FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.id=?");
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id as "
+                        + ID + " ,c.name as " + NAME + " ,c.introduced as " + INTRODUCED
+                        + " ,c.discontinued as " + DISCONTINUED + " ,company.id as " + COMPANY_ID
+                        + " ,company.name as " + COMPANY_NAME
+                        + " FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.id=?");) {
             preparedStatement.setLong(1, id);
-            resultSet = preparedStatement.executeQuery();
-            computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE.bindingComputer(resultSet);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE
+                        .bindingComputer(resultSet);
+            }
         } catch (SQLException e) {
             throw new DaoException("Can't retrieve computer : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
-            DatabaseConnection.INSTANCE.closeResulSet(resultSet);
         }
         Computer c = new Computer.Builder("").build();
         if (computers.size() == 1) {
@@ -182,44 +178,20 @@ enum ComputerDaoSql implements ComputerDao {
      */
     @Override
     public void updateComputer(Computer computer) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         if (computer == null) {
             return;
         }
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement(
-                    "UPDATE computer SET name=?, introduced=?,discontinued=?,company_id=? where id = ?");
-            preparedStatement.setString(1, computer.getName());
-            LocalDate introduced = computer.getIntroduced();
-            if (introduced != null) {
-                preparedStatement.setTimestamp(2, Timestamp
-                        .valueOf(LocalDateTime.of(computer.getIntroduced(), LocalTime.of(0, 0))));
-            } else {
-                preparedStatement.setNull(2, Types.TIMESTAMP);
-            }
-            LocalDate discontinued = computer.getDiscontinued();
-            if (discontinued != null) {
-                preparedStatement.setTimestamp(3, Timestamp
-                        .valueOf(LocalDateTime.of(computer.getDiscontinued(), LocalTime.of(0, 0))));
-            } else {
-                preparedStatement.setNull(3, Types.TIMESTAMP);
-            }
-            if (computer.getCompany() != null && computer.getCompany().getId() > 0) {
-                preparedStatement.setLong(4, computer.getCompany().getId());
-            } else {
-                preparedStatement.setNull(4, Types.BIGINT);
-            }
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement("UPDATE computer SET " + NAME + "=?, " + INTRODUCED
+                                + "=?," + DISCONTINUED + "=?," + COMPANY_ID + "=? where id = ?");) {
+            setPreparedStatementCreateUpdate(preparedStatement, computer);
             preparedStatement.setLong(5, computer.getId());
             if (preparedStatement.executeUpdate() == 0) {
                 throw new DaoException("No operation executed");
             }
         } catch (SQLException e) {
             throw new DaoException("Can't update computer : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
         }
     }
 
@@ -228,45 +200,33 @@ enum ComputerDaoSql implements ComputerDao {
      */
     @Override
     public void deleteComputer(long id) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         if (id <= 0) {
             return;
         }
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            preparedStatement = connection.prepareStatement("DELETE FROM computer where id=?");
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement("DELETE FROM computer where id=?");) {
             preparedStatement.setLong(1, id);
             if (preparedStatement.executeUpdate() == 0) {
                 throw new DaoException("No operation executed");
             }
         } catch (SQLException e) {
             throw new DaoException("Can't delete computer : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(preparedStatement);
         }
     }
 
     @Override
     public int countComputer() {
-        Connection connection = null;
-        Statement st = null;
-        ResultSet rs = null;
         int numberOfComputers = 0;
-        try {
-            connection = DatabaseConnection.INSTANCE.getConnection();
-            st = connection.createStatement();
-            rs = st.executeQuery("SELECT count(*) as numberOfComputers from computer");
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+                Statement st = connection.createStatement();
+                ResultSet rs = st.executeQuery(
+                        "SELECT count(" + ID + ") as numberOfComputers from computer");) {
             if (rs.next()) {
                 numberOfComputers = rs.getInt("numberOfComputers");
             }
         } catch (SQLException e) {
             throw new DaoException("Can't count computer : ", e);
-        } finally {
-            DatabaseConnection.INSTANCE.closeConnection(connection);
-            DatabaseConnection.INSTANCE.closeStatement(st);
-            DatabaseConnection.INSTANCE.closeResulSet(rs);
         }
         return numberOfComputers;
     }

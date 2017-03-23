@@ -1,6 +1,6 @@
 package com.excilys.mlemaile.cdb.presentation;
 
-public class Page<T> {
+public class Page {
     public static int numberPerPage = 50;
     private int       pageNumber;
 

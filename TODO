@@ -1,11 +1,7 @@
 Refacto :
-* Page.java, enlever la généricité
 * 1 obj / couche
 * dtos dans jsp
 * Optional
-* try with resources
-* * dans requête SQL
-* code en double dans create et update SQL
 
 WIP :
 

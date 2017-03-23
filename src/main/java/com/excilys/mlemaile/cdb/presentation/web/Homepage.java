@@ -51,7 +51,7 @@ public class Homepage extends HttpServlet {
                 limit = Integer.parseInt(request.getParameter(PARAM_PAGE_LIMIT));
             }
             Page.numberPerPage = limit;
-            Page<Computer> page = new Page<>(numPage);
+            Page page = new Page(numPage);
             List<Computer> computers = ServiceComputer.INSTANCE.listComputer(Page.numberPerPage,
                     (page.getPageNumber() - 1) * Page.numberPerPage);
             request.setAttribute(ATT_LIST_COMPUTERS, computers);

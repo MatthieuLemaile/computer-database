@@ -17,6 +17,7 @@ import java.util.Optional;
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
+import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
@@ -26,12 +27,12 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
  */
 public enum ComputerDaoSql implements ComputerDao {
     INSTANCE();
-    private static final String ID           = "id";
-    private static final String NAME         = "name";
-    private static final String INTRODUCED   = "introduced";
-    private static final String DISCONTINUED = "discontinued";
+    public static final String  ID           = "id";
+    public static final String  NAME         = "name";
+    public static final String  INTRODUCED   = "introduced";
+    public static final String  DISCONTINUED = "discontinued";
     private static final String COMPANY_ID   = "company_id";
-    private static final String COMPANY_NAME = "company_name";
+    public static final String  COMPANY_NAME = "company_name";
 
     /**
      * this method map the result of a request (in the ResultSet) with the computer object.
@@ -133,22 +134,29 @@ public enum ComputerDaoSql implements ComputerDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#listSomecomputer(int, long)
+     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#listSortComputer(int, long)
      */
     @Override
-    public List<Computer> listSomecomputer(int number, long idFirst) {
+    public List<Computer> listSortSearchComputer(int number, long idFirst, FieldSort sort,
+            String search) {
         ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de retourner null
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id as "
-                        + ID + " ,c.name as " + NAME + " ,c.introduced as " + INTRODUCED
-                        + " ,c.discontinued as " + DISCONTINUED + " ,company.id as " + COMPANY_ID
-                        + " ,company.name as " + COMPANY_NAME
-                        + " FROM computer as c LEFT JOIN company ON c.company_id=company.id ORDER BY c.id ASC LIMIT ?,?");) {
-            preparedStatement.setLong(1, idFirst);
-            preparedStatement.setInt(2, number);
-            try (ResultSet resultSet = preparedStatement.executeQuery();) {
-                computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE
-                        .bindingComputer(resultSet);
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();) {
+            String sql = "SELECT c.id as " + ID + " ,c.name as " + NAME + " ,c.introduced as "
+                    + INTRODUCED + " ,c.discontinued as " + DISCONTINUED + " ,company.id as "
+                    + COMPANY_ID + " ,company.name as " + COMPANY_NAME
+                    + " FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.name LIKE ? OR company.name like ? ORDER BY %s ASC LIMIT ?,?";
+
+            sql = String.format(sql, sort.toString());
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+                String searchPattern = search != null ? "%" + search + "%" : "%";
+                preparedStatement.setString(1, searchPattern);
+                preparedStatement.setString(2, searchPattern);
+                preparedStatement.setLong(3, idFirst);
+                preparedStatement.setInt(4, number);
+                try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                    computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE
+                            .bindingComputer(resultSet);
+                }
             }
         } catch (SQLException e) {
             throw new DaoException("Can't list computers : ", e);
@@ -211,7 +219,7 @@ public enum ComputerDaoSql implements ComputerDao {
     @Override
     public void deleteComputer(long id) {
         if (id <= 0) {
-            return;
+            throw new DaoException("The id " + id + " is not valid");
         }
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection
@@ -226,14 +234,19 @@ public enum ComputerDaoSql implements ComputerDao {
     }
 
     @Override
-    public int countComputer() {
+    public int countComputer(String search) {
         int numberOfComputers = 0;
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                Statement st = connection.createStatement();
-                ResultSet rs = st.executeQuery(
-                        "SELECT count(" + ID + ") as numberOfComputers from computer");) {
-            if (rs.next()) {
-                numberOfComputers = rs.getInt("numberOfComputers");
+                PreparedStatement st = connection.prepareStatement(
+                        "SELECT count(computer.id) as numberOfComputers FROM computer LEFT JOIN company ON computer.company_id=company.id"
+                        + " WHERE computer.name LIKE ? OR company.name like ?");) {
+            String searchPattern = search != null ? "%" + search + "%" : "%";
+            st.setString(1, searchPattern);
+            st.setString(2, searchPattern);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    numberOfComputers = rs.getInt("numberOfComputers");
+                }
             }
         } catch (SQLException e) {
             throw new DaoException("Can't count computer : ", e);

@@ -16,6 +16,7 @@ import org.powermock.reflect.Whitebox;
 
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
+import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
 @RunWith(PowerMockRunner.class)
@@ -63,8 +64,8 @@ public class ServiceComputerTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.listSomecomputer(10, 0)).thenReturn(computers);
-		assertEquals("List computers does not work as intended",computers,ServiceComputer.INSTANCE.listComputer(10, 0));
+		when(mockComputerDao.listSortSearchComputer(10, 0,FieldSort.NAME, null)).thenReturn(computers);
+		assertEquals("List computers does not work as intended",computers,ServiceComputer.INSTANCE.listComputer(10, 0,FieldSort.NAME, null));
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package com.excilys.mlemaile.cdb.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -45,5 +46,25 @@ public class ServiceCompanyTest {
 		when(mockCompanyDao.getCompany(1)).thenReturn(opt);
 		assertEquals("Get Company does not work as intended",company,ServiceCompany.INSTANCE.getCompany(1));
 	}
-
+	
+	@Test
+	public void testDeleteCompanyId(){
+	    Company c = new Company.Builder().build();
+	    DaoFactory mockFactory = mock(DaoFactory.class);
+	    CompanyDao mockCompanyDao = mock(CompanyDao.class);
+	    Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
+	    when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
+	    when(mockCompanyDao.getCompany(1)).thenReturn(Optional.ofNullable(c));
+	    assertTrue("Delete company does not work as intended",ServiceCompany.INSTANCE.deleteCompany(1));
+	}
+	
+	@Test
+    public void testDeleteCompanyCompany(){
+	    Company c = new Company.Builder().build();
+        DaoFactory mockFactory = mock(DaoFactory.class);
+        CompanyDao mockCompanyDao = mock(CompanyDao.class);
+        Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
+        when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
+        assertTrue("Delete company does not work as intended",ServiceCompany.INSTANCE.deleteCompany(c));
+    }
 }

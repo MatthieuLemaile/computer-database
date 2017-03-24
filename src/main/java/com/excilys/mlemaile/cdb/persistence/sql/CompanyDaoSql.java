@@ -106,4 +106,35 @@ public enum CompanyDaoSql implements CompanyDao {
         }
         return companies;
     }
+
+    /**
+     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#deleteCompany()
+     */
+    @Override
+    public void deleteCompany(Company company) {
+        if (company == null) {
+            throw new DaoException("Can't delete a null object");
+        }
+        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();) {
+            try (PreparedStatement preparedStatement = connection
+                    .prepareStatement("DELETE FROM computer WHERE company_id=?")) {
+                connection.setAutoCommit(false);
+                preparedStatement.setLong(1, company.getId());
+                preparedStatement.executeUpdate();
+                try (PreparedStatement deleteCompanyStatement = connection
+                        .prepareStatement("DELETE FROM company WHERE id=?")) {
+                    deleteCompanyStatement.setLong(1, company.getId());
+                    deleteCompanyStatement.executeUpdate();
+                    connection.commit();
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                throw new DaoException("Can't delete company", e);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Error opening the conenction", e);
+        }
+    }
 }

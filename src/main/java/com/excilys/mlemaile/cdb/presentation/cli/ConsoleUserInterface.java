@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
@@ -32,6 +33,7 @@ public class ConsoleUserInterface {
             System.out.println("4 : create a computer");
             System.out.println("5 : update a computer");
             System.out.println("6 : delete a computer");
+            System.out.println("7 : delete a company");
             System.out.println("0 : Exit");
             try {
                 entry = br.readLine();
@@ -41,7 +43,7 @@ public class ConsoleUserInterface {
             } catch (NumberFormatException e) {
                 System.out.println("You must enter an integer");
             }
-        } while (optionNumber < 0 || optionNumber > 6);
+        } while (optionNumber < 0 || optionNumber > 7);
 
         switch (optionNumber) {
         case 1:
@@ -61,6 +63,9 @@ public class ConsoleUserInterface {
             break;
         case 6:
             deleteComputer(br);
+            break;
+        case 7:
+            deleteCompany(br);
             break;
         default:
             continuProgramm = false;
@@ -86,7 +91,7 @@ public class ConsoleUserInterface {
                 if (pageNumber > 0) {
                     int indexMin = (pageNumber - 1) * Page.numberPerPage;
                     computers = (ArrayList<Computer>) ServiceComputer.INSTANCE
-                            .listComputer(Page.numberPerPage, indexMin);
+                            .listComputer(Page.numberPerPage, indexMin, FieldSort.NAME, null);
                     for (Computer computer : computers) {
                         System.out.println(computer.toString());
                     }
@@ -296,6 +301,36 @@ public class ConsoleUserInterface {
             Computer c = ServiceComputer.INSTANCE.getComputer(id).get();
             ServiceComputer.INSTANCE.deleteComputer(c);
             System.out.println("Computer successfully deleted !");
+        } catch (ServiceException e) {
+            System.out.println("a problem occurpage.getPageNumber() - 1) * Page.numberPerPage)"
+                    + e.getMessage());
+        }
+    }
+
+    /**
+     * This function allow the user to delete a company.
+     * @param br BufferedReader to read the user's entry
+     */
+    private static void deleteCompany(BufferedReader br) {
+        System.out.println("Enter the id of the company you want to delete.");
+        String entry;
+        int id = 0;
+        do {
+            System.out.println("Enter a number greater or equal to 1");
+            try {
+                entry = br.readLine();
+                id = Integer.parseInt(entry);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (NumberFormatException e) {
+                System.out.println("You must enter an integer");
+            }
+        } while (id < 1);
+        try {
+            Company c = ServiceCompany.INSTANCE.getCompany(id);
+            ServiceCompany.INSTANCE.deleteCompany(c);
+            System.out.println("Company successfully deleted !");
         } catch (ServiceException e) {
             System.out.println("a problem occur" + e.getMessage());
         }

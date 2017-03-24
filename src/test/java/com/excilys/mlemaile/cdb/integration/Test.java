@@ -68,7 +68,7 @@ public class Test {
     }
 
     private void testValidationDateRealTime() {
-        driver.findElement(By.id("computerName")).sendKeys("Automatised Test with Selenium");
+        driver.findElement(By.id("computerName")).sendKeys("ZZAutomatised Test with Selenium");
         driver.findElement(By.id("introduced")).sendKeys("2012-02-05");
         driver.findElement(By.id("discontinued")).sendKeys("2012-02-01");
         Pattern pattern = Pattern.compile("alert alert-danger");
@@ -79,7 +79,7 @@ public class Test {
 
     private void testAddComputer() {
         driver.findElement(By.id("computerName")).clear();
-        driver.findElement(By.id("computerName")).sendKeys("Automatised Test with Selenium");
+        driver.findElement(By.id("computerName")).sendKeys("ZZAutomatised Test with Selenium");
         driver.findElement(By.id("introduced")).clear();
         driver.findElement(By.id("introduced")).sendKeys("2012-02-05");
         driver.findElement(By.id("discontinued")).clear();
@@ -89,21 +89,21 @@ public class Test {
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));
         lastPage.click();
         WebElement el = (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions
-                .presenceOfElementLocated(By.linkText("Automatised Test with Selenium")));
+                .presenceOfElementLocated(By.linkText("ZZAutomatised Test with Selenium")));
         List<WebElement> els = el.findElement(By.xpath("../..")).findElements(By.xpath(".//td"));
-        assertEquals("Automatised Test with Selenium", els.get(1).getText());
+        assertEquals("ZZAutomatised Test with Selenium", els.get(1).getText());
         assertEquals("2012-02-05", els.get(2).getText());
         assertEquals("2014-02-01", els.get(3).getText());
         assertEquals("", els.get(4).getText());
     }
 
     private void testEditValidationDateRealTime() {
-        WebElement el = driver.findElement(By.linkText("Automatised Test with Selenium"));
+        WebElement el = driver.findElement(By.linkText("ZZAutomatised Test with Selenium"));
         el.sendKeys(Keys.ENTER);
         // wait the loading of the page
         (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("computerName")));
-        assertEquals("Automatised Test with Selenium",
+        assertEquals("ZZAutomatised Test with Selenium",
                 driver.findElement(By.id("computerName")).getAttribute("value"));
         assertEquals("2012-02-05", driver.findElement(By.id("introduced")).getAttribute("value"));
         assertEquals("2014-02-01", driver.findElement(By.id("discontinued")).getAttribute("value"));
@@ -122,15 +122,15 @@ public class Test {
         driver.findElement(By.id("discontinued")).sendKeys("2015-02-01");
         driver.findElement(By.id("computerName")).clear();
         driver.findElement(By.id("computerName"))
-                .sendKeys("Automatised Test with Selenium[Edited]");
+                .sendKeys("ZZAutomatised Test with Selenium[Edited]");
         driver.findElement(By.id("submit")).click();
         WebElement lastPage = (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));
         lastPage.click();
         WebElement el = (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions
-                .presenceOfElementLocated(By.linkText("Automatised Test with Selenium[Edited]")));
+                .presenceOfElementLocated(By.linkText("ZZAutomatised Test with Selenium[Edited]")));
         List<WebElement> els = el.findElement(By.xpath("../..")).findElements(By.xpath(".//td"));
-        assertEquals("Automatised Test with Selenium[Edited]", els.get(1).getText());
+        assertEquals("ZZAutomatised Test with Selenium[Edited]", els.get(1).getText());
         assertEquals("2014-02-05", els.get(2).getText());
         assertEquals("2015-02-01", els.get(3).getText());
         assertEquals("", els.get(4).getText());
@@ -139,7 +139,7 @@ public class Test {
     private void testDelete() throws IOException {
         driver.findElement(By.id("editComputer")).click();
         WebElement el = (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions
-                .presenceOfElementLocated(By.linkText("Automatised Test with Selenium[Edited]")));
+                .presenceOfElementLocated(By.linkText("ZZAutomatised Test with Selenium[Edited]")));
         List<WebElement> els = el.findElement(By.xpath("../..")).findElements(By.xpath(".//td"));
         WebElement checkbox = els.get(0).findElement(By.xpath(".//input"));
         String id = checkbox.getAttribute("value");
@@ -155,7 +155,7 @@ public class Test {
         (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("firstPage")));
         List<WebElement> listComputers = driver
-                .findElements(By.linkText("Automatised Test with Selenium[Edited]"));
+                .findElements(By.linkText("ZZAutomatised Test with Selenium[Edited]"));
         for (WebElement computer : listComputers) {
             List<WebElement> computerElement = computer.findElement(By.xpath("../.."))
                     .findElements(By.xpath(".//td"));
@@ -175,7 +175,7 @@ public class Test {
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("firstPage")));
         driver.findElement(By.id("editComputer")).click();
         List<WebElement> listComputers = driver
-                .findElements(By.linkText("Automatised Test with Selenium"));
+                .findElements(By.linkText("ZZAutomatised Test with Selenium"));
         for (WebElement computer : listComputers) {
             List<WebElement> computerElement = computer.findElement(By.xpath("../.."))
                     .findElements(By.xpath(".//td"));
@@ -195,7 +195,7 @@ public class Test {
         (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("firstPage")));
         List<WebElement> computersStillThere = driver
-                .findElements(By.linkText("Automatised Test with Selenium[Edited]"));
+                .findElements(By.linkText("ZZAutomatised Test with Selenium[Edited]"));
         assertEquals(0, computersStillThere.size());
 
     }
@@ -204,7 +204,7 @@ public class Test {
         driver.get("http://localhost:8080/ComputerDatabase/addComputer");
         (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("computerName")));
-        driver.findElement(By.id("computerName")).sendKeys("Automatised Test with Selenium");
+        driver.findElement(By.id("computerName")).sendKeys("ZZAutomatised Test with Selenium");
         driver.findElement(By.id("introduced")).sendKeys("2014-02-05");
         driver.findElement(By.id("discontinued")).sendKeys("2015-02-01");
         driver.findElement(By.id("submit")).click();

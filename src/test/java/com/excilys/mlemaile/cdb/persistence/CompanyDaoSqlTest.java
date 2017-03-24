@@ -3,6 +3,7 @@ package com.excilys.mlemaile.cdb.persistence;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.util.List;
@@ -71,16 +72,27 @@ public class CompanyDaoSqlTest {
 	@Test
 	public void testListSomeCompanies() {
 		List<Company> companies = companyDao.listSomeCompanies(10, 0);
-		assertEquals("Read method is not correct", 3, companies.size());
+		assertEquals("Read method is not correct", 4, companies.size());
 		assertEquals("Read method is not correct", "ID : 1 name : company1", companies.get(0).toString());
 		assertEquals("Read method is not correct", "ID : 2 name : company2", companies.get(1).toString());
 		assertEquals("Read method is not correct", "ID : 3 name : company3", companies.get(2).toString());
+		assertEquals("Read method is not correct", "ID : 4 name : company4", companies.get(3).toString());
 	}
 	
 	@Test
 	public void testGetCompany() {
 		Company company = companyDao.getCompany(2).get();
 		assertEquals("Read method is not correct", "ID : 2 name : company2",company.toString());
+	}
+	
+	@Test
+	public void testDeleteCompany(){
+	    Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(4).get();
+	    DaoFactory.INSTANCE.getCompanyDao().deleteCompany(company);
+	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputer(14).isPresent());
+	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputer(15).isPresent());
+	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputer(16).isPresent());
+	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getCompanyDao().getCompany(4).isPresent());
 	}
 
 }

@@ -2,7 +2,8 @@
 <dataset> 
     <company id="1" name="company1" />
     <company id="2" name="company2" />
-    <company id="3" name="company3" /> 
+    <company id="3" name="company3" />
+    <company id="4" name="company4" />  
     <computer id="1" name="computer1" introduced="2012-02-05" discontinued="2015-08-24" company_id="1"/>
     <computer id="2" name="computer2" introduced="2014-05-10" discontinued="2016-04-09" company_id="1"/>
     <computer id="3" name="computer3" introduced="2016-04-09" discontinued="2017-02-18" company_id="3"/>
@@ -15,5 +16,8 @@
     <computer id="10" name="computer10" introduced="2016-04-09" discontinued="2017-02-18" company_id="2"/>
     <computer id="11" name="computer11" introduced="2016-04-09" discontinued="2017-02-18" company_id="3"/>
     <computer id="12" name="computer12" introduced="2016-04-09" discontinued="2017-02-18" company_id="1"/>
-    <computer id="13" name="computer13" introduced="2016-04-09" discontinued="2017-02-18" company_id="3"/> 
+    <computer id="13" name="computer13" introduced="2016-04-09" discontinued="2017-02-18" company_id="3"/>
+    <computer id="14" name="computer14" company_id="4"/>
+    <computer id="15" name="computer15" company_id="4"/>
+    <computer id="16" name="computer16" company_id="4"/> 
 </dataset>

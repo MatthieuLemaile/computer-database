@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
+import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
@@ -139,12 +140,15 @@ public enum ServiceComputer {
      * list number computer from idFirst, if there is enough in the db.
      * @param number The number of computer to list
      * @param idFirst the id of the first computer to list
+     * @param search The String that computer and company name must contains
+     * @param sort the field to sort the result according to
      * @return a List of Computer
      */
-    public List<Computer> listComputer(int number, long idFirst) {
+    public List<Computer> listComputer(int number, long idFirst, FieldSort sort, String search) {
         List<Computer> computers = new ArrayList<>();
         try {
-            computers = DaoFactory.INSTANCE.getComputerDao().listSomecomputer(number, idFirst);
+            computers = DaoFactory.INSTANCE.getComputerDao().listSortSearchComputer(number, idFirst,
+                    sort, search);
         } catch (DaoException e) {
             LOGGER.warn("cant' list computers", e);
             throw new ServiceException("cant' list computers", e);
@@ -205,13 +209,14 @@ public enum ServiceComputer {
     }
 
     /**
-     * This method count the number of computer in the database.
+     * This method count the number of computer in the database whose name match the search string.
+     * @param search the String to search in the database
      * @return The number of computer.
      */
-    public int countComputers() {
+    public int countComputers(String search) {
         int numberOfComputers = 0;
         try {
-            numberOfComputers = DaoFactory.INSTANCE.getComputerDao().countComputer();
+            numberOfComputers = DaoFactory.INSTANCE.getComputerDao().countComputer(search);
         } catch (DaoException e) {
             LOGGER.warn("can't count computers", e);
             throw new ServiceException("can't count computers", e);

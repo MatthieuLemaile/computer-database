@@ -65,4 +65,41 @@ public enum ServiceCompany {
         }
         return companies;
     }
+
+    /**
+     * This method delete the given company.
+     * @param company The company to delete
+     * @return a boolean which is true if the execution went well
+     */
+    public boolean deleteCompany(Company company) {
+        boolean execution = false;
+        try {
+            DaoFactory.INSTANCE.getCompanyDao().deleteCompany(company);
+            execution = true;
+            LOGGER.info("deleted company : " + company.toString());
+        } catch (DaoException e) {
+            LOGGER.warn("can't delete the company", e);
+            throw new ServiceException("cant' delete the company", e);
+        }
+        return execution;
+    }
+
+    /**
+     * This method delete a company, identified by the id.
+     * @param id The id of the company to delete
+     * @return a boolean which is true if the execution went well
+     */
+    public boolean deleteCompany(long id) {
+        try {
+            Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(id);
+            if (opt.isPresent()) {
+                Company company = opt.get();
+                return deleteCompany(company);
+            } else {
+                return false;
+            }
+        } catch (DaoException e) {
+            throw new ServiceException("can't delete the company", e);
+        }
+    }
 }

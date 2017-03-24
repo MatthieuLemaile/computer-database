@@ -22,11 +22,17 @@
 		</h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
-				<form id="searchForm" action="#" method="GET" class="form-inline">
-
-					<input type="search" id="searchbox" name="search"
-						class="form-control" placeholder="Search name" /> <input
-						type="submit" id="searchsubmit" value="Filter by name"
+				<form id="searchForm"
+					action="${pageContext.request.contextPath}/homepage" method="GET"
+					class="form-inline">
+					<input type=hidden name="page"
+						value="${requestScope.page.pageNumber}" /> <input type=hidden
+						name="limit" value="${requestScope.page.numberPerPage}" /> <input
+						type=hidden name="sort"
+						value="${requestScope.page.sort.toString()}" /> <input
+						type="search" id="searchbox" name="search" class="form-control"
+						placeholder="Search name" value="${requestScope.search}" /> <input
+						alert("elem :"+);type="submit" id="searchsubmit" value="Filter by name"
 						class="btn btn-primary" />
 				</form>
 			</div>
@@ -58,12 +64,19 @@
 								class="fa fa-trash-o fa-lg"></i>
 						</a>
 					</span></th>
-					<th>Computer name</th>
-					<th>Introduced date</th>
+					<th><a
+						href="${pageContext.request.contextPath}/homepage?sort=name">Computer
+							name</a></th>
+					<th><a
+						href="${pageContext.request.contextPath}/homepage?sort=introduced">Introduced
+							date</a></th>
 					<!-- Table header for Discontinued Date -->
-					<th>Discontinued date</th>
+					<th><a
+						href="${pageContext.request.contextPath}/homepage?sort=discontinued">Discontinued
+							date</a></th>
 					<!-- Table header for Company -->
-					<th>Company</th>
+					<th><a
+						href="${pageContext.request.contextPath}/homepage?sort=companyName">Company</a></th>
 
 				</tr>
 			</thead>
@@ -95,46 +108,44 @@
 		<ul class="pagination">
 			<c:if test="${requestScope.page.pageNumber > 1}">
 				<li><a id="firstPage"
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',1,requestScope.page.numberPerPage)}" />"
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',1,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />"
 					aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 				</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber-1 > 0}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}" />"
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />"
 					aria-label="Previous"> <span aria-hidden="true">&lt;</span>
 				</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber-2 > 0}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-2,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber-2}</a></li>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-2,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber-2}</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber-1 > 0}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber-1}</a></li>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber-1}</a></li>
 			</c:if>
-			<c:if
-				test="${requestScope.page.pageNumber+0 > 0 && requestScope.page.pageNumber+0 < numberPageMax+1}">
+
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+0}</a></li>
-			</c:if>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber+0}</a></li>
 			<c:if test="${requestScope.page.pageNumber+1 < numberPageMax+1}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+1}</a></li>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber+1}</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber+2 < numberPageMax+1}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+2,requestScope.page.numberPerPage)}" />">${requestScope.page.pageNumber+2}</a></li>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+2,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber+2}</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber+1 < numberPageMax+1}">
 				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}" />"
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />"
 					aria-label="Next"> <span aria-hidden="true">&gt;</span>
 				</a></li>
 			</c:if>
 			<c:if test="${requestScope.page.pageNumber < numberPageMax}">
 				<li><a id="lastPage"
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',numberPageMax,requestScope.page.numberPerPage)}" />"
+					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',numberPageMax,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />"
 					aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</c:if>
@@ -143,11 +154,11 @@
 		<div class="btn-group btn-group-sm pull-right" role="group">
 			<ul>
 				<li class="btn btn-default"><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,10)}" />">10</a></li>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,10)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">10</a></li>
 				<li class="btn btn-default"><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,50)}" />">50</a></li>
-				<li class="btn btn-defalastult"><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,100)}" />">100</a></li>
+					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,50)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">50</a></li>
+				<li class="btn btn-default"><a
+					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,100)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">100</a></li>
 			</ul>
 			<!-- <button type="button" class="btn btn-default">10</button>
             <button type="button" class="btn btn-default">50</button>

@@ -44,7 +44,7 @@ public enum DatabaseConnection {
                 Class.forName("com.mysql.jdbc.Driver");
                 HikariConfig configHikari = new HikariConfig();
                 // +"?zeroDateTimeBehavior"+zeroDataTimeBehavior
-                configHikari.setJdbcUrl(startUrl + host + "/" + database + "?zeroDateTimeBehavior"
+                configHikari.setJdbcUrl(startUrl + host + "/" + database + "?zeroDateTimeBehavior="
                         + zeroDataTimeBehavior);
                 configHikari.setUsername(user);
                 configHikari.setPassword(password);

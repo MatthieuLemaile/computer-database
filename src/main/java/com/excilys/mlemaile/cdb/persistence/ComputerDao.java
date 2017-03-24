@@ -17,9 +17,11 @@ public interface ComputerDao {
      * This method list a number of computer.
      * @param number The number of computer to list
      * @param idFirst The id of the first computer to list
+     * @param sort The field to sort computer by
+     * @param search The string that companuter and company must contains
      * @return a List of Computer
      */
-    List<Computer> listSomecomputer(int number, long idFirst);
+    List<Computer> listSortSearchComputer(int number, long idFirst, FieldSort sort, String search);
 
     /**
      * This method return the computer identified by the id. If it doesn't exist, it return a
@@ -31,9 +33,10 @@ public interface ComputerDao {
 
     /**
      * This method count the total number of computer in the database.
+     * @param search The string that Company and Computer must contains
      * @return The number of computer
      */
-    int countComputer();
+    int countComputer(String search);
 
     /**
      * This method change all the attribute of the computer identified by the id to those in the

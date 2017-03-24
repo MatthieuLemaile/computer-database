@@ -28,4 +28,9 @@ public interface CompanyDao {
      */
     List<Company> listCompanies();
 
+    /**
+     * This method delete a company.
+     * @param company the company to delete
+     */
+    void deleteCompany(Company company);
 }

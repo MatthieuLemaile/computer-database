@@ -14,6 +14,7 @@
 		<slf4j.version>1.7.24</slf4j.version>
 		<logback.version>1.2.1</logback.version>
 		<mysql.version>5.1.41</mysql.version>
+		<hikari.version>2.6.1</hikari.version>
 		<apacheCommonsConfiguration.version>2.0</apacheCommonsConfiguration.version>
 		<apacheCommonsBeanutils.version>1.9.3</apacheCommonsBeanutils.version>
 		<junit.version>4.10</junit.version>
@@ -40,7 +41,7 @@
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>2.6.1</version>
+			<version>${hikari.version}</version>
 		</dependency>
 
 

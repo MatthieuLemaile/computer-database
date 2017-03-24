@@ -72,15 +72,15 @@ public class CompanyDaoSqlTest {
 	public void testListSomeCompanies() {
 		List<Company> companies = companyDao.listSomeCompanies(10, 0);
 		assertEquals("Read method is not correct", 3, companies.size());
-		assertEquals("Reas method is not correct", "ID : 1 name : company1", companies.get(0).toString());
-		assertEquals("Reas method is not correct", "ID : 2 name : company2", companies.get(1).toString());
-		assertEquals("Reas method is not correct", "ID : 3 name : company3", companies.get(2).toString());
+		assertEquals("Read method is not correct", "ID : 1 name : company1", companies.get(0).toString());
+		assertEquals("Read method is not correct", "ID : 2 name : company2", companies.get(1).toString());
+		assertEquals("Read method is not correct", "ID : 3 name : company3", companies.get(2).toString());
 	}
 	
 	@Test
 	public void testGetCompany() {
 		Company company = companyDao.getCompany(2).get();
-		assertEquals("Reas method is not correct", "ID : 2 name : company2",company.toString());
+		assertEquals("Read method is not correct", "ID : 2 name : company2",company.toString());
 	}
 
 }

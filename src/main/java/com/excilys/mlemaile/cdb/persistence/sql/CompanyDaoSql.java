@@ -73,8 +73,7 @@ public enum CompanyDaoSql implements CompanyDao {
      */
     @Override
     public List<Company> listSomeCompanies(int number, long idFirst) {
-        ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
-                                                          // retourner null
+        ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
                         "SELECT " + ID + "," + NAME + " FROM company ORDER BY id ASC LIMIT ?,?");) {
@@ -96,6 +95,7 @@ public enum CompanyDaoSql implements CompanyDao {
     public List<Company> listCompanies() {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
         // retourner null
+
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(

@@ -137,7 +137,7 @@ public enum ComputerDaoSql implements ComputerDao {
      */
     @Override
     public List<Computer> listSomecomputer(int number, long idFirst) {
-        ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de
+        ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id as "
                         + ID + " ,c.name as " + NAME + " ,c.introduced as " + INTRODUCED

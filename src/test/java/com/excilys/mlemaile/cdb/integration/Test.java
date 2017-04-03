@@ -58,6 +58,7 @@ public class Test {
         testEdit();
         testDelete();
         testMultipleDelete();
+        assertNumberPerPage();
         // get a screenshot
         // File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         // FileUtils.copyFile(scrFile, new File("/home/excilys/screen.png"));
@@ -201,7 +202,18 @@ public class Test {
         assertEquals(0, computersStillThere.size());
 
     }
-
+    
+    private void assertNumberPerPage(){
+        WebElement firstPage = (new WebDriverWait(driver, TIMEOUT))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("firstPage")));
+        firstPage.click();
+        (new WebDriverWait(driver, TIMEOUT))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));
+        List<WebElement> listChecks = driver
+                .findElements(By.className("cb"));
+        assertTrue("Wrong number of element in the page",listChecks.size()<=50);
+    }
+    
     private void addComputer() {
         driver.get(BASE_URL + "/addComputer");
         (new WebDriverWait(driver, TIMEOUT))

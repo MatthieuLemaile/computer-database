@@ -32,8 +32,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public class Test {
 
-    private static WebDriver driver;
-    private final static int TIMEOUT = 5;
+    private static WebDriver    driver;
+    private final static int    TIMEOUT  = 5;
+    private final static String BASE_URL = "http://localhost:8080/ComputerDatabase";
 
     @BeforeClass
     public static void setUpClass() {
@@ -62,7 +63,7 @@ public class Test {
     }
 
     private void testOpenUrl() {
-        driver.get("http://localhost:8080/ComputerDatabase/addComputer");
+        driver.get(BASE_URL + "/addComputer");
         WebElement el = driver.findElement(By.tagName("h1"));
         assertEquals("Add Computer", el.getText());
     }
@@ -201,7 +202,7 @@ public class Test {
     }
 
     private void addComputer() {
-        driver.get("http://localhost:8080/ComputerDatabase/addComputer");
+        driver.get(BASE_URL + "/addComputer");
         (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("computerName")));
         driver.findElement(By.id("computerName")).sendKeys("ZZAutomatised Test with Selenium");

@@ -17,7 +17,7 @@ $(function() {
 	// window.location.search);
 	// });
 	
-	$(".btn-default").click(function(){
+	$(".nb-per-page").click(function(){
 		$(this).children()[0].click();
 	});
 

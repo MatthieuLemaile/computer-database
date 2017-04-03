@@ -26,13 +26,13 @@
 					action="${pageContext.request.contextPath}/homepage" method="GET"
 					class="form-inline">
 					<input type=hidden name="page"
-						value="${requestScope.page.pageNumber}" /> <input type=hidden
+						value="1" /> <input type=hidden
 						name="limit" value="${requestScope.page.numberPerPage}" /> <input
 						type=hidden name="sort"
 						value="${requestScope.page.sort.toString()}" /> <input
 						type="search" id="searchbox" name="search" class="form-control"
 						placeholder="Search name" value="${requestScope.search}" /> <input
-						alert("elem :"+);type="submit" id="searchsubmit" value="Filter by name"
+						type="submit" id="searchsubmit" value="Filter by name"
 						class="btn btn-primary" />
 				</form>
 			</div>
@@ -153,11 +153,11 @@
 
 		<div class="btn-group btn-group-sm pull-right" role="group">
 			<ul>
-				<li class="btn btn-default"><a
+				<li class="btn btn-default nb-per-page"><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,10)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">10</a></li>
-				<li class="btn btn-default"><a
+				<li class="btn btn-default nb-per-page"><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,50)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">50</a></li>
-				<li class="btn btn-default"><a
+				<li class="btn btn-default nb-per-page"><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:pagination(requestScope.page.pageNumber,100)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">100</a></li>
 			</ul>
 			<!-- <button type="button" class="btn btn-default">10</button>

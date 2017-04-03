@@ -145,7 +145,6 @@ public enum ComputerDaoSql implements ComputerDao {
                     + INTRODUCED + " ,c.discontinued as " + DISCONTINUED + " ,company.id as "
                     + COMPANY_ID + " ,company.name as " + COMPANY_NAME
                     + " FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.name LIKE ? OR company.name like ? ORDER BY %s ASC LIMIT ?,?";
-
             sql = String.format(sql, sort.toString());
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
                 String searchPattern = search != null ? "%" + search + "%" : "%";

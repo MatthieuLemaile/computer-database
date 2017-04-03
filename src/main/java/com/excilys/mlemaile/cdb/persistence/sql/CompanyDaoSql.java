@@ -111,19 +111,19 @@ public enum CompanyDaoSql implements CompanyDao {
      * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#deleteCompany()
      */
     @Override
-    public void deleteCompany(Company company) {
-        if (company == null) {
-            throw new DaoException("Can't delete a null object");
+    public void deleteCompany(long companyId) {
+        if (companyId < 1) {
+            throw new DaoException("Can't delete a company with an id less than 0");
         }
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();) {
             try (PreparedStatement preparedStatement = connection
                     .prepareStatement("DELETE FROM computer WHERE company_id=?")) {
                 connection.setAutoCommit(false);
-                preparedStatement.setLong(1, company.getId());
+                preparedStatement.setLong(1, companyId);
                 preparedStatement.executeUpdate();
                 try (PreparedStatement deleteCompanyStatement = connection
                         .prepareStatement("DELETE FROM company WHERE id=?")) {
-                    deleteCompanyStatement.setLong(1, company.getId());
+                    deleteCompanyStatement.setLong(1, companyId);
                     deleteCompanyStatement.executeUpdate();
                     connection.commit();
                     connection.setAutoCommit(true);

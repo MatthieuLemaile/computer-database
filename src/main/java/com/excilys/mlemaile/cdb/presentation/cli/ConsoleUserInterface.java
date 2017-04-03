@@ -328,8 +328,7 @@ public class ConsoleUserInterface {
             }
         } while (id < 1);
         try {
-            Company c = ServiceCompany.INSTANCE.getCompany(id);
-            ServiceCompany.INSTANCE.deleteCompany(c);
+            ServiceCompany.INSTANCE.deleteCompany(id);
             System.out.println("Company successfully deleted !");
         } catch (ServiceException e) {
             System.out.println("a problem occur" + e.getMessage());

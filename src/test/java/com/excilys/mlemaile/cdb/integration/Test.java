@@ -35,6 +35,7 @@ public class Test {
     private static WebDriver    driver;
     private final static int    TIMEOUT  = 5;
     private final static String BASE_URL = "http://localhost:8080/ComputerDatabase";
+    //private final static String BASE_URL = "http://localhost:8080/ComputerDatabase-1.4-RELEASE/";
 
     @BeforeClass
     public static void setUpClass() {

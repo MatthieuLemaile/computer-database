@@ -65,18 +65,18 @@
 						</a>
 					</span></th>
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=name">Computer
+						href="${pageContext.request.contextPath}/homepage?sort=name&search=${requestScope.search}">Computer
 							name</a></th>
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=introduced">Introduced
+						href="${pageContext.request.contextPath}/homepage?sort=introduced&search=${requestScope.search}">Introduced
 							date</a></th>
 					<!-- Table header for Discontinued Date -->
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=discontinued">Discontinued
+						href="${pageContext.request.contextPath}/homepage?sort=discontinued&search=${requestScope.search}">Discontinued
 							date</a></th>
 					<!-- Table header for Company -->
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=companyName">Company</a></th>
+						href="${pageContext.request.contextPath}/homepage?sort=companyName&search=${requestScope.search}">Company</a></th>
 
 				</tr>
 			</thead>

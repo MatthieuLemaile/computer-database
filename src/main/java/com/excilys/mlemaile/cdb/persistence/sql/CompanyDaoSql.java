@@ -134,7 +134,7 @@ public enum CompanyDaoSql implements CompanyDao {
                 throw new DaoException("Can't delete company", e);
             }
         } catch (SQLException e) {
-            throw new DaoException("Error opening the conenction", e);
+            throw new DaoException("Error opening the connection", e);
         }
     }
 }

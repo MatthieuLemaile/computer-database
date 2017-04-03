@@ -1,12 +1,9 @@
 WIP :
-* JS, quand boutons edit/validate trigger fonctionnalité 10,50,100 => y ajouter une classe spé
-* recherche, bouton buggé
-* congé hellfest
+* recherche, bouton buggé ???
 
 Before next Impl :
 
 Opt mais important: 
-* DTOs en CLI
 
 Opt :
 * une classe Secureinput qui vérifie lesdits inputs

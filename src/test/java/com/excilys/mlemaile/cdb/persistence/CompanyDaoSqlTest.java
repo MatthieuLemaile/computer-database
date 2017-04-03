@@ -87,8 +87,7 @@ public class CompanyDaoSqlTest {
 	
 	@Test
 	public void testDeleteCompany(){
-	    Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(4).get();
-	    DaoFactory.INSTANCE.getCompanyDao().deleteCompany(company);
+	    DaoFactory.INSTANCE.getCompanyDao().deleteCompany(4);
 	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputer(14).isPresent());
 	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputer(15).isPresent());
 	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputer(16).isPresent());

@@ -60,11 +60,10 @@ public class ServiceCompanyTest {
 	
 	@Test
     public void testDeleteCompanyCompany(){
-	    Company c = new Company.Builder().build();
         DaoFactory mockFactory = mock(DaoFactory.class);
         CompanyDao mockCompanyDao = mock(CompanyDao.class);
         Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
         when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-        assertTrue("Delete company does not work as intended",ServiceCompany.INSTANCE.deleteCompany(c));
+        assertTrue("Delete company does not work as intended",ServiceCompany.INSTANCE.deleteCompany(1));
     }
 }

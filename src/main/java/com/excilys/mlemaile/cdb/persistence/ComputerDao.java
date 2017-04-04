@@ -1,5 +1,6 @@
 package com.excilys.mlemaile.cdb.persistence;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,5 +51,12 @@ public interface ComputerDao {
      * @param id The id of the computer to delete
      */
     void deleteComputerById(long id);
+    
+    /**
+     * Delete Computer by company Id
+     * @param id the id of the company of computer to delete
+     * @param connection the connection to use
+     */
+    void deleteComputerByCompanyId(long id,Connection connection);
 
 }

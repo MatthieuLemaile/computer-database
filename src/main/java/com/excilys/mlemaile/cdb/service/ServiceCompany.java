@@ -1,5 +1,7 @@
 package com.excilys.mlemaile.cdb.service;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
+import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
 import com.excilys.mlemaile.cdb.service.model.Company;
 
 public enum ServiceCompany {
@@ -73,13 +76,25 @@ public enum ServiceCompany {
      */
     public boolean deleteCompany(long id) {
         boolean execution = false;
+        Connection connection = DatabaseConnection.INSTANCE.getConnection();
         try {
-            DaoFactory.INSTANCE.getCompanyDao().deleteCompanyById(id);
+            connection.setAutoCommit(false);
+            DaoFactory.INSTANCE.getComputerDao().deleteComputerByCompanyId(id, connection);
+            DaoFactory.INSTANCE.getCompanyDao().deleteCompanyById(id, connection);
             execution = true;
+            connection.commit();
             LOGGER.info("deleted company : " + id);
         } catch (DaoException e) {
             LOGGER.warn("can't delete the company", e);
             throw new ServiceException("cant' delete the company", e);
+        }catch(SQLException e){
+            throw new ServiceException("Error with the connection", e);
+        }finally{
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new ServiceException("Error with the connection", e);
+            }
         }
         return execution;
     }

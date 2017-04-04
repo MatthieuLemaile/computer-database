@@ -6,8 +6,10 @@ Before next Impl :
 Opt mais important: 
 
 Opt :
-* une classe Secureinput qui vérifie lesdits inputs
-* Unit test coverage
+
+Test:
+* ComputerDaoSql : deleteComputerBycompanyId
+* ServiceCompany : deleteCompany
 
 Big Step :
 * Multiple point

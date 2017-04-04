@@ -252,4 +252,20 @@ public enum ComputerDaoSql implements ComputerDao {
         }
         return numberOfComputers;
     }
+
+    @Override
+    public void deleteComputerByCompanyId(long id, Connection connection) {
+        try (PreparedStatement preparedStatement = connection
+                .prepareStatement("DELETE FROM computer WHERE company_id=?")) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+        }catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                throw new DaoException("error manipulating the connection from:" + e.getMessage(), e1);
+            }
+            throw new DaoException("Can't delete company", e);
+        }
+    }
 }

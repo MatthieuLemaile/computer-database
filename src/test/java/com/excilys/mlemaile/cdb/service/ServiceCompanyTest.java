@@ -16,11 +16,14 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
+import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoFactory;
+import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
 import com.excilys.mlemaile.cdb.service.model.Company;
+import com.mysql.jdbc.Connection;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CompanyDao.class,DaoFactory.class})
+@PrepareForTest({CompanyDao.class,DaoFactory.class,ComputerDao.class,DatabaseConnection.class})
 public class ServiceCompanyTest {
 
 	@Test
@@ -50,20 +53,17 @@ public class ServiceCompanyTest {
 	@Test
 	public void testDeleteCompanyId(){
 	    Company c = new Company.Builder().build();
+	    DatabaseConnection mockDatabaseConnection = mock(DatabaseConnection.class);
+	    Connection mockConnection = mock(Connection.class);
 	    DaoFactory mockFactory = mock(DaoFactory.class);
 	    CompanyDao mockCompanyDao = mock(CompanyDao.class);
+	    ComputerDao mockComputerDao = mock(ComputerDao.class);
 	    Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
+	    Whitebox.setInternalState(DatabaseConnection.class, "INSTANCE", mockDatabaseConnection);
+	    when(mockDatabaseConnection.getConnection()).thenReturn(mockConnection);
 	    when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
+	    when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
 	    when(mockCompanyDao.getCompanyById(1)).thenReturn(Optional.ofNullable(c));
 	    assertTrue("Delete company does not work as intended",ServiceCompany.INSTANCE.deleteCompany(1));
 	}
-	
-	@Test
-    public void testDeleteCompanyCompany(){
-        DaoFactory mockFactory = mock(DaoFactory.class);
-        CompanyDao mockCompanyDao = mock(CompanyDao.class);
-        Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
-        when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-        assertTrue("Delete company does not work as intended",ServiceCompany.INSTANCE.deleteCompany(1));
-    }
 }

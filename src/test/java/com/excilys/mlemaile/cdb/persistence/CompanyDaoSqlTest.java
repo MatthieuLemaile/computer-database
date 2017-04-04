@@ -72,11 +72,12 @@ public class CompanyDaoSqlTest {
 	@Test
 	public void testListSomeCompanies() {
 		List<Company> companies = companyDao.listNumberCompaniesStartingAt(10, 0);
-		assertEquals("Read method is not correct", 4, companies.size());
+		assertEquals("Read method is not correct", 5, companies.size());
 		assertEquals("Read method is not correct", "ID : 1 name : company1", companies.get(0).toString());
 		assertEquals("Read method is not correct", "ID : 2 name : company2", companies.get(1).toString());
 		assertEquals("Read method is not correct", "ID : 3 name : company3", companies.get(2).toString());
 		assertEquals("Read method is not correct", "ID : 4 name : company4", companies.get(3).toString());
+		assertEquals("Read method is not correct", "ID : 5 name : company5", companies.get(4).toString());
 	}
 	
 	@Test
@@ -87,11 +88,8 @@ public class CompanyDaoSqlTest {
 	
 	@Test
 	public void testDeleteCompany(){
-	    DaoFactory.INSTANCE.getCompanyDao().deleteCompanyById(4);
-	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputerById(14).isPresent());
-	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputerById(15).isPresent());
-	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getComputerDao().getComputerById(16).isPresent());
-	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getCompanyDao().getCompanyById(4).isPresent());
+	    DaoFactory.INSTANCE.getCompanyDao().deleteCompanyById(5, DatabaseConnection.INSTANCE.getConnection());
+	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getCompanyDao().getCompanyById(5).isPresent());
 	}
 
 }

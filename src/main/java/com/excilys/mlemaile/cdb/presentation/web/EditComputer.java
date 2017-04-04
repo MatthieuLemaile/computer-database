@@ -17,6 +17,7 @@ import com.excilys.mlemaile.cdb.presentation.model.MapperException;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
+import com.excilys.mlemaile.cdb.service.Validator;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
 /**
@@ -53,7 +54,7 @@ public class EditComputer extends HttpServlet {
             if (request.getParameter(PARAM_COMPUTER_ID) != null) {
                 computerId = Long.parseLong(request.getParameter(PARAM_COMPUTER_ID));
             }
-            Optional<Computer> optComputer = ServiceComputer.INSTANCE.getComputer(computerId);
+            Optional<Computer> optComputer = ServiceComputer.INSTANCE.getComputerById(computerId);
             if (optComputer.isPresent()) {
                 ComputerDto c = MapperDtoToModel.INSTANCE.modelToComputerDto(optComputer.get());
                 request.setAttribute(ATT_COMPUTER, c);
@@ -75,11 +76,19 @@ public class EditComputer extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String id = request.getParameter(PARAM_COMPUTER_ID);
+        String companyId = request.getParameter(PARAM_COMPANY_ID); 
+        String introduced = request.getParameter(PARAM_COMPUTER_INTRO);
+        String discontinued = request.getParameter(PARAM_COMPUTER_DISCO);
+        Validator.INSTANCE.checkId(id);
+        Validator.INSTANCE.checkId(companyId);
+        Validator.INSTANCE.checkDate(introduced);
+        Validator.INSTANCE.checkDate(discontinued);
+        Validator.INSTANCE.checkDateNotBeforeDate(discontinued, introduced);
         ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
-                .introduced(request.getParameter(PARAM_COMPUTER_INTRO))
-                .discontinued(request.getParameter(PARAM_COMPUTER_DISCO))
-                .companyId(request.getParameter(PARAM_COMPANY_ID))
-                .id(request.getParameter(PARAM_COMPUTER_ID)).build();
+                .introduced(introduced)
+                .discontinued(discontinued)
+                .companyId(companyId).id(id).build();
         try {
             ServiceComputer.INSTANCE
                     .updatecomputer(MapperDtoToModel.INSTANCE.computerDtoToModel(ce));

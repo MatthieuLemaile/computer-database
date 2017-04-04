@@ -21,7 +21,7 @@ public interface ComputerDao {
      * @param search The string that companuter and company must contains
      * @return a List of Computer
      */
-    List<Computer> listSortSearchComputer(int number, long idFirst, FieldSort sort, String search);
+    List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort, String search);
 
     /**
      * This method return the computer identified by the id. If it doesn't exist, it return a
@@ -29,14 +29,14 @@ public interface ComputerDao {
      * @param id l'id du computer.
      * @return un Computer
      */
-    Optional<Computer> getComputer(long id);
+    Optional<Computer> getComputerById(long id);
 
     /**
      * This method count the total number of computer in the database.
      * @param search The string that Company and Computer must contains
      * @return The number of computer
      */
-    int countComputer(String search);
+    int countSearchedComputer(String search);
 
     /**
      * This method change all the attribute of the computer identified by the id to those in the
@@ -49,6 +49,6 @@ public interface ComputerDao {
      * This method delete the computer identified by the id of the given computer.
      * @param id The id of the computer to delete
      */
-    void deleteComputer(long id);
+    void deleteComputerById(long id);
 
 }

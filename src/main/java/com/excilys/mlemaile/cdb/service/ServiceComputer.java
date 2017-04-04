@@ -33,7 +33,7 @@ public enum ServiceComputer {
 
         try {
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(companyId);
                 if (opt.isPresent()) {
                     company = opt.get();
                 }
@@ -43,7 +43,7 @@ public enum ServiceComputer {
         }
         try {
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(companyId);
 
                 if (opt.isPresent()) {
                     company = opt.get();
@@ -108,7 +108,7 @@ public enum ServiceComputer {
     public boolean updatecomputer(long id, String name, LocalDate introduced,
             LocalDate discontinued, long companyId) {
         boolean execution = false;
-        Optional<Computer> optComputer = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
+        Optional<Computer> optComputer = DaoFactory.INSTANCE.getComputerDao().getComputerById(id);
 
         if (optComputer.isPresent()) {
             Computer c = optComputer.get();
@@ -117,7 +117,7 @@ public enum ServiceComputer {
             c.setIntroduced(introduced);
             Company company = null;
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(companyId);
                 if (opt.isPresent()) {
                     company = opt.get();
                 }
@@ -144,10 +144,10 @@ public enum ServiceComputer {
      * @param sort the field to sort the result according to
      * @return a List of Computer
      */
-    public List<Computer> listComputer(int number, long idFirst, FieldSort sort, String search) {
+    public List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort, String search) {
         List<Computer> computers = new ArrayList<>();
         try {
-            computers = DaoFactory.INSTANCE.getComputerDao().listSortSearchComputer(number, idFirst,
+            computers = DaoFactory.INSTANCE.getComputerDao().listSortSearchNumberComputer(number, idFirst,
                     sort, search);
         } catch (DaoException e) {
             LOGGER.warn("cant' list computers", e);
@@ -161,10 +161,10 @@ public enum ServiceComputer {
      * @param id The id of the computer to return
      * @return a Computer
      */
-    public Optional<Computer> getComputer(long id) {
+    public Optional<Computer> getComputerById(long id) {
         Optional<Computer> optComputer;
         try {
-            optComputer = DaoFactory.INSTANCE.getComputerDao().getComputer(id);
+            optComputer = DaoFactory.INSTANCE.getComputerDao().getComputerById(id);
         } catch (DaoException e) {
             LOGGER.warn("cant' find the computer", e);
             throw new ServiceException("cant' find the computer", e);
@@ -180,7 +180,7 @@ public enum ServiceComputer {
     public boolean deleteComputer(Computer c) {
         boolean execution = false;
         try {
-            DaoFactory.INSTANCE.getComputerDao().deleteComputer(c.getId());
+            DaoFactory.INSTANCE.getComputerDao().deleteComputerById(c.getId());
             LOGGER.info("computer deleted : " + c.toString());
             execution = true;
         } catch (DaoException e) {
@@ -198,7 +198,7 @@ public enum ServiceComputer {
     public boolean deleteComputer(long id) {
         boolean execution = false;
         try {
-            DaoFactory.INSTANCE.getComputerDao().deleteComputer(id);
+            DaoFactory.INSTANCE.getComputerDao().deleteComputerById(id);
             execution = true;
             LOGGER.info("computer deleted : computer n°" + id);
         } catch (DaoException e) {
@@ -216,7 +216,7 @@ public enum ServiceComputer {
     public int countComputers(String search) {
         int numberOfComputers = 0;
         try {
-            numberOfComputers = DaoFactory.INSTANCE.getComputerDao().countComputer(search);
+            numberOfComputers = DaoFactory.INSTANCE.getComputerDao().countSearchedComputer(search);
         } catch (DaoException e) {
             LOGGER.warn("can't count computers", e);
             throw new ServiceException("can't count computers", e);

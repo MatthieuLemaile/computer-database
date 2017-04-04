@@ -44,10 +44,10 @@ public enum CompanyDaoSql implements CompanyDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#getCompany(long)
+     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#getCompanyById(long)
      */
     @Override
-    public Optional<Company> getCompany(long id) {
+    public Optional<Company> getCompanyById(long id) {
         ArrayList<Company> companies = new ArrayList<>(); // initialising
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
@@ -69,10 +69,10 @@ public enum CompanyDaoSql implements CompanyDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#listSomeCompanies(int, long)
+     * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#listNumberCompaniesStartingAt(int, long)
      */
     @Override
-    public List<Company> listSomeCompanies(int number, long idFirst) {
+    public List<Company> listNumberCompaniesStartingAt(int number, long idFirst) {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(
@@ -111,7 +111,7 @@ public enum CompanyDaoSql implements CompanyDao {
      * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#deleteCompany()
      */
     @Override
-    public void deleteCompany(long companyId) {
+    public void deleteCompanyById(long companyId) {
         if (companyId < 1) {
             throw new DaoException("Can't delete a company with an id less than 0");
         }

@@ -12,7 +12,7 @@ public interface CompanyDao {
      * @param id the id of the company to retrieve
      * @return the company identified by the id
      */
-    Optional<Company> getCompany(long id);
+    Optional<Company> getCompanyById(long id);
 
     /**
      * This method return number companies, ordered by id, in ascendent order.
@@ -20,7 +20,7 @@ public interface CompanyDao {
      * @param idFirst The id of the first company to return
      * @return a List of Company
      */
-    List<Company> listSomeCompanies(int number, long idFirst);
+    List<Company> listNumberCompaniesStartingAt(int number, long idFirst);
 
     /**
      * List all companies in the database.
@@ -32,5 +32,5 @@ public interface CompanyDao {
      * This method delete a company.
      * @param companyId the id of the company to delete
      */
-    void deleteCompany(long companyId);
+    void deleteCompanyById(long companyId);
 }

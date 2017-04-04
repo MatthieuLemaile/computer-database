@@ -16,6 +16,7 @@ import com.excilys.mlemaile.cdb.presentation.model.MapperException;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
+import com.excilys.mlemaile.cdb.service.Validator;
 
 /**
  * Servlet implementation class AddComputer.
@@ -62,11 +63,16 @@ public class AddComputer extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
-                .introduced(request.getParameter(PARAM_COMPUTER_INTRO))
-                .discontinued(request.getParameter(PARAM_COMPUTER_DISCO))
-                .companyId(request.getParameter(PARAM_COMPANY_ID)).build();
+        String companyId = request.getParameter(PARAM_COMPANY_ID);
+        String introduced = request.getParameter(PARAM_COMPUTER_INTRO);
+        String discontinued = request.getParameter(PARAM_COMPUTER_DISCO);
         try {
+            Validator.INSTANCE.checkId(companyId);
+            Validator.INSTANCE.checkDate(introduced);
+            Validator.INSTANCE.checkDate(discontinued);
+            Validator.INSTANCE.checkDateNotBeforeDate(discontinued, introduced);
+            ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
+                    .introduced(introduced).discontinued(discontinued).companyId(companyId).build();
             ServiceComputer.INSTANCE
                     .createComputer(MapperDtoToModel.INSTANCE.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");

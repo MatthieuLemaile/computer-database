@@ -24,7 +24,7 @@ public enum ServiceCompany {
     public List<Company> listcompanies(int number, long idFirst) {
         List<Company> companies = new ArrayList<Company>();
         try {
-            companies = DaoFactory.INSTANCE.getCompanyDao().listSomeCompanies(number, idFirst);
+            companies = DaoFactory.INSTANCE.getCompanyDao().listNumberCompaniesStartingAt(number, idFirst);
         } catch (DaoException e) {
             LOGGER.warn("can't list companies", e);
             throw new ServiceException("can't list companies", e);
@@ -37,10 +37,10 @@ public enum ServiceCompany {
      * @param id The id of the company to return.
      * @return a Company
      */
-    public Company getCompany(long id) {
+    public Company getCompanyById(long id) {
         Company company = new Company.Builder().build();
         try {
-            Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompany(id);
+            Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(id);
             if (opt.isPresent()) {
                 company = opt.get();
             }
@@ -74,7 +74,7 @@ public enum ServiceCompany {
     public boolean deleteCompany(long id) {
         boolean execution = false;
         try {
-            DaoFactory.INSTANCE.getCompanyDao().deleteCompany(id);
+            DaoFactory.INSTANCE.getCompanyDao().deleteCompanyById(id);
             execution = true;
             LOGGER.info("deleted company : " + id);
         } catch (DaoException e) {

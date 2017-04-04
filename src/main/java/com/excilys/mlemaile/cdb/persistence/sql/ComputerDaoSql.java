@@ -137,7 +137,7 @@ public enum ComputerDaoSql implements ComputerDao {
      * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#listSortComputer(int, long)
      */
     @Override
-    public List<Computer> listSortSearchComputer(int number, long idFirst, FieldSort sort,
+    public List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort,
             String search) {
         ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();) {
@@ -164,10 +164,10 @@ public enum ComputerDaoSql implements ComputerDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#getComputer(long)
+     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#getComputerById(long)
      */
     @Override
-    public Optional<Computer> getComputer(long id) {
+    public Optional<Computer> getComputerById(long id) {
         ArrayList<Computer> computers = new ArrayList<>(); // initialising computers
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id as "
@@ -213,10 +213,10 @@ public enum ComputerDaoSql implements ComputerDao {
     }
 
     /**
-     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#deleteComputer(com.excilys.mlemaile.cdb.service.model.Computer)
+     * @see com.excilys.mlemaile.cdb.persistence.ComputerDao#deleteComputerById(com.excilys.mlemaile.cdb.service.model.Computer)
      */
     @Override
-    public void deleteComputer(long id) {
+    public void deleteComputerById(long id) {
         if (id <= 0) {
             throw new DaoException("The id " + id + " is not valid");
         }
@@ -233,7 +233,7 @@ public enum ComputerDaoSql implements ComputerDao {
     }
 
     @Override
-    public int countComputer(String search) {
+    public int countSearchedComputer(String search) {
         int numberOfComputers = 0;
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement st = connection.prepareStatement(

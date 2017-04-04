@@ -70,16 +70,16 @@ public class ComputerDaoSqlTest {
     @Test
     public void testCreateComputer() {
         LocalDate date = LocalDate.now();
-        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1).get();
+        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(1).get();
         Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
         computerDao.createComputer(c);
         assertEquals("Creation of a computer is not working", c.toString(),
-                computerDao.getComputer(c.getId()).get().toString());
+                computerDao.getComputerById(c.getId()).get().toString());
     }
 
     @Test
     public void testListSomecomputer() {
-        List<Computer> computers = computerDao.listSortSearchComputer(10, 0,FieldSort.NAME, null);
+        List<Computer> computers = computerDao.listSortSearchNumberComputer(10, 0,FieldSort.NAME, null);
         assertEquals("Read method is not correct", 10, computers.size());
         assertEquals("Read method is not correct",
                 "ID : 1 name : computer1 manufacturer [ID : 1 name : company1] introduced : 2012-02-05 Discontinued : 2015-08-24",
@@ -115,7 +115,7 @@ public class ComputerDaoSqlTest {
 
     @Test
     public void testListSomecomputerLastPage() {
-        List<Computer> computers = computerDao.listSortSearchComputer(10, 10,FieldSort.NAME, null);
+        List<Computer> computers = computerDao.listSortSearchNumberComputer(10, 10,FieldSort.NAME, null);
         assertEquals("Read method is not correct", 6, computers.size());
         assertEquals("Read method is not correct",
                 "ID : 4 name : computer4 manufacturer [ID : 1 name : company1] introduced : 2016-04-09 Discontinued : 2017-02-18",
@@ -130,7 +130,7 @@ public class ComputerDaoSqlTest {
 
     @Test
     public void testGetComputer() {
-        Computer computer = computerDao.getComputer(2).get();
+        Computer computer = computerDao.getComputerById(2).get();
         assertEquals("Read method is not correct",
                 "ID : 2 name : computer2 manufacturer [ID : 1 name : company1] introduced : 2014-05-10 Discontinued : 2016-04-09",
                 computer.toString());
@@ -138,7 +138,7 @@ public class ComputerDaoSqlTest {
 
     @Test
     public void testUpdateComputer() {
-        Computer computer = computerDao.getComputer(2).get();
+        Computer computer = computerDao.getComputerById(2).get();
         computer.setName("Test");
         computerDao.updateComputer(computer);
         assertEquals("Read method is not correct",
@@ -149,12 +149,12 @@ public class ComputerDaoSqlTest {
     @Test
     public void testDeleteComputer() {
         LocalDate date = LocalDate.now();
-        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompany(1).get();
+        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(1).get();
         Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
         computerDao.createComputer(c);
-        computerDao.deleteComputer(c.getId());
+        computerDao.deleteComputerById(c.getId());
         assertFalse("Deletion of a computer is not working",
-                computerDao.getComputer(c.getId()).isPresent());
+                computerDao.getComputerById(c.getId()).isPresent());
     }
 
 }

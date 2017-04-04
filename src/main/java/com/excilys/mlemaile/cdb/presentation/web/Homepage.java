@@ -62,7 +62,7 @@ public class Homepage extends HttpServlet {
             Page page = new Page(numPage);
             setSort(page, request);
             List<ComputerDto> computers = MapperDtoToModel.INSTANCE.modelListToComputerDto(
-                    ServiceComputer.INSTANCE.listComputer(Page.numberPerPage,
+                    ServiceComputer.INSTANCE.listSortSearchNumberComputer(Page.numberPerPage,
                             (page.getPageNumber() - 1) * Page.numberPerPage, page.getSort(),
                             search));
             request.setAttribute(ATT_LIST_COMPUTERS, computers);

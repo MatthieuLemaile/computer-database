@@ -57,14 +57,6 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>${mariadb.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -133,7 +125,7 @@
 			<version>${selenium.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -185,6 +177,19 @@
 					<linkXRef>false</linkXRef>
 				</configuration>
 
+			</plugin>
+
+			<!-- Tomcat plugin To redeploy : mvn tomcat7:redeploy ( -Dmaven.test.skip=true)-->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://localhost:8080/manager/text</url>
+					<server>Tomcat8Server</server>
+					<username>admin</username>
+					<password>manager</password>
+				</configuration>
 			</plugin>
 		</plugins>
 

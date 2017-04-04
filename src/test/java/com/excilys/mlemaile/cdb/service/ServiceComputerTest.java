@@ -64,8 +64,8 @@ public class ServiceComputerTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.listSortSearchComputer(10, 0,FieldSort.NAME, null)).thenReturn(computers);
-		assertEquals("List computers does not work as intended",computers,ServiceComputer.INSTANCE.listComputer(10, 0,FieldSort.NAME, null));
+		when(mockComputerDao.listSortSearchNumberComputer(10, 0,FieldSort.NAME, null)).thenReturn(computers);
+		assertEquals("List computers does not work as intended",computers,ServiceComputer.INSTANCE.listSortSearchNumberComputer(10, 0,FieldSort.NAME, null));
 	}
 
 	@Test
@@ -75,8 +75,8 @@ public class ServiceComputerTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-		when(mockComputerDao.getComputer(1)).thenReturn(Optional.ofNullable(computer));
-		assertEquals("Get computer does not work as intended",computer,ServiceComputer.INSTANCE.getComputer(1).get());
+		when(mockComputerDao.getComputerById(1)).thenReturn(Optional.ofNullable(computer));
+		assertEquals("Get computer does not work as intended",computer,ServiceComputer.INSTANCE.getComputerById(1).get());
 		
 	}
 

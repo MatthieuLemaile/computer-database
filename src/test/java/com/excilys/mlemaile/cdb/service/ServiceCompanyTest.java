@@ -31,7 +31,7 @@ public class ServiceCompanyTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-		when(mockCompanyDao.listSomeCompanies(10,0 )).thenReturn(companies);
+		when(mockCompanyDao.listNumberCompaniesStartingAt(10,0 )).thenReturn(companies);
 		assertEquals("List Companies does not work as intended",companies,ServiceCompany.INSTANCE.listcompanies(10, 0));
 	}
 
@@ -43,8 +43,8 @@ public class ServiceCompanyTest {
 		DaoFactory mockFactory = mock(DaoFactory.class);
 		Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 		when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-		when(mockCompanyDao.getCompany(1)).thenReturn(opt);
-		assertEquals("Get Company does not work as intended",company,ServiceCompany.INSTANCE.getCompany(1));
+		when(mockCompanyDao.getCompanyById(1)).thenReturn(opt);
+		assertEquals("Get Company does not work as intended",company,ServiceCompany.INSTANCE.getCompanyById(1));
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class ServiceCompanyTest {
 	    CompanyDao mockCompanyDao = mock(CompanyDao.class);
 	    Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
 	    when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-	    when(mockCompanyDao.getCompany(1)).thenReturn(Optional.ofNullable(c));
+	    when(mockCompanyDao.getCompanyById(1)).thenReturn(Optional.ofNullable(c));
 	    assertTrue("Delete company does not work as intended",ServiceCompany.INSTANCE.deleteCompany(1));
 	}
 	

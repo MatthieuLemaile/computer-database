@@ -91,7 +91,7 @@ public class ConsoleUserInterface {
                 if (pageNumber > 0) {
                     int indexMin = (pageNumber - 1) * Page.numberPerPage;
                     computers = (ArrayList<Computer>) ServiceComputer.INSTANCE
-                            .listComputer(Page.numberPerPage, indexMin, FieldSort.NAME, null);
+                            .listSortSearchNumberComputer(Page.numberPerPage, indexMin, FieldSort.NAME, null);
                     for (Computer computer : computers) {
                         System.out.println(computer.toString());
                     }
@@ -153,7 +153,7 @@ public class ConsoleUserInterface {
             try {
                 entry = br.readLine();
                 id = Integer.parseInt(entry);
-                c = ServiceComputer.INSTANCE.getComputer(id).get();
+                c = ServiceComputer.INSTANCE.getComputerById(id).get();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
@@ -239,7 +239,7 @@ public class ConsoleUserInterface {
             entry = br.readLine();
             String[] args = entry.split("( -|=)");
             id = Integer.parseInt(args[0]);
-            Computer c = ServiceComputer.INSTANCE.getComputer(id).get();
+            Computer c = ServiceComputer.INSTANCE.getComputerById(id).get();
             for (int i = 1; i < args.length; i = i + 2) {
                 if ("name".equals(args[i])) {
                     c.setName(args[i + 1]);
@@ -258,7 +258,7 @@ public class ConsoleUserInterface {
                     if (strId != null && !strId.trim().isEmpty()) {
                         long companyId = Long.parseLong(strId);
                         if (companyId > 1) {
-                            Company company = ServiceCompany.INSTANCE.getCompany(companyId);
+                            Company company = ServiceCompany.INSTANCE.getCompanyById(companyId);
                             c.setCompany(company);
                         }
                     }
@@ -298,7 +298,7 @@ public class ConsoleUserInterface {
             }
         } while (id < 1);
         try {
-            Computer c = ServiceComputer.INSTANCE.getComputer(id).get();
+            Computer c = ServiceComputer.INSTANCE.getComputerById(id).get();
             ServiceComputer.INSTANCE.deleteComputer(c);
             System.out.println("Computer successfully deleted !");
         } catch (ServiceException e) {

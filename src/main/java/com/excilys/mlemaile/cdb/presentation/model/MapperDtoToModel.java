@@ -62,7 +62,7 @@ public enum MapperDtoToModel {
         }
         Company company = null;
         if (companyId > 0) {
-            company = ServiceCompany.INSTANCE.getCompany(companyId);
+            company = ServiceCompany.INSTANCE.getCompanyById(companyId);
         }
 
         return new Computer.Builder(ce.getName()).company(company).id(id).introduced(introduced)

@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Story line : Open the website, directly to add a computer. Verify that we are on the right page,
- * then check for wrong date without submit, then with submit (disable js?). check also name
+ * then check for wrong date without submit. check also name
  * required Finally add a computer. Then list all computer, go to last page, and check that there is
  * the last - added computer. Edit that one, check for client side and server side verification.
  * Edit the name and validate. Go back to listing computer, and check for the new name. Delete the

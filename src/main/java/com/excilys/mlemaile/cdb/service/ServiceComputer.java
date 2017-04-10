@@ -16,7 +16,9 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public enum ServiceComputer {
     INSTANCE();
-    public static final Logger LOGGER = LoggerFactory.getLogger(ServiceComputer.class);
+    public static final Logger LOGGER            = LoggerFactory.getLogger(ServiceComputer.class);
+    private static int         numberOfComputers = 0;
+    private static boolean     updated           = false;
 
     /**
      * Create a computer from following informations.
@@ -33,7 +35,8 @@ public enum ServiceComputer {
 
         try {
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao()
+                        .getCompanyById(companyId);
                 if (opt.isPresent()) {
                     company = opt.get();
                 }
@@ -43,7 +46,8 @@ public enum ServiceComputer {
         }
         try {
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao()
+                        .getCompanyById(companyId);
 
                 if (opt.isPresent()) {
                     company = opt.get();
@@ -51,8 +55,12 @@ public enum ServiceComputer {
             }
             Computer c = new Computer.Builder(name).introduced(introduced)
                     .discontinued(discontinued).company(company).build();
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("creating computer " + c.toString());
+            }
             DaoFactory.INSTANCE.getComputerDao().createComputer(c);
             computerCreated = true;
+            addCounterComputer();
             LOGGER.info("Computer created : " + c.toString());
         } catch (DaoException e) {
             LOGGER.warn("Can't create the computer", e);
@@ -117,7 +125,8 @@ public enum ServiceComputer {
             c.setIntroduced(introduced);
             Company company = null;
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(companyId);
+                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao()
+                        .getCompanyById(companyId);
                 if (opt.isPresent()) {
                     company = opt.get();
                 }
@@ -144,11 +153,12 @@ public enum ServiceComputer {
      * @param sort the field to sort the result according to
      * @return a List of Computer
      */
-    public List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort, String search) {
+    public List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort,
+            String search) {
         List<Computer> computers = new ArrayList<>();
         try {
-            computers = DaoFactory.INSTANCE.getComputerDao().listSortSearchNumberComputer(number, idFirst,
-                    sort, search);
+            computers = DaoFactory.INSTANCE.getComputerDao().listSortSearchNumberComputer(number,
+                    idFirst, sort, search);
         } catch (DaoException e) {
             LOGGER.warn("cant' list computers", e);
             throw new ServiceException("cant' list computers", e);
@@ -183,6 +193,7 @@ public enum ServiceComputer {
             DaoFactory.INSTANCE.getComputerDao().deleteComputerById(c.getId());
             LOGGER.info("computer deleted : " + c.toString());
             execution = true;
+            minCounterComputer();
         } catch (DaoException e) {
             LOGGER.warn("cant' delete the computer", e);
             throw new ServiceException("cant' delete the computer", e);
@@ -200,6 +211,7 @@ public enum ServiceComputer {
         try {
             DaoFactory.INSTANCE.getComputerDao().deleteComputerById(id);
             execution = true;
+            minCounterComputer();
             LOGGER.info("computer deleted : computer n°" + id);
         } catch (DaoException e) {
             LOGGER.warn("cant' delete the computer", e);
@@ -214,13 +226,30 @@ public enum ServiceComputer {
      * @return The number of computer.
      */
     public int countComputers(String search) {
-        int numberOfComputers = 0;
-        try {
-            numberOfComputers = DaoFactory.INSTANCE.getComputerDao().countSearchedComputer(search);
-        } catch (DaoException e) {
-            LOGGER.warn("can't count computers", e);
-            throw new ServiceException("can't count computers", e);
+        if (!updated || !"".equals(search)) {
+            try {
+                numberOfComputers = DaoFactory.INSTANCE.getComputerDao()
+                        .countSearchedComputer(search);
+                updated = true;
+            } catch (DaoException e) {
+                LOGGER.warn("can't count computers", e);
+                throw new ServiceException("can't count computers", e);
+            }
         }
         return numberOfComputers;
+    }
+
+    /**
+     * Add one to the number of computer. Sync.
+     */
+    private synchronized void addCounterComputer() {
+        numberOfComputers++;
+    }
+
+    /**
+     * minus one to the number of computer. Sync.
+     */
+    private synchronized void minCounterComputer() {
+        numberOfComputers--;
     }
 }

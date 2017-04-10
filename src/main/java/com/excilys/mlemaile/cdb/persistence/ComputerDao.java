@@ -22,7 +22,8 @@ public interface ComputerDao {
      * @param search The string that companuter and company must contains
      * @return a List of Computer
      */
-    List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort, String search);
+    List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort,
+            String search);
 
     /**
      * This method return the computer identified by the id. If it doesn't exist, it return a
@@ -51,12 +52,12 @@ public interface ComputerDao {
      * @param id The id of the computer to delete
      */
     void deleteComputerById(long id);
-    
+
     /**
-     * Delete Computer by company Id
+     * Delete Computer by company Id.
      * @param id the id of the company of computer to delete
      * @param connection the connection to use
      */
-    void deleteComputerByCompanyId(long id,Connection connection);
+    void deleteComputerByCompanyId(long id, Connection connection);
 
 }

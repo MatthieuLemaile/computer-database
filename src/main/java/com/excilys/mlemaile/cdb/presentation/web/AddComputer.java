@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
 import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
@@ -23,6 +26,7 @@ import com.excilys.mlemaile.cdb.service.Validator;
  */
 @WebServlet("/addComputer")
 public class AddComputer extends HttpServlet {
+    private static final Logger LOGGER               = LoggerFactory.getLogger(AddComputer.class);
     private static final long   serialVersionUID     = 1L;
     private static final String ADD_COMPUTER_VIEW    = "/WEB-INF/views/addComputer.jsp";
     private static final String ATT_COMPANIES        = "companies";
@@ -63,20 +67,27 @@ public class AddComputer extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String name = request.getParameter(PARAM_COMPUTER_NAME);
         String companyId = request.getParameter(PARAM_COMPANY_ID);
         String introduced = request.getParameter(PARAM_COMPUTER_INTRO);
         String discontinued = request.getParameter(PARAM_COMPUTER_DISCO);
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Add computer : " + name + " intro " + introduced + " discontinued "
+                    + discontinued + " companyID " + companyId);
+        }
         try {
             Validator.INSTANCE.checkId(companyId);
             Validator.INSTANCE.checkDate(introduced);
             Validator.INSTANCE.checkDate(discontinued);
             Validator.INSTANCE.checkDateNotBeforeDate(discontinued, introduced);
-            ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
-                    .introduced(introduced).discontinued(discontinued).companyId(companyId).build();
+            ComputerDto ce = new ComputerDto.Builder(name).introduced(introduced)
+                    .discontinued(discontinued).companyId(companyId).build();
             ServiceComputer.INSTANCE
                     .createComputer(MapperDtoToModel.INSTANCE.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
         } catch (MapperException | ServiceException e) {
+            LOGGER.error("Failed to add the computer", e);
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
             request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
                     response);

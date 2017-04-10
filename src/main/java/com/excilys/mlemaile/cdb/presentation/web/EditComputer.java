@@ -77,7 +77,7 @@ public class EditComputer extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id = request.getParameter(PARAM_COMPUTER_ID);
-        String companyId = request.getParameter(PARAM_COMPANY_ID); 
+        String companyId = request.getParameter(PARAM_COMPANY_ID);
         String introduced = request.getParameter(PARAM_COMPUTER_INTRO);
         String discontinued = request.getParameter(PARAM_COMPUTER_DISCO);
         Validator.INSTANCE.checkId(id);
@@ -86,9 +86,8 @@ public class EditComputer extends HttpServlet {
         Validator.INSTANCE.checkDate(discontinued);
         Validator.INSTANCE.checkDateNotBeforeDate(discontinued, introduced);
         ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
-                .introduced(introduced)
-                .discontinued(discontinued)
-                .companyId(companyId).id(id).build();
+                .introduced(introduced).discontinued(discontinued).companyId(companyId).id(id)
+                .build();
         try {
             ServiceComputer.INSTANCE
                     .updatecomputer(MapperDtoToModel.INSTANCE.computerDtoToModel(ce));

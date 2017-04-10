@@ -6,8 +6,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool.PoolInitializationException;
 
 /**
  * This enum manage connections to the database.
@@ -16,32 +20,42 @@ import com.zaxxer.hikari.HikariDataSource;
  */
 public enum DatabaseConnection {
     INSTANCE();
+    private static final Logger                 LOGGER            = LoggerFactory
+            .getLogger(DatabaseConnection.class);
     private static HikariDataSource             ds                = null;
     public static final ThreadLocal<Connection> THREAD_CONNECTION = new ThreadLocal<Connection>();
+
+    /**
+     * create the datasource for hikari.
+     */
+    private void createDatasource() {
+        if (ds == null || ds.isClosed()) {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            Properties props = new Properties();
+            try (InputStream resourceStream = loader.getResourceAsStream("hikari.properties")) {
+                props.load(resourceStream);
+                HikariConfig config = new HikariConfig(props);
+                ds = new HikariDataSource(config);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * Create and return a database connection.
      * @return a Connection to the database
      */
-    public Connection connect() {
-        Connection connection = null;
+    private Connection connect() {
         try {
             if (ds == null || ds.isClosed()) {
-                ClassLoader loader = Thread.currentThread().getContextClassLoader();
-                Properties props = new Properties();
-                try (InputStream resourceStream = loader.getResourceAsStream("hikari.properties")) {
-                  props.load(resourceStream);
-                  HikariConfig config = new HikariConfig(props);
-                  ds = new HikariDataSource(config);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                createDatasource();
             }
-            connection = ds.getConnection();
-        } catch (SQLException e) {
-            throw new DaoException("Exception while connecting to the database", e);
+            return ds.getConnection();
+        } catch (SQLException | PoolInitializationException e) {
+            LOGGER.error("Failed to connect to the database", e);
+            throw new DaoException("Error while connecting to the database", e);
         }
-        return connection;
     }
 
     /**

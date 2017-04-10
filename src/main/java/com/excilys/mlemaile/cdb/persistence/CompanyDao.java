@@ -32,7 +32,7 @@ public interface CompanyDao {
     /**
      * This method delete a company.
      * @param companyId the id of the company to delete
-     * @param connection TODO
+     * @param connection The connection to the database
      */
     void deleteCompanyById(long companyId, Connection connection);
 }

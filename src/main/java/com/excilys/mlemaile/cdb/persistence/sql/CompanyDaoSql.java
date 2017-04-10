@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
@@ -21,8 +24,16 @@ import com.excilys.mlemaile.cdb.service.model.Company;
  */
 public enum CompanyDaoSql implements CompanyDao {
     INSTANCE;
-    private static final String ID   = "id";
-    private static final String NAME = "name";
+    private static final Logger LOGGER           = LoggerFactory.getLogger(CompanyDaoSql.class);
+    private static final String ID               = "id";
+    private static final String NAME             = "name";
+    private static final String SQL_SELECT_BY_ID = "select " + ID + "," + NAME
+            + " from company where id=?";
+    private static final String SQL_SELECT       = "SELECT " + ID + "," + NAME
+            + " FROM company ORDER BY id ASC LIMIT ?,?";
+    private static final String SQL_SELECT_ALL   = "SELECT " + ID + "," + NAME
+            + " FROM company ORDER BY id ASC";
+    private static final String SQL_DELETE       = "DELETE FROM company WHERE id=?";
 
     /**
      * This method map the result of a request (in the result set) to a company object.
@@ -38,7 +49,8 @@ public enum CompanyDaoSql implements CompanyDao {
                 companies.add(company);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't bind company :", e);
+            LOGGER.warn("Failed to bind company :", e);
+            throw new DaoException("Failed to bind company :", e);
         }
         return companies;
     }
@@ -50,15 +62,17 @@ public enum CompanyDaoSql implements CompanyDao {
     public Optional<Company> getCompanyById(long id) {
         ArrayList<Company> companies = new ArrayList<>(); // initialising
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(
-                        "select " + ID + "," + NAME + " from company where id=?");) {
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement(SQL_SELECT_BY_ID);) {
+            connection.setReadOnly(true);
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
 
                 companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't find company :", e);
+            LOGGER.error("Failed to SQL_DELETEfind company :", e);
+            throw new DaoException("Failed to find company :", e);
         }
 
         Company c = null;
@@ -75,8 +89,8 @@ public enum CompanyDaoSql implements CompanyDao {
     public List<Company> listNumberCompaniesStartingAt(int number, long idFirst) {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(
-                        "SELECT " + ID + "," + NAME + " FROM company ORDER BY id ASC LIMIT ?,?");) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT);) {
+            connection.setReadOnly(true);
             preparedStatement.setLong(1, idFirst);
             preparedStatement.setInt(2, number);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
@@ -98,11 +112,12 @@ public enum CompanyDaoSql implements CompanyDao {
 
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(
-                        "SELECT " + ID + "," + NAME + " FROM company ORDER BY id ASC");) {
+                ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL);) {
+            connection.setReadOnly(true);
             companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
         } catch (SQLException e) {
-            throw new DaoException("Can't list companies : ", e);
+            LOGGER.error("Failed to list companies", e);
+            throw new DaoException("Failed to list companies", e);
         }
         return companies;
     }
@@ -112,17 +127,20 @@ public enum CompanyDaoSql implements CompanyDao {
      */
     @Override
     public void deleteCompanyById(long companyId, Connection connection) {
-            try (PreparedStatement deleteCompanyStatement = connection
-                        .prepareStatement("DELETE FROM company WHERE id=?")) {
-                    deleteCompanyStatement.setLong(1, companyId);
-                    deleteCompanyStatement.executeUpdate();
-            } catch (SQLException e) {
-                try {
-                    connection.rollback();
-                } catch (SQLException e1) {
-                    throw new DaoException("error manipulating the connection from:" + e.getMessage(), e1);
-                }
-                throw new DaoException("Can't delete company", e);
+        try (PreparedStatement deleteCompanyStatement = connection.prepareStatement(SQL_DELETE)) {
+            connection.setReadOnly(false);
+            deleteCompanyStatement.setLong(1, companyId);
+            deleteCompanyStatement.executeUpdate();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                LOGGER.error("error manipulating the connection from:" + e.getMessage(), e1);
+                throw new DaoException("error manipulating the connection from:" + e.getMessage(),
+                        e1);
             }
+            LOGGER.error("Failed to delete a company", e);
+            throw new DaoException("Failed to delete a company", e);
+        }
     }
 }

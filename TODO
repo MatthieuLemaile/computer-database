@@ -9,7 +9,6 @@ Opt :
 
 Test:
 * ComputerDaoSql : deleteComputerBycompanyId
-* ServiceCompany : deleteCompany
 
 Big Step :
 * Multiple point

@@ -27,7 +27,8 @@ public enum ServiceCompany {
     public List<Company> listcompanies(int number, long idFirst) {
         List<Company> companies = new ArrayList<Company>();
         try {
-            companies = DaoFactory.INSTANCE.getCompanyDao().listNumberCompaniesStartingAt(number, idFirst);
+            companies = DaoFactory.INSTANCE.getCompanyDao().listNumberCompaniesStartingAt(number,
+                    idFirst);
         } catch (DaoException e) {
             LOGGER.warn("can't list companies", e);
             throw new ServiceException("can't list companies", e);
@@ -87,9 +88,9 @@ public enum ServiceCompany {
         } catch (DaoException e) {
             LOGGER.warn("can't delete the company", e);
             throw new ServiceException("cant' delete the company", e);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new ServiceException("Error with the connection", e);
-        }finally{
+        } finally {
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException e) {

@@ -17,12 +17,13 @@
     <!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <pattern>%d{HH:mm:ss.SSS} [CORE_APP][%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
     
   </appender>
 
-  <root level="debug">
+  <com.zaxxer.hikari level="none" />
+  <root level="error">
     <appender-ref ref="RollingFile" />
   </root>
   

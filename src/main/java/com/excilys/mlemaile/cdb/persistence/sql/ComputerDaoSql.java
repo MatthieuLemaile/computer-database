@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
@@ -27,12 +30,28 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
  */
 public enum ComputerDaoSql implements ComputerDao {
     INSTANCE();
-    public static final String  ID           = "id";
-    public static final String  NAME         = "name";
-    public static final String  INTRODUCED   = "introduced";
-    public static final String  DISCONTINUED = "discontinued";
-    private static final String COMPANY_ID   = "company_id";
-    public static final String  COMPANY_NAME = "company_name";
+    private static final Logger LOGGER                = LoggerFactory
+            .getLogger(ComputerDaoSql.class);
+    public static final String  ID                    = "id";
+    public static final String  NAME                  = "name";
+    public static final String  INTRODUCED            = "introduced";
+    public static final String  DISCONTINUED          = "discontinued";
+    private static final String COMPANY_ID            = "company_id";
+    public static final String  COMPANY_NAME          = "company_name";
+    private static final String SQL_CREATE            = "INSERT INTO computer (" + NAME + ","
+            + INTRODUCED + "," + DISCONTINUED + "," + COMPANY_ID + ") values(?,?,?,?)";
+    private static final String SQL_SEARCH            = "SELECT c.id as " + ID + " ,c.name as "
+            + NAME + " ,c.introduced as " + INTRODUCED + " ,c.discontinued as " + DISCONTINUED
+            + " ,company.id as " + COMPANY_ID + " ,company.name as " + COMPANY_NAME
+            + " FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.name LIKE ? OR company.name like ? ORDER BY %s ASC LIMIT ?,?";
+    private static final String SQL_SELECT_ID         = "SELECT c.id as " + ID + " ,c.name as "
+            + NAME + " ,c.introduced as " + INTRODUCED + " ,c.discontinued as " + DISCONTINUED
+            + " ,company.id as " + COMPANY_ID + " ,company.name as " + COMPANY_NAME
+            + " FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.id=?";
+    private static final String SQL_UPDATE            = "UPDATE computer SET " + NAME + "=?, "
+            + INTRODUCED + "=?," + DISCONTINUED + "=?," + COMPANY_ID + "=? where id = ?";
+    private static final String SQL_DELETE_BY_ID      = "DELETE FROM computer where id=?";
+    private static final String SQL_DELETE_BY_COMPANY = "DELETE FROM computer WHERE company_id=?";
 
     /**
      * this method map the result of a request (in the ResultSet) with the computer object.
@@ -72,7 +91,8 @@ public enum ComputerDaoSql implements ComputerDao {
                 computers.add(builder.build());
             }
         } catch (SQLException e) {
-            throw new DaoException("can't find computer : ", e);
+            LOGGER.error("Failed to find computer", e);
+            throw new DaoException("Failed to find computer", e);
         }
         return computers;
     }
@@ -115,11 +135,13 @@ public enum ComputerDaoSql implements ComputerDao {
         if (computer == null) {
             return;
         }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Storing computer " + computer.toString());
+        }
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(
-                        "INSERT INTO computer (" + NAME + "," + INTRODUCED + "," + DISCONTINUED
-                                + "," + COMPANY_ID + ") values(?,?,?,?)",
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE,
                         Statement.RETURN_GENERATED_KEYS);) {
+            connection.setReadOnly(false);
             setPreparedStatementCreateUpdate(preparedStatement, computer);
             if (preparedStatement.executeUpdate() > 0) {
                 try (ResultSet generatedKey = preparedStatement.getGeneratedKeys();) {
@@ -129,7 +151,8 @@ public enum ComputerDaoSql implements ComputerDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Error storing the computer : ", e);
+            LOGGER.error("Failed to store the computer " + computer.toString(), e);
+            throw new DaoException("Failed to store a computer", e);
         }
     }
 
@@ -141,13 +164,10 @@ public enum ComputerDaoSql implements ComputerDao {
             String search) {
         ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de retourner null
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();) {
-            String sql = "SELECT c.id as " + ID + " ,c.name as " + NAME + " ,c.introduced as "
-                    + INTRODUCED + " ,c.discontinued as " + DISCONTINUED + " ,company.id as "
-                    + COMPANY_ID + " ,company.name as " + COMPANY_NAME
-                    + " FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.name LIKE ? OR company.name like ? ORDER BY %s ASC LIMIT ?,?";
-            sql = String.format(sql, sort.toString());
+            connection.setReadOnly(true);
+            String sql = String.format(SQL_SEARCH, sort.toString());
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
-                String searchPattern = search != null ? "%" + search + "%" : "%";
+                String searchPattern = search != null ? search + "%" : "%";
                 preparedStatement.setString(1, searchPattern);
                 preparedStatement.setString(2, searchPattern);
                 preparedStatement.setLong(3, idFirst);
@@ -158,7 +178,8 @@ public enum ComputerDaoSql implements ComputerDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't list computers : ", e);
+            LOGGER.error("Failed to list computers", e);
+            throw new DaoException("Failed to list computers", e);
         }
         return computers;
     }
@@ -170,18 +191,16 @@ public enum ComputerDaoSql implements ComputerDao {
     public Optional<Computer> getComputerById(long id) {
         ArrayList<Computer> computers = new ArrayList<>(); // initialising computers
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT c.id as "
-                        + ID + " ,c.name as " + NAME + " ,c.introduced as " + INTRODUCED
-                        + " ,c.discontinued as " + DISCONTINUED + " ,company.id as " + COMPANY_ID
-                        + " ,company.name as " + COMPANY_NAME
-                        + " FROM computer as c LEFT JOIN company ON c.company_id=company.id WHERE c.id=?");) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ID);) {
+            connection.setReadOnly(true);
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
                 computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE
                         .bindingComputer(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't retrieve computer : ", e);
+            LOGGER.error("Failed to find the computer " + id, e);
+            throw new DaoException("Failed to find the computer " + id, e);
         }
         Computer c = null;
         if (computers.size() == 1) {
@@ -199,16 +218,14 @@ public enum ComputerDaoSql implements ComputerDao {
             return;
         }
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
-                PreparedStatement preparedStatement = connection
-                        .prepareStatement("UPDATE computer SET " + NAME + "=?, " + INTRODUCED
-                                + "=?," + DISCONTINUED + "=?," + COMPANY_ID + "=? where id = ?");) {
+                PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE);) {
+            connection.setReadOnly(false);
             setPreparedStatementCreateUpdate(preparedStatement, computer);
             preparedStatement.setLong(5, computer.getId());
-            if (preparedStatement.executeUpdate() == 0) {
-                throw new DaoException("No operation executed");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Can't update computer : ", e);
+            LOGGER.error("Failed to update the computer " + computer.toString(), e);
+            throw new DaoException("Failed to update the computer", e);
         }
     }
 
@@ -222,13 +239,13 @@ public enum ComputerDaoSql implements ComputerDao {
         }
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement preparedStatement = connection
-                        .prepareStatement("DELETE FROM computer where id=?");) {
+                        .prepareStatement(SQL_DELETE_BY_ID);) {
+            connection.setReadOnly(false);
             preparedStatement.setLong(1, id);
-            if (preparedStatement.executeUpdate() == 0) {
-                throw new DaoException("No operation executed");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException("Can't delete computer : ", e);
+            LOGGER.error("Failed to delete the computer " + id, e);
+            throw new DaoException("Failed to delete the computer ", e);
         }
     }
 
@@ -238,8 +255,9 @@ public enum ComputerDaoSql implements ComputerDao {
         try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
                 PreparedStatement st = connection.prepareStatement(
                         "SELECT count(computer.id) as numberOfComputers FROM computer LEFT JOIN company ON computer.company_id=company.id"
-                        + " WHERE computer.name LIKE ? OR company.name like ?");) {
-            String searchPattern = search != null ? "%" + search + "%" : "%";
+                                + " WHERE computer.name LIKE ? OR company.name like ?");) {
+            connection.setReadOnly(false);
+            String searchPattern = search != null ? search + "%" : "%";
             st.setString(1, searchPattern);
             st.setString(2, searchPattern);
             try (ResultSet rs = st.executeQuery()) {
@@ -248,7 +266,8 @@ public enum ComputerDaoSql implements ComputerDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException("Can't count computer : ", e);
+            LOGGER.error("Failed to count computers", e);
+            throw new DaoException("Failed to count computers", e);
         }
         return numberOfComputers;
     }
@@ -256,16 +275,20 @@ public enum ComputerDaoSql implements ComputerDao {
     @Override
     public void deleteComputerByCompanyId(long id, Connection connection) {
         try (PreparedStatement preparedStatement = connection
-                .prepareStatement("DELETE FROM computer WHERE company_id=?")) {
+                .prepareStatement(SQL_DELETE_BY_COMPANY)) {
+            connection.setReadOnly(false);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             try {
                 connection.rollback();
             } catch (SQLException e1) {
-                throw new DaoException("error manipulating the connection from:" + e.getMessage(), e1);
+                LOGGER.error("error manipulating the connection from:" + e.getMessage(), e1);
+                throw new DaoException("error manipulating the connection from:" + e.getMessage(),
+                        e1);
             }
-            throw new DaoException("Can't delete company", e);
+            LOGGER.error("Failed to delete computers of company" + id, e);
+            throw new DaoException("Failed to delete computers", e);
         }
     }
 }

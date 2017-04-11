@@ -11,23 +11,26 @@ import java.util.regex.Pattern;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Story line : Open the website, directly to add a computer. Verify that we are on the right page,
- * then check for wrong date without submit. check also name
- * required Finally add a computer. Then list all computer, go to last page, and check that there is
- * the last - added computer. Edit that one, check for client side and server side verification.
- * Edit the name and validate. Go back to listing computer, and check for the new name. Delete the
- * last computer, assert that he has been deleted. Add 2 computer, and delete them. Assert their
- * creation, then their deletion.
+ * then check for wrong date without submit. check also name required Finally add a computer. Then
+ * list all computer, go to last page, and check that there is the last - added computer. Edit that
+ * one, check for client side and server side verification. Edit the name and validate. Go back to
+ * listing computer, and check for the new name. Delete the last computer, assert that he has been
+ * deleted. Add 2 computer, and delete them. Assert their creation, then their deletion.
  * @author Matthieu Lemaile.
  */
 public class Test {
@@ -35,12 +38,17 @@ public class Test {
     private static WebDriver    driver;
     private final static int    TIMEOUT  = 5;
     private final static String BASE_URL = "http://localhost:8080/ComputerDatabase";
-    //private final static String BASE_URL = "http://localhost:8080/ComputerDatabase-1.4-RELEASE/";
+    // private final static String BASE_URL = "http://localhost:8080/ComputerDatabase-1.4-RELEASE/";
 
     @BeforeClass
     public static void setUpClass() {
-        System.setProperty("webdriver.gecko.driver", "/opt/geckodriver/geckodriver");
-        driver = new FirefoxDriver();
+//        System.setProperty("webdriver.gecko.driver", "/opt/geckodriver/geckodriver");
+//        driver = new FirefoxDriver();
+//        
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setJavascriptEnabled(true);  
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs");
+        driver = new PhantomJSDriver(caps);
 
     }
 
@@ -49,6 +57,7 @@ public class Test {
         driver.quit();
     }
 
+    @Ignore
     @org.junit.Test
     public void test() throws IOException {
         testOpenUrl();
@@ -150,6 +159,7 @@ public class Test {
         driver.findElement(By.id("deleteSelected")).click();
 
         // confirm the javascript pop up
+        (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions.alertIsPresent());
         Alert alert = driver.switchTo().alert();
         alert.accept();
         WebElement lastPage = (new WebDriverWait(driver, TIMEOUT))
@@ -202,18 +212,17 @@ public class Test {
         assertEquals(0, computersStillThere.size());
 
     }
-    
-    private void assertNumberPerPage(){
+
+    private void assertNumberPerPage() {
         WebElement firstPage = (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("firstPage")));
         firstPage.click();
         (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));
-        List<WebElement> listChecks = driver
-                .findElements(By.className("cb"));
-        assertTrue("Wrong number of element in the page",listChecks.size()<=50);
+        List<WebElement> listChecks = driver.findElements(By.className("cb"));
+        assertTrue("Wrong number of element in the page", listChecks.size() <= 50);
     }
-    
+
     private void addComputer() {
         driver.get(BASE_URL + "/addComputer");
         (new WebDriverWait(driver, TIMEOUT))

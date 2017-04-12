@@ -16,4 +16,4 @@ RUN groupadd -g 999 docker && usermod -a -G docker jenkins
 
 USER jenkins
 
-#docker run -d --name=jenkins -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker -p 8282:8080 jenkins
+#docker run -d --name=jenkins -v /var/run/docker.sock:/var/run/docker.sock -v $(which docker):/usr/bin/docker -p 8282:8080 -v test:/test -v prod:/prod jenkins

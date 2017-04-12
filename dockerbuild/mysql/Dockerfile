@@ -13,4 +13,4 @@ ADD 3-ENTRIES.sql /docker-entrypoint-initdb.d/3-ENTRIES.sql
 #  mysql -u root computer-database-db < /tmp/2-PRIVILEGES.sql && \
 #  mysql -u root computer-database-db < /tmp/3-ENTRIES.sql
 
-#docker run -d --name=mysql --net=prod-network --ip=172.18.0.2 mysql-prod
+#docker run -d --name=mysql --net=prod-network --ip=172.18.0.2 mysql

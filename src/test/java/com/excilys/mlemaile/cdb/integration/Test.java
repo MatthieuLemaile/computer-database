@@ -57,7 +57,7 @@ public class Test {
         driver.quit();
     }
 
-    //@Ignore
+    @Ignore
     @org.junit.Test
     public void test() throws IOException {
         testOpenUrl();

@@ -47,7 +47,6 @@ public class CompanyDaoSqlTest {
 		String url = startUrl+host+"/"+database+"?user="+user
                 + "&password="+password
                 + "&zeroDateTimeBehavior="+zeroDataTimeBehavior;
-		
 		databaseTester = new JdbcDatabaseTester(
 			"com.mysql.jdbc.Driver", url);
 		databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);

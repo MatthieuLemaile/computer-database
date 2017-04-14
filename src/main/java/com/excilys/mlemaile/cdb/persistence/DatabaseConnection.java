@@ -39,6 +39,7 @@ public enum DatabaseConnection {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            
         }
     }
 

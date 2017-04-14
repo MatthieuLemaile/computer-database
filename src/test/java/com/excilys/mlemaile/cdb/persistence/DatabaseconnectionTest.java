@@ -11,7 +11,7 @@ public class DatabaseconnectionTest {
 
 	@Test
 	public void test() {
-		assertNotNull("failed to connect, to the database",DatabaseConnection.INSTANCE.getConnection());
+		assertNotNull("failed to connect to the database",DatabaseConnection.INSTANCE.getConnection());
 	}
 
 }

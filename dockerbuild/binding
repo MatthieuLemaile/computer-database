@@ -10,3 +10,5 @@ docker network create --driver=bridge --subnet=172.19.0.0/16 --gateway=172.19.0.
 	
 docker volume create --name test
 docker volume create --name prod
+
+sur le cloud : /war dans tous les caontainer et l'hôte, sauf bdd & tomcat (/usr/local/tomcat/webapps)

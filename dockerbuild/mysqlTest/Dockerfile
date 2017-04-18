@@ -3,8 +3,8 @@ FROM mysql:5.5
 ENV MYSQL_ROOT_PASSWORD=toor
 EXPOSE 3306
 
-ADD 1-SCHEMA.sql /docker-entrypoint-initdb.d/1-SCHEMA.sql
-ADD 2-PRIVILEGES.sql /docker-entrypoint-initdb.d/2-PRIVILEGES.sql
+COPY 1-SCHEMA.sql /docker-entrypoint-initdb.d/1-SCHEMA.sql
+COPY 2-PRIVILEGES.sql /docker-entrypoint-initdb.d/2-PRIVILEGES.sql
 
 #RUN /bin/bash -c "/usr/bin/mysqld_safe &" && \
 #  sleep 5 && \

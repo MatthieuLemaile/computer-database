@@ -12,12 +12,10 @@ import java.util.regex.Pattern;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -68,9 +66,6 @@ public class Test {
         testDelete();
         testMultipleDelete();
         assertNumberPerPage();
-        // get a screenshot
-        // File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        // FileUtils.copyFile(scrFile, new File("/home/excilys/screen.png"));
     }
 
     private void testOpenUrl() {

@@ -56,7 +56,7 @@ node {
                  sh "'/usr/share/maven/bin/mvn' -Dmaven.test.failure.ignore compile"
           }
           stage('Test'){
-            sh "'/usr/share/maven/bin/mvn' test"
+            sh "'/usr/share/maven/bin/mvn' intergration-test"
           }
           stage('Package'){
             sh "'/usr/share/maven/bin/mvn' -DskipTests package"

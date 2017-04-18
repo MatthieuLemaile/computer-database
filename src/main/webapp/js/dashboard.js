@@ -86,11 +86,11 @@ function replaceQueryParam(param, newval, search) {
 // then submits it to the deleteForm
 (function($) {
 	$.fn.deleteSelected = function() {
-		if (confirm("Are you sure you want to delete the selected computers?")) {
+		//if (confirm("Are you sure you want to delete the selected computers?")) {
 			$('#deleteForm input[name=selection]').setCheckboxValues(
 					'selection', 'cb');
 			$('#deleteForm').submit();
-		}
+		//}
 	};
 }(jQuery));
 

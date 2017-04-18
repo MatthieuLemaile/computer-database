@@ -158,10 +158,6 @@ public class Test {
         checkbox.sendKeys(Keys.SPACE);
         driver.findElement(By.id("deleteSelected")).click();
 
-        // confirm the javascript pop up
-        (new WebDriverWait(driver, TIMEOUT)).until(ExpectedConditions.alertIsPresent());
-        Alert alert = driver.switchTo().alert();
-        alert.accept();
         WebElement lastPage = (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));
         lastPage.click();
@@ -197,10 +193,6 @@ public class Test {
 
         }
         driver.findElement(By.id("deleteSelected")).click();
-
-        // confirm the javascript pop up
-        Alert alert = driver.switchTo().alert();
-        alert.accept();
 
         WebElement secondLastPage = (new WebDriverWait(driver, TIMEOUT))
                 .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));

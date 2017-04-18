@@ -56,10 +56,10 @@ public class EditComputer extends HttpServlet {
             }
             Optional<Computer> optComputer = ServiceComputer.INSTANCE.getComputerById(computerId);
             if (optComputer.isPresent()) {
-                ComputerDto c = MapperDtoToModel.INSTANCE.modelToComputerDto(optComputer.get());
+                ComputerDto c = MapperDtoToModel.modelToComputerDto(optComputer.get());
                 request.setAttribute(ATT_COMPUTER, c);
             }
-            List<CompanyDto> companies = MapperDtoToModel.INSTANCE
+            List<CompanyDto> companies = MapperDtoToModel
                     .modelListToCompanyDto(ServiceCompany.INSTANCE.listCompanies());
             request.setAttribute(ATT_COMPANIES, companies);
         } catch (NumberFormatException | ServiceException e) {
@@ -90,7 +90,7 @@ public class EditComputer extends HttpServlet {
                 .build();
         try {
             ServiceComputer.INSTANCE
-                    .updatecomputer(MapperDtoToModel.INSTANCE.computerDtoToModel(ce));
+                    .updatecomputer(MapperDtoToModel.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
         } catch (MapperException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());

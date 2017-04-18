@@ -50,7 +50,7 @@ public class AddComputer extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<CompanyDto> companies = MapperDtoToModel.INSTANCE
+            List<CompanyDto> companies = MapperDtoToModel
                     .modelListToCompanyDto(ServiceCompany.INSTANCE.listCompanies());
             request.setAttribute(ATT_COMPANIES, companies);
         } catch (ServiceException e) {
@@ -84,7 +84,7 @@ public class AddComputer extends HttpServlet {
             ComputerDto ce = new ComputerDto.Builder(name).introduced(introduced)
                     .discontinued(discontinued).companyId(companyId).build();
             ServiceComputer.INSTANCE
-                    .createComputer(MapperDtoToModel.INSTANCE.computerDtoToModel(ce));
+                    .createComputer(MapperDtoToModel.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
         } catch (MapperException | ServiceException e) {
             LOGGER.error("Failed to add the computer", e);

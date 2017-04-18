@@ -32,7 +32,7 @@
 		<jspapi.version>2.3.1</jspapi.version>
 		<jstl.version>1.2</jstl.version>
 		
-		<mavenCheckstyle.version>2.17</mavenCheckstyle.version>
+		<maven.checkstyle.version>2.17</maven.checkstyle.version>
 		<maven.surefire.version>2.20</maven.surefire.version>
 		<maven.failsafe.version>2.20</maven.failsafe.version>
 		<maven.war.version>2.6</maven.war.version>
@@ -172,7 +172,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>{mavenCheckstyle.version}</version>
+				<version>${maven.checkstyle.version}</version>
 
 				<goals>
 					<goal>check</goal>
@@ -275,7 +275,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>{mavenCheckstyle.version}</version>
+				<version>${maven.checkstyle.version}</version>
 				<configuration>
 					<configLocation>checkstyle.xml</configLocation>
 					<suppressionsLocation>suppressions.xml</suppressionsLocation>

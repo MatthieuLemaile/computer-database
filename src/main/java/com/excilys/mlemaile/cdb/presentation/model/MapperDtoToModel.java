@@ -9,15 +9,19 @@ import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
-public enum MapperDtoToModel {
-    INSTANCE;
+/**
+ * This class contains mapping functions for dto <-> model conversion.
+ * @author Matthieu Lemaile
+ *
+ */
+public class MapperDtoToModel {
 
     /**
      * Mapp a computer to a ComputerDto.
      * @param c the computer to map
      * @return the computerDto mapped
      */
-    public ComputerDto modelToComputerDto(Computer c) {
+    public static ComputerDto modelToComputerDto(Computer c) {
         String introStr = "";
         String discoStr = "";
         if (c.getIntroduced() != null) {
@@ -37,7 +41,7 @@ public enum MapperDtoToModel {
      * @param ce the ComputerDto to map
      * @return the computer mapped
      */
-    public Computer computerDtoToModel(ComputerDto ce) {
+    public static Computer computerDtoToModel(ComputerDto ce) {
         LocalDate introduced = null;
         LocalDate discontinued = null;
         long companyId = 0;
@@ -74,7 +78,7 @@ public enum MapperDtoToModel {
      * @param computers the List to map
      * @return The List mapped
      */
-    public List<ComputerDto> modelListToComputerDto(List<Computer> computers) {
+    public static List<ComputerDto> modelListToComputerDto(List<Computer> computers) {
         List<ComputerDto> computersEdit = new ArrayList<>();
         for (Computer c : computers) {
             computersEdit.add(modelToComputerDto(c));
@@ -87,7 +91,7 @@ public enum MapperDtoToModel {
      * @param c the Company to map
      * @return the CompanyDto mapped
      */
-    public CompanyDto modelToCompanyDto(Company c) {
+    public static CompanyDto modelToCompanyDto(Company c) {
         return new CompanyDto.Builder().id(Long.toString(c.getId())).name(c.getName()).build();
     }
 
@@ -96,7 +100,7 @@ public enum MapperDtoToModel {
      * @param companies the List of Company to map
      * @return The List of CompanyDto mapped
      */
-    public List<CompanyDto> modelListToCompanyDto(List<Company> companies) {
+    public static List<CompanyDto> modelListToCompanyDto(List<Company> companies) {
         List<CompanyDto> companiesDto = new ArrayList<>();
         for (Company c : companies) {
             companiesDto.add(modelToCompanyDto(c));

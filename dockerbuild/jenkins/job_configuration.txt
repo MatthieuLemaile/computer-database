@@ -44,13 +44,15 @@ node {
         stage('Preparation') { // for display purposes
         // Get some code from a GitHub repository
         git 'https://github.com/MatthieuLemaile/computer-database'
+        sh "docker pull mlemaile/javamaven:latest"
     }
        stage('checkstyle'){
         step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', checkstyle: 'checkstyle.xml'])
        }
-       withDockerContainer(args: '-d -u 0', image: 'mlemaile/javamaven:latest') {
+       withDockerContainer(args: '-d -u 0 -v /war:/war', image: 'mlemaile/javamaven:latest') {
          stage('Build') {
           // Run the maven build
+                 sh "rm /var/jenkins_home/workspace/CDB-pipeline/target/*.war"
                  sh "'/usr/share/maven/bin/mvn' -Dmaven.test.failure.ignore compile"
           }
           stage('Test'){
@@ -59,9 +61,9 @@ node {
           stage('Package'){
             sh "'/usr/share/maven/bin/mvn' -DskipTests package"
           }
-          /*stage('pass to jenkins'){
-            sh "cp /var/jenkins_home/workspace/CDB-pipeline/target/*.war /war/"
-          }*/
+          stage('pass to jenkins'){
+            sh "cp /var/jenkins_home/workspace/CDB-pipeline/target/*.war /war/ComputerDatabase.war"
+          }
        }
        /*stage("deploy to tomcat"){
            sh "ls /test/"

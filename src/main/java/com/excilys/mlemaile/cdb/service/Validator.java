@@ -1,40 +1,32 @@
 package com.excilys.mlemaile.cdb.service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
-public enum Validator {
-    INSTANCE;
+import org.apache.commons.lang3.StringUtils;
+
+public class Validator {
+    private static final String REGEX_DATE = "^(((((1[26]|2[048])00)|[12]\\d([2468][048]|[13579][26]|0[48]))-((((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01]))|((0[469]|11)-(0[1-9]|[12]\\d|30)))|(02-(0[1-9]|[12]\\d))))|((([12]\\d([02468][1235679]|[13579][01345789]))|((1[1345789]|2[1235679])00))-((((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01]))|((0[469]|11)-(0[1-9]|[12]\\d|30)))|(02-(0[1-9]|1\\d|2[0-8])))))$";
 
     /**
      * check that id is a long greater than 0.
      * @param id the id to check
      */
-    public void checkId(String id) {
-        if (id != null) {
-            if (id.trim().isEmpty()) {
-                throw new ServiceException("The given parameter is not an id, it's empty !");
-            }
-            try {
-                Long.parseLong(id);
-            } catch (NumberFormatException e) {
-                throw new ServiceException("The given parameter is not an id.", e);
-            }
+    public static String checkId(String id) {
+        if (id != null && !id.matches("^\\d+$")) {
+            return "The id supplied is not a good one.";
         }
+        return null;
     }
 
     /**
      * check that the given String is a date.
      * @param date the String to check
      */
-    public void checkDate(String date) {
-        if (date != null && !date.trim().isEmpty()) {
-            try {
-                LocalDate.parse(date);
-            } catch (DateTimeParseException e) {
-                throw new ServiceException("The given parameter is not a date.", e);
-            }
+    public static String checkDate(String date) {
+        if (date != null && !date.matches(REGEX_DATE)) {
+            return "The date supplied is not well formatted.";
         }
+        return null;
     }
 
     /**
@@ -42,16 +34,44 @@ public enum Validator {
      * @param discontinuedDate the discontinued date
      * @param introducedDate the introduced date
      */
-    public void checkDateNotBeforeDate(String discontinuedDate, String introducedDate) {
+    public static String checkDateNotBeforeDate(String discontinuedDate, String introducedDate) {
         if (introducedDate != null && discontinuedDate != null && !introducedDate.trim().isEmpty()
                 && !discontinuedDate.trim().isEmpty()) {
-            this.checkDate(introducedDate);
-            this.checkDate(discontinuedDate);
+            String introValid = checkDate(introducedDate);
+            String discoValid = checkDate(discontinuedDate);
+            if (introValid != null) {
+                return introValid;
+            }
+            if (discoValid != null) {
+                return discoValid;
+            }
             LocalDate intro = LocalDate.parse(introducedDate);
             LocalDate disco = LocalDate.parse(discontinuedDate);
             if (intro.isAfter(disco)) {
-                throw new ServiceException("The introduced date is after the discontinued date.");
+                return "The introduced date is after the discontinued date.";
             }
         }
+        return null;
+    }
+
+    public static String checkNameNotEmpty(String name) {
+        if (StringUtils.isNotEmpty(name)) {
+            return null;
+        }
+        return "You must suply a name.";
+    }
+
+    public static String checkPageNumberPositiveOrNull(String number) {
+        if (number != null && !number.matches("^\\d+$")) {
+            return "The page number must be a positive integer.";
+        }
+        return null;
+    }
+
+    public static String checkPageLimitPositiveOrNull(String number) {
+        if (number != null && !number.matches("^\\d+$")) {
+            return "The page limit must be a positive integer.";
+        }
+        return null;
     }
 }

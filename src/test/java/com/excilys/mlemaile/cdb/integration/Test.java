@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -55,7 +54,6 @@ public class Test {
         driver.quit();
     }
 
-    @Ignore
     @org.junit.Test
     public void test() throws IOException {
         testOpenUrl();

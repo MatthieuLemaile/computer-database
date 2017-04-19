@@ -1,7 +1,9 @@
 package com.excilys.mlemaile.cdb.presentation.web;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +16,8 @@ import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
 import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
-import com.excilys.mlemaile.cdb.service.ServiceException;
+import com.excilys.mlemaile.cdb.service.Validator;
+import com.excilys.mlemaile.cdb.service.model.Computer;
 
 /**
  * Servlet implementation class homepage.
@@ -45,38 +48,69 @@ public class Homepage extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            int numPage = 1;
-            if (request.getParameter(PARAM_PAGE_NUMBER) != null) {
-                numPage = Integer.parseInt(request.getParameter(PARAM_PAGE_NUMBER));
-            }
-            int limit = 50;
-            if (request.getParameter(PARAM_PAGE_LIMIT) != null) {
-                limit = Integer.parseInt(request.getParameter(PARAM_PAGE_LIMIT));
-            }
-            String search = null;
-            if (request.getParameter(PARAM_SEARCH) != null) {
-                search = request.getParameter(PARAM_SEARCH);
-            }
-            Page.numberPerPage = limit;
-            Page page = new Page(numPage);
-            setSort(page, request);
-            List<ComputerDto> computers = MapperDtoToModel.modelListToComputerDto(
-                    ServiceComputer.INSTANCE.listSortSearchNumberComputer(Page.numberPerPage,
-                            (page.getPageNumber() - 1) * Page.numberPerPage, page.getSort(),
-                            search));
-            request.setAttribute(ATT_LIST_COMPUTERS, computers);
-            request.setAttribute(ATT_PAGE, page);
-            request.setAttribute(PARAM_SEARCH, search);
-            request.setAttribute(TOTAL_NUMBER_COMPUTER,
-                    ServiceComputer.INSTANCE.countComputers(search));
-            request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request,
-                    response);
-        } catch (NumberFormatException | ServiceException e) {
-            request.setAttribute(ATT_EXCEPTION, e.getMessage());
-            request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request,
-                    response);
+        Map<String, String> errors = isValid(request);
+        for (String err : errors.values()) {
+            System.out.println(err);
         }
+        if (!errors.isEmpty()) {
+            request.setAttribute(ATT_EXCEPTION, errors);
+        } else {
+            computeResponse(request);
+        }
+        request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request, response);
+    }
+
+    /**
+     * Validate the request made by the user
+     * @param request the request issued by the client
+     * @return a Map of errors
+     */
+    private Map<String, String> isValid(HttpServletRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        String pageNumberValid = Validator
+                .checkPageNumberPositiveOrNull(request.getParameter(PARAM_PAGE_NUMBER));
+        if (pageNumberValid != null) {
+            errors.put("numPage", pageNumberValid);
+        }
+        String pageLimitValid = Validator
+                .checkPageLimitPositiveOrNull(request.getParameter(PARAM_PAGE_LIMIT));
+        if (pageLimitValid != null) {
+            errors.put("pageLimit", pageLimitValid);
+        }
+        return errors;
+    }
+
+    /**
+     * Compute the response to give to the user
+     * @param request the request issued by the user
+     */
+    private void computeResponse(HttpServletRequest request) {
+        int numPage = (request.getParameter(PARAM_PAGE_NUMBER) != null) ? Integer.parseInt(request.getParameter(PARAM_PAGE_NUMBER)) : 1;
+        int limit = (request.getParameter(PARAM_PAGE_LIMIT) != null)
+                ? Integer.parseInt(request.getParameter(PARAM_PAGE_LIMIT)) : 50;
+        String search = request.getParameter(PARAM_SEARCH);
+
+        Page page = new Page(numPage);
+        page.setNumberPerPage(limit);
+        setSort(page, request);
+        request.setAttribute(ATT_LIST_COMPUTERS, listPageComputers(page, search));
+        request.setAttribute(ATT_PAGE, page);
+        request.setAttribute(PARAM_SEARCH, search);
+        request.setAttribute(TOTAL_NUMBER_COMPUTER,
+                ServiceComputer.INSTANCE.countComputers(search));
+    }
+
+    /**
+     * Return the computers to display for the given page and the given search
+     * @param page the page of asked computers
+     * @param search a String that computers name have to contains
+     * @return the List of ComputerDto matching the request
+     */
+    private List<ComputerDto> listPageComputers(Page page, String search) {
+        int startElementNumber = (page.getPageNumber() - 1) * page.getNumberPerPage();
+        List<Computer> computers = ServiceComputer.INSTANCE.listSortSearchNumberComputer(
+                page.getNumberPerPage(), startElementNumber, page.getSort(), search);
+        return MapperDtoToModel.modelListToComputerDto(computers);
     }
 
     /**

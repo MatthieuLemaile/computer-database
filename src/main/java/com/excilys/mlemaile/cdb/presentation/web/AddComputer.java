@@ -1,7 +1,9 @@
 package com.excilys.mlemaile.cdb.presentation.web;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,13 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
 import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
-import com.excilys.mlemaile.cdb.presentation.model.MapperException;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
@@ -26,7 +24,6 @@ import com.excilys.mlemaile.cdb.service.Validator;
  */
 @WebServlet("/addComputer")
 public class AddComputer extends HttpServlet {
-    private static final Logger LOGGER               = LoggerFactory.getLogger(AddComputer.class);
     private static final long   serialVersionUID     = 1L;
     private static final String ADD_COMPUTER_VIEW    = "/WEB-INF/views/addComputer.jsp";
     private static final String ATT_COMPANIES        = "companies";
@@ -67,32 +64,45 @@ public class AddComputer extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter(PARAM_COMPUTER_NAME);
-        String companyId = request.getParameter(PARAM_COMPANY_ID);
-        String introduced = request.getParameter(PARAM_COMPUTER_INTRO);
-        String discontinued = request.getParameter(PARAM_COMPUTER_DISCO);
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Add computer : " + name + " intro " + introduced + " discontinued "
-                    + discontinued + " companyID " + companyId);
-        }
-        try {
-            Validator.INSTANCE.checkId(companyId);
-            Validator.INSTANCE.checkDate(introduced);
-            Validator.INSTANCE.checkDate(discontinued);
-            Validator.INSTANCE.checkDateNotBeforeDate(discontinued, introduced);
-            ComputerDto ce = new ComputerDto.Builder(name).introduced(introduced)
-                    .discontinued(discontinued).companyId(companyId).build();
+        Map<String, String> errors = isValid(request);
+        if (errors.isEmpty()) {
+            ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
+                    .introduced(request.getParameter(PARAM_COMPUTER_INTRO))
+                    .discontinued(request.getParameter(PARAM_COMPUTER_DISCO))
+                    .companyId(request.getParameter(PARAM_COMPANY_ID)).build();
             ServiceComputer.INSTANCE
                     .createComputer(MapperDtoToModel.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
-        } catch (MapperException | ServiceException e) {
-            LOGGER.error("Failed to add the computer", e);
-            request.setAttribute(ATT_EXCEPTION, e.getMessage());
+        } else {
+            request.setAttribute(ATT_EXCEPTION, errors);
             request.getServletContext().getRequestDispatcher(ADD_COMPUTER_VIEW).forward(request,
                     response);
         }
+    }
 
+    /**
+     * Validate the request made by the user
+     * @param request the request issued by the client
+     * @return a Map of errors
+     */
+    private Map<String, String> isValid(HttpServletRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        String nameValid = Validator.checkNameNotEmpty(request.getParameter(PARAM_COMPUTER_NAME));
+        if(nameValid!=null){
+            errors.put(PARAM_COMPUTER_NAME, nameValid);
+        }
+        String companyIdValid = Validator.checkId(request.getParameter(PARAM_COMPANY_ID));
+        if (companyIdValid != null) {
+            errors.put(PARAM_COMPANY_ID, companyIdValid);
+        }
+        String validDates = Validator.checkDateNotBeforeDate(
+                request.getParameter(PARAM_COMPUTER_DISCO),
+                request.getParameter(PARAM_COMPUTER_INTRO));
+        if (validDates != null) {
+            errors.put(PARAM_COMPUTER_DISCO, validDates);
+        }
+        return errors;
     }
 
 }

@@ -80,11 +80,11 @@ public class EditComputer extends HttpServlet {
         String companyId = request.getParameter(PARAM_COMPANY_ID);
         String introduced = request.getParameter(PARAM_COMPUTER_INTRO);
         String discontinued = request.getParameter(PARAM_COMPUTER_DISCO);
-        Validator.INSTANCE.checkId(id);
-        Validator.INSTANCE.checkId(companyId);
-        Validator.INSTANCE.checkDate(introduced);
-        Validator.INSTANCE.checkDate(discontinued);
-        Validator.INSTANCE.checkDateNotBeforeDate(discontinued, introduced);
+        Validator.checkId(id);
+        Validator.checkId(companyId);
+        Validator.checkDate(introduced);
+        Validator.checkDate(discontinued);
+        Validator.checkDateNotBeforeDate(discontinued, introduced);
         ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
                 .introduced(introduced).discontinued(discontinued).companyId(companyId).id(id)
                 .build();

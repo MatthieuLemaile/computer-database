@@ -5,13 +5,19 @@
 
 <section id="main">
 
-	<c:if test="${not empty exception}">
-		<div class="container">
-			<div class="alert alert-danger">
-				<c:out value="${exception}" />
-			</div>
-		</div>
+	<c:if test="${not empty requestScope.exception}">
+		<c:forEach var="map" items="${requestScope.exception}">
+			<c:forEach var="hash" items="${map.value}">
+				<div class="container">
+					<div class="alert alert-danger">
+						<c:out value="${hash}" />
+					</div>
+				</div>
+
+			</c:forEach>
+		</c:forEach>
 	</c:if>
+	
 	<fmt:formatNumber var="numberPageMax"
 		value="${requestScope.totalNumberComputers/requestScope.page.numberPerPage}"
 		maxFractionDigits="0" />
@@ -25,8 +31,7 @@
 				<form id="searchForm"
 					action="${pageContext.request.contextPath}/homepage" method="GET"
 					class="form-inline">
-					<input type=hidden name="page"
-						value="1" /> <input type=hidden
+					<input type=hidden name="page" value="1" /> <input type=hidden
 						name="limit" value="${requestScope.page.numberPerPage}" /> <input
 						type=hidden name="sort"
 						value="${requestScope.page.sort.toString()}" /> <input
@@ -127,8 +132,8 @@
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber-1,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber-1}</a></li>
 			</c:if>
 
-				<li><a
-					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber+0}</a></li>
+			<li><a
+				href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+0,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber+0}</a></li>
 			<c:if test="${requestScope.page.pageNumber+1 < numberPageMax+1}">
 				<li><a
 					href="<c:out value="${pageContext.request.contextPath}${myLib:link('homepage',requestScope.page.pageNumber+1,requestScope.page.numberPerPage)}&sort=${requestScope.page.sort.toString()}&search=${requestScope.search}" />">${requestScope.page.pageNumber+1}</a></li>

@@ -3,7 +3,7 @@ package com.excilys.mlemaile.cdb.presentation;
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 
 public class Page {
-    public static int numberPerPage = 50;
+    private int       numberPerPage = 50;
     private int       pageNumber;
     private FieldSort sort;
 
@@ -22,6 +22,10 @@ public class Page {
 
     public int getNumberPerPage() {
         return numberPerPage;
+    }
+
+    public void setNumberPerPage(int numberPerPage) {
+        this.numberPerPage = numberPerPage;
     }
 
     /**

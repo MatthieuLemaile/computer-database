@@ -8,7 +8,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
-import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
@@ -16,12 +15,14 @@ import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public class ConsoleUserInterface {
+    private final static int NUMBER_PER_PAGE = 50;
 
     /**
      * Display the menu and call the function to do the choosen action.
      * @return a boolean which is true as long as the user don't choose to leave
      */
     public static boolean menu() {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String entry;
         int optionNumber = 0;
@@ -89,9 +90,10 @@ public class ConsoleUserInterface {
                 entry = br.readLine();
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
-                    int indexMin = (pageNumber - 1) * Page.numberPerPage;
+                    int indexMin = (pageNumber - 1) * NUMBER_PER_PAGE;
                     computers = (ArrayList<Computer>) ServiceComputer.INSTANCE
-                            .listSortSearchNumberComputer(Page.numberPerPage, indexMin, FieldSort.NAME, null);
+                            .listSortSearchNumberComputer(NUMBER_PER_PAGE, indexMin, FieldSort.NAME,
+                                    null);
                     for (Computer computer : computers) {
                         System.out.println(computer.toString());
                     }
@@ -121,9 +123,9 @@ public class ConsoleUserInterface {
                 entry = br.readLine();
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
-                    int indexMin = (pageNumber - 1) * Page.numberPerPage;
+                    int indexMin = (pageNumber - 1) * NUMBER_PER_PAGE;
                     companies = (ArrayList<Company>) ServiceCompany.INSTANCE
-                            .listcompanies(Page.numberPerPage, indexMin);
+                            .listcompanies(NUMBER_PER_PAGE, indexMin);
                     for (Company company : companies) {
                         System.out.println(company.toString());
                     }

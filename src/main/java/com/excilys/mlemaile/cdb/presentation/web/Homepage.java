@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
@@ -24,6 +28,7 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
  */
 @WebServlet("/homepage")
 public class Homepage extends HttpServlet {
+    private static final Logger LOGGER                = LoggerFactory.getLogger(Homepage.class);
     private static final long   serialVersionUID      = 1L;
     private static final String DASHBOARD_VIEW        = "/WEB-INF/views/dashboard.jsp";
     private static final String ATT_LIST_COMPUTERS    = "listComputers";
@@ -34,6 +39,11 @@ public class Homepage extends HttpServlet {
     private static final String PARAM_PAGE_LIMIT      = "limit";
     private static final String PARAM_SORT            = "sort";
     private static final String PARAM_SEARCH          = "search";
+    private static ClassPathXmlApplicationContext ctx                   = new ClassPathXmlApplicationContext(
+            "spring.xml");
+
+    private static ServiceComputer                serviceComputer       = ctx
+            .getBean("serviceComputer", ServiceComputer.class);
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -97,7 +107,7 @@ public class Homepage extends HttpServlet {
         request.setAttribute(ATT_PAGE, page);
         request.setAttribute(PARAM_SEARCH, search);
         request.setAttribute(TOTAL_NUMBER_COMPUTER,
-                ServiceComputer.INSTANCE.countComputers(search));
+                serviceComputer.countComputers(search));
     }
 
     /**
@@ -108,7 +118,7 @@ public class Homepage extends HttpServlet {
      */
     private List<ComputerDto> listPageComputers(Page page, String search) {
         int startElementNumber = (page.getPageNumber() - 1) * page.getNumberPerPage();
-        List<Computer> computers = ServiceComputer.INSTANCE.listSortSearchNumberComputer(
+        List<Computer> computers = serviceComputer.listSortSearchNumberComputer(
                 page.getNumberPerPage(), startElementNumber, page.getSort(), search);
         return MapperDtoToModel.modelListToComputerDto(computers);
     }

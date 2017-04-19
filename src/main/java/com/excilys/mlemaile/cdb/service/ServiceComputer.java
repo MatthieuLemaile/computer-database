@@ -7,18 +7,41 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.excilys.mlemaile.cdb.persistence.CompanyDao;
+import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
-import com.excilys.mlemaile.cdb.persistence.DaoFactory;
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
-public enum ServiceComputer {
-    INSTANCE();
+@Service("serviceComputer")
+public class ServiceComputer {
     public static final Logger LOGGER            = LoggerFactory.getLogger(ServiceComputer.class);
     private static int         numberOfComputers = 0;
     private static boolean     updated           = false;
+    @Autowired
+    private CompanyDao         companyDao;
+    @Autowired
+    private ComputerDao        computerDao;
+
+    public CompanyDao getCompanyDao() {
+        return companyDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
+    }
+
+    public ComputerDao getComputerDao() {
+        return computerDao;
+    }
+
+    public void setComputerDao(ComputerDao computerDao) {
+        this.computerDao = computerDao;
+    }
 
     /**
      * Create a computer from following informations.
@@ -35,7 +58,7 @@ public enum ServiceComputer {
 
         try {
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao()
+                Optional<Company> opt = companyDao
                         .getCompanyById(companyId);
                 if (opt.isPresent()) {
                     company = opt.get();
@@ -46,9 +69,8 @@ public enum ServiceComputer {
         }
         try {
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao()
+                Optional<Company> opt = companyDao
                         .getCompanyById(companyId);
-
                 if (opt.isPresent()) {
                     company = opt.get();
                 }
@@ -58,7 +80,7 @@ public enum ServiceComputer {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("creating computer " + c.toString());
             }
-            DaoFactory.INSTANCE.getComputerDao().createComputer(c);
+            computerDao.createComputer(c);
             computerCreated = true;
             addCounterComputer();
             LOGGER.info("Computer created : " + c.toString());
@@ -94,7 +116,7 @@ public enum ServiceComputer {
     public boolean updatecomputer(Computer c) {
         boolean execution = false;
         try {
-            DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
+            computerDao.updateComputer(c);
             execution = true;
             LOGGER.info("updated computer to : " + c.toString());
         } catch (DaoException e) {
@@ -116,7 +138,7 @@ public enum ServiceComputer {
     public boolean updatecomputer(long id, String name, LocalDate introduced,
             LocalDate discontinued, long companyId) {
         boolean execution = false;
-        Optional<Computer> optComputer = DaoFactory.INSTANCE.getComputerDao().getComputerById(id);
+        Optional<Computer> optComputer = computerDao.getComputerById(id);
 
         if (optComputer.isPresent()) {
             Computer c = optComputer.get();
@@ -125,7 +147,7 @@ public enum ServiceComputer {
             c.setIntroduced(introduced);
             Company company = null;
             if (companyId > 0) {
-                Optional<Company> opt = DaoFactory.INSTANCE.getCompanyDao()
+                Optional<Company> opt = companyDao
                         .getCompanyById(companyId);
                 if (opt.isPresent()) {
                     company = opt.get();
@@ -133,7 +155,7 @@ public enum ServiceComputer {
             }
             c.setCompany(company);
             try {
-                DaoFactory.INSTANCE.getComputerDao().updateComputer(c);
+                computerDao.updateComputer(c);
                 LOGGER.info("updated computer to : " + c.toString());
                 execution = true;
             } catch (DaoException e) {
@@ -157,7 +179,7 @@ public enum ServiceComputer {
             String search) {
         List<Computer> computers = new ArrayList<>();
         try {
-            computers = DaoFactory.INSTANCE.getComputerDao().listSortSearchNumberComputer(number,
+            computers = computerDao.listSortSearchNumberComputer(number,
                     idFirst, sort, search);
         } catch (DaoException e) {
             LOGGER.warn("cant' list computers", e);
@@ -174,7 +196,7 @@ public enum ServiceComputer {
     public Optional<Computer> getComputerById(long id) {
         Optional<Computer> optComputer;
         try {
-            optComputer = DaoFactory.INSTANCE.getComputerDao().getComputerById(id);
+            optComputer = computerDao.getComputerById(id);
         } catch (DaoException e) {
             LOGGER.warn("cant' find the computer", e);
             throw new ServiceException("cant' find the computer", e);
@@ -190,7 +212,7 @@ public enum ServiceComputer {
     public boolean deleteComputer(Computer c) {
         boolean execution = false;
         try {
-            DaoFactory.INSTANCE.getComputerDao().deleteComputerById(c.getId());
+            computerDao.deleteComputerById(c.getId());
             LOGGER.info("computer deleted : " + c.toString());
             execution = true;
             minCounterComputer();
@@ -209,7 +231,7 @@ public enum ServiceComputer {
     public boolean deleteComputer(long id) {
         boolean execution = false;
         try {
-            DaoFactory.INSTANCE.getComputerDao().deleteComputerById(id);
+            computerDao.deleteComputerById(id);
             execution = true;
             minCounterComputer();
             LOGGER.info("computer deleted : computer n°" + id);
@@ -228,8 +250,7 @@ public enum ServiceComputer {
     public int countComputers(String search) {
         if (!updated || !"".equals(search)) {
             try {
-                numberOfComputers = DaoFactory.INSTANCE.getComputerDao()
-                        .countSearchedComputer(search);
+                numberOfComputers = computerDao.countSearchedComputer(search);
                 updated = true;
             } catch (DaoException e) {
                 LOGGER.warn("can't count computers", e);

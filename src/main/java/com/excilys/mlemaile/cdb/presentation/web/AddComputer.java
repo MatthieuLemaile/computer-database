@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
 import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
@@ -32,6 +34,12 @@ public class AddComputer extends HttpServlet {
     private static final String PARAM_COMPUTER_INTRO = "introduced";
     private static final String PARAM_COMPUTER_DISCO = "discontinued";
     private static final String PARAM_COMPANY_ID     = "companyId";
+    private static ClassPathXmlApplicationContext ctx                  = new ClassPathXmlApplicationContext(
+            "spring.xml");
+    private static ServiceCompany                 serviceCompany       = ctx
+            .getBean("serviceCompany", ServiceCompany.class);
+    private static ServiceComputer                serviceComputer      = ctx
+            .getBean("serviceComputer", ServiceComputer.class);
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -48,7 +56,7 @@ public class AddComputer extends HttpServlet {
             throws ServletException, IOException {
         try {
             List<CompanyDto> companies = MapperDtoToModel
-                    .modelListToCompanyDto(ServiceCompany.INSTANCE.listCompanies());
+                    .modelListToCompanyDto(serviceCompany.listCompanies());
             request.setAttribute(ATT_COMPANIES, companies);
         } catch (ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
@@ -71,8 +79,7 @@ public class AddComputer extends HttpServlet {
                     .introduced(request.getParameter(PARAM_COMPUTER_INTRO))
                     .discontinued(request.getParameter(PARAM_COMPUTER_DISCO))
                     .companyId(request.getParameter(PARAM_COMPANY_ID)).build();
-            ServiceComputer.INSTANCE
-                    .createComputer(MapperDtoToModel.computerDtoToModel(ce));
+            serviceComputer.createComputer(MapperDtoToModel.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
         } else {
             request.setAttribute(ATT_EXCEPTION, errors);

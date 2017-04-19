@@ -22,8 +22,8 @@
     
   </appender>
 
-  <com.zaxxer.hikari level="none" />
-  <root level="error">
+  
+  <root level="info">
     <appender-ref ref="RollingFile" />
   </root>
   

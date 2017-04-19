@@ -5,6 +5,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
@@ -15,6 +17,10 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
  *
  */
 public class MapperDtoToModel {
+    private static ClassPathXmlApplicationContext ctx            = new ClassPathXmlApplicationContext(
+            "spring.xml");
+    private static ServiceCompany                 serviceCompany = ctx.getBean("serviceCompany",
+            ServiceCompany.class);
 
     /**
      * Mapp a computer to a ComputerDto.
@@ -66,7 +72,7 @@ public class MapperDtoToModel {
         }
         Company company = null;
         if (companyId > 0) {
-            company = ServiceCompany.INSTANCE.getCompanyById(companyId);
+            company = serviceCompany.getCompanyById(companyId);
         }
 
         return new Computer.Builder(ce.getName()).company(company).id(id).introduced(introduced)

@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
-import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
@@ -28,8 +31,8 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
  * This enum communicate with the database to store, update and read computers in the database.
  * @author Matthieu Lemaile
  */
-public enum ComputerDaoSql implements ComputerDao {
-    INSTANCE();
+@Repository("computerDao")
+public class ComputerDaoSql implements ComputerDao {
     private static final Logger LOGGER                = LoggerFactory
             .getLogger(ComputerDaoSql.class);
     public static final String  ID                    = "id";
@@ -52,6 +55,8 @@ public enum ComputerDaoSql implements ComputerDao {
             + INTRODUCED + "=?," + DISCONTINUED + "=?," + COMPANY_ID + "=? where id = ?";
     private static final String SQL_DELETE_BY_ID      = "DELETE FROM computer where id=?";
     private static final String SQL_DELETE_BY_COMPANY = "DELETE FROM computer WHERE company_id=?";
+    @Autowired
+    private DataSource          dataSource;
 
     /**
      * this method map the result of a request (in the ResultSet) with the computer object.
@@ -138,7 +143,7 @@ public enum ComputerDaoSql implements ComputerDao {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Storing computer " + computer.toString());
         }
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE,
                         Statement.RETURN_GENERATED_KEYS);) {
             connection.setReadOnly(false);
@@ -163,7 +168,7 @@ public enum ComputerDaoSql implements ComputerDao {
     public List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort,
             String search) {
         ArrayList<Computer> computers = new ArrayList<>(); // permet d'éviter de retourner null
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();) {
+        try (Connection connection = dataSource.getConnection();) {
             connection.setReadOnly(true);
             String sql = String.format(SQL_SEARCH, sort.toString());
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
@@ -173,8 +178,7 @@ public enum ComputerDaoSql implements ComputerDao {
                 preparedStatement.setLong(3, idFirst);
                 preparedStatement.setInt(4, number);
                 try (ResultSet resultSet = preparedStatement.executeQuery();) {
-                    computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE
-                            .bindingComputer(resultSet);
+                    computers = (ArrayList<Computer>) bindingComputer(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -190,13 +194,12 @@ public enum ComputerDaoSql implements ComputerDao {
     @Override
     public Optional<Computer> getComputerById(long id) {
         ArrayList<Computer> computers = new ArrayList<>(); // initialising computers
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ID);) {
             connection.setReadOnly(true);
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
-                computers = (ArrayList<Computer>) ComputerDaoSql.INSTANCE
-                        .bindingComputer(resultSet);
+                computers = (ArrayList<Computer>) bindingComputer(resultSet);
             }
         } catch (SQLException e) {
             LOGGER.error("Failed to find the computer " + id, e);
@@ -217,7 +220,7 @@ public enum ComputerDaoSql implements ComputerDao {
         if (computer == null) {
             return;
         }
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE);) {
             connection.setReadOnly(false);
             setPreparedStatementCreateUpdate(preparedStatement, computer);
@@ -237,7 +240,7 @@ public enum ComputerDaoSql implements ComputerDao {
         if (id <= 0) {
             throw new DaoException("The id " + id + " is not valid");
         }
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection
                         .prepareStatement(SQL_DELETE_BY_ID);) {
             connection.setReadOnly(false);
@@ -252,7 +255,7 @@ public enum ComputerDaoSql implements ComputerDao {
     @Override
     public int countSearchedComputer(String search) {
         int numberOfComputers = 0;
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 PreparedStatement st = connection.prepareStatement(
                         "SELECT count(computer.id) as numberOfComputers FROM computer LEFT JOIN company ON computer.company_id=company.id"
                                 + " WHERE computer.name LIKE ? OR company.name like ?");) {

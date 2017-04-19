@@ -6,7 +6,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
@@ -21,12 +25,23 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.excilys.mlemaile.cdb.service.model.Company;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({ "classpath:spring.xml" })
 public class CompanyDaoSqlTest {
-	private CompanyDao companyDao;
 	private IDatabaseTester databaseTester;
+    @Autowired
+    private DataSource      dataSource;
+    @Resource(name = "companyDao")
+    private CompanyDao         companyDao;
+    @Resource(name = "companyComputerDao")
+    private CompanyComputerDao companyComputerDao;
 	
 	private IDataSet readDataSet() throws Exception {
 		return new FlatXmlDataSetBuilder().build(new File("src/test/resources/databaseTest.xml"));
@@ -58,7 +73,6 @@ public class CompanyDaoSqlTest {
 	public void setUp() throws Exception {
 		IDataSet dataSet = readDataSet();
 		cleanlyInsertDataset(dataSet);
-		companyDao = DaoFactory.INSTANCE.getCompanyDao();
 		databaseTester.onSetup();
 	}
 	
@@ -87,8 +101,12 @@ public class CompanyDaoSqlTest {
 	
 	@Test
 	public void testDeleteCompany(){
-	    DaoFactory.INSTANCE.getCompanyDao().deleteCompanyById(5, DatabaseConnection.INSTANCE.getConnection());
-	    assertFalse("deleteCompany does not work",DaoFactory.INSTANCE.getCompanyDao().getCompanyById(5).isPresent());
+        try {
+            companyDao.deleteCompanyById(5, dataSource.getConnection());
+            assertFalse("deleteCompany does not work", companyDao.getCompanyById(5).isPresent());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 	}
 
 }

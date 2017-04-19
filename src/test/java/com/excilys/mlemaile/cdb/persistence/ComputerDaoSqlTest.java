@@ -20,11 +20,20 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({ "classpath:spring.xml" })
 public class ComputerDaoSqlTest {
+    @Autowired
+    private CompanyDao      companyDao;
+    @Autowired
     private ComputerDao     computerDao;
     private IDatabaseTester databaseTester;
 
@@ -57,7 +66,6 @@ public class ComputerDaoSqlTest {
     public void setUp() throws Exception {
         IDataSet dataSet = readDataSet();
         cleanlyInsertDataset(dataSet);
-        computerDao = DaoFactory.INSTANCE.getComputerDao();
         databaseTester.onSetup();
     }
 
@@ -70,7 +78,7 @@ public class ComputerDaoSqlTest {
     @Test
     public void testCreateComputer() {
         LocalDate date = LocalDate.now();
-        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(1).get();
+        Company company = companyDao.getCompanyById(1).get();
         Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
         computerDao.createComputer(c);
         assertEquals("Creation of a computer is not working", c.toString(),
@@ -149,7 +157,7 @@ public class ComputerDaoSqlTest {
     @Test
     public void testDeleteComputer() {
         LocalDate date = LocalDate.now();
-        Company company = DaoFactory.INSTANCE.getCompanyDao().getCompanyById(1).get();
+        Company company = companyDao.getCompanyById(1).get();
         Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
         computerDao.createComputer(c);
         computerDao.deleteComputerById(c.getId());

@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
@@ -16,6 +18,12 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public class ConsoleUserInterface {
     private final static int NUMBER_PER_PAGE = 50;
+    private static ClassPathXmlApplicationContext ctx             = new ClassPathXmlApplicationContext(
+            "spring.xml");
+    private static ServiceCompany                 serviceCompany  = ctx.getBean("serviceCompany",
+            ServiceCompany.class);
+    private static ServiceComputer                serviceComputer = ctx.getBean("serviceComputer",
+            ServiceComputer.class);
 
     /**
      * Display the menu and call the function to do the choosen action.
@@ -91,8 +99,8 @@ public class ConsoleUserInterface {
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
                     int indexMin = (pageNumber - 1) * NUMBER_PER_PAGE;
-                    computers = (ArrayList<Computer>) ServiceComputer.INSTANCE
-                            .listSortSearchNumberComputer(NUMBER_PER_PAGE, indexMin, FieldSort.NAME,
+                    computers = (ArrayList<Computer>) serviceComputer.listSortSearchNumberComputer(
+                            NUMBER_PER_PAGE, indexMin, FieldSort.NAME,
                                     null);
                     for (Computer computer : computers) {
                         System.out.println(computer.toString());
@@ -115,6 +123,7 @@ public class ConsoleUserInterface {
      */
     private static void listCompanies(BufferedReader br) {
         ArrayList<Company> companies = new ArrayList<Company>();
+
         String entry;
         int pageNumber = 0;
         do {
@@ -124,8 +133,8 @@ public class ConsoleUserInterface {
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
                     int indexMin = (pageNumber - 1) * NUMBER_PER_PAGE;
-                    companies = (ArrayList<Company>) ServiceCompany.INSTANCE
-                            .listcompanies(NUMBER_PER_PAGE, indexMin);
+                    companies = (ArrayList<Company>) serviceCompany.listcompanies(NUMBER_PER_PAGE,
+                            indexMin);
                     for (Company company : companies) {
                         System.out.println(company.toString());
                     }
@@ -155,7 +164,7 @@ public class ConsoleUserInterface {
             try {
                 entry = br.readLine();
                 id = Integer.parseInt(entry);
-                c = ServiceComputer.INSTANCE.getComputerById(id).get();
+                c = serviceComputer.getComputerById(id).get();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
@@ -210,7 +219,7 @@ public class ConsoleUserInterface {
             if (ldDisco.isEqual(defaultDate)) {
                 ldDisco = null;
             }
-            ServiceComputer.INSTANCE.createComputer(name, ldIntro, ldDisco, companyId);
+            serviceComputer.createComputer(name, ldIntro, ldDisco, companyId);
             System.out.println("computer successfully created !");
         } catch (IOException e) {
             e.printStackTrace();
@@ -241,7 +250,7 @@ public class ConsoleUserInterface {
             entry = br.readLine();
             String[] args = entry.split("( -|=)");
             id = Integer.parseInt(args[0]);
-            Computer c = ServiceComputer.INSTANCE.getComputerById(id).get();
+            Computer c = serviceComputer.getComputerById(id).get();
             for (int i = 1; i < args.length; i = i + 2) {
                 if ("name".equals(args[i])) {
                     c.setName(args[i + 1]);
@@ -260,13 +269,13 @@ public class ConsoleUserInterface {
                     if (strId != null && !strId.trim().isEmpty()) {
                         long companyId = Long.parseLong(strId);
                         if (companyId > 1) {
-                            Company company = ServiceCompany.INSTANCE.getCompanyById(companyId);
+                            Company company = serviceCompany.getCompanyById(companyId);
                             c.setCompany(company);
                         }
                     }
                 }
             }
-            ServiceComputer.INSTANCE.updatecomputer(c);
+            serviceComputer.updatecomputer(c);
             System.out.println("computer successfully updated");
         } catch (IOException e) {
             e.printStackTrace();
@@ -300,8 +309,8 @@ public class ConsoleUserInterface {
             }
         } while (id < 1);
         try {
-            Computer c = ServiceComputer.INSTANCE.getComputerById(id).get();
-            ServiceComputer.INSTANCE.deleteComputer(c);
+            Computer c = serviceComputer.getComputerById(id).get();
+            serviceComputer.deleteComputer(c);
             System.out.println("Computer successfully deleted !");
         } catch (ServiceException e) {
             System.out.println("a problem occurpage.getPageNumber() - 1) * Page.numberPerPage)"
@@ -330,7 +339,7 @@ public class ConsoleUserInterface {
             }
         } while (id < 1);
         try {
-            ServiceCompany.INSTANCE.deleteCompany(id);
+            serviceCompany.deleteCompany(id);
             System.out.println("Company successfully deleted !");
         } catch (ServiceException e) {
             System.out.println("a problem occur" + e.getMessage());

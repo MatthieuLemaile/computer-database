@@ -9,12 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
-import com.excilys.mlemaile.cdb.persistence.DatabaseConnection;
 import com.excilys.mlemaile.cdb.service.model.Company;
 
 /**
@@ -22,8 +25,8 @@ import com.excilys.mlemaile.cdb.service.model.Company;
  * @author Matthieu Lemaile
  *
  */
-public enum CompanyDaoSql implements CompanyDao {
-    INSTANCE;
+@Repository("companyDao")
+public class CompanyDaoSql implements CompanyDao {
     private static final Logger LOGGER           = LoggerFactory.getLogger(CompanyDaoSql.class);
     private static final String ID               = "id";
     private static final String NAME             = "name";
@@ -34,6 +37,8 @@ public enum CompanyDaoSql implements CompanyDao {
     private static final String SQL_SELECT_ALL   = "SELECT " + ID + "," + NAME
             + " FROM company ORDER BY id ASC";
     private static final String SQL_DELETE       = "DELETE FROM company WHERE id=?";
+    @Autowired
+    private DataSource          dataSource;
 
     /**
      * This method map the result of a request (in the result set) to a company object.
@@ -61,14 +66,14 @@ public enum CompanyDaoSql implements CompanyDao {
     @Override
     public Optional<Company> getCompanyById(long id) {
         ArrayList<Company> companies = new ArrayList<>(); // initialising
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection
                         .prepareStatement(SQL_SELECT_BY_ID);) {
             connection.setReadOnly(true);
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
 
-                companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+                companies = (ArrayList<Company>) bindingCompany(resultSet);
             }
         } catch (SQLException e) {
             LOGGER.error("Failed to SQL_DELETEfind company :", e);
@@ -88,13 +93,13 @@ public enum CompanyDaoSql implements CompanyDao {
     @Override
     public List<Company> listNumberCompaniesStartingAt(int number, long idFirst) {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de retourner null
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT);) {
             connection.setReadOnly(true);
             preparedStatement.setLong(1, idFirst);
             preparedStatement.setInt(2, number);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
-                companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+                companies = (ArrayList<Company>) bindingCompany(resultSet);
             }
         } catch (SQLException e) {
             throw new DaoException("Can't list companies : ", e);
@@ -110,11 +115,11 @@ public enum CompanyDaoSql implements CompanyDao {
         ArrayList<Company> companies = new ArrayList<>(); // permet d'éviter de
         // retourner null
 
-        try (Connection connection = DatabaseConnection.INSTANCE.getConnection();
+        try (Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL);) {
             connection.setReadOnly(true);
-            companies = (ArrayList<Company>) CompanyDaoSql.INSTANCE.bindingCompany(resultSet);
+            companies = (ArrayList<Company>) bindingCompany(resultSet);
         } catch (SQLException e) {
             LOGGER.error("Failed to list companies", e);
             throw new DaoException("Failed to list companies", e);

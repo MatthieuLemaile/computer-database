@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
 import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
@@ -35,6 +37,12 @@ public class EditComputer extends HttpServlet {
     private static final String PARAM_COMPUTER_INTRO = "introduced";
     private static final String PARAM_COMPUTER_DISCO = "discontinued";
     private static final String PARAM_COMPANY_ID     = "companyId";
+    private static ClassPathXmlApplicationContext ctx                  = new ClassPathXmlApplicationContext(
+            "spring.xml");
+    private static ServiceCompany                 serviceCompany       = ctx
+            .getBean("serviceCompany", ServiceCompany.class);
+    private static ServiceComputer                serviceComputer      = ctx
+            .getBean("serviceComputer", ServiceComputer.class);
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -54,13 +62,13 @@ public class EditComputer extends HttpServlet {
             if (request.getParameter(PARAM_COMPUTER_ID) != null) {
                 computerId = Long.parseLong(request.getParameter(PARAM_COMPUTER_ID));
             }
-            Optional<Computer> optComputer = ServiceComputer.INSTANCE.getComputerById(computerId);
+            Optional<Computer> optComputer = serviceComputer.getComputerById(computerId);
             if (optComputer.isPresent()) {
                 ComputerDto c = MapperDtoToModel.modelToComputerDto(optComputer.get());
                 request.setAttribute(ATT_COMPUTER, c);
             }
             List<CompanyDto> companies = MapperDtoToModel
-                    .modelListToCompanyDto(ServiceCompany.INSTANCE.listCompanies());
+                    .modelListToCompanyDto(serviceCompany.listCompanies());
             request.setAttribute(ATT_COMPANIES, companies);
         } catch (NumberFormatException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());
@@ -89,8 +97,7 @@ public class EditComputer extends HttpServlet {
                 .introduced(introduced).discontinued(discontinued).companyId(companyId).id(id)
                 .build();
         try {
-            ServiceComputer.INSTANCE
-                    .updatecomputer(MapperDtoToModel.computerDtoToModel(ce));
+            serviceComputer.updatecomputer(MapperDtoToModel.computerDtoToModel(ce));
             response.sendRedirect(getServletContext().getContextPath() + "/homepage");
         } catch (MapperException | ServiceException e) {
             request.setAttribute(ATT_EXCEPTION, e.getMessage());

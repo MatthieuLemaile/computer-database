@@ -12,9 +12,10 @@ public class Company {
     private String name;
 
     /**
-     * Constructeur par défaut.
+     * default empty constructor.
      */
-    private Company() {
+    public Company() {
+
     }
 
     /**

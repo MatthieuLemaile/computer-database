@@ -20,5 +20,9 @@
 		<property name="idleTimeout" value="28000"/>
 		<property name="leakDetectionThreshold" value = "4000"/>
 	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
 
 </beans>

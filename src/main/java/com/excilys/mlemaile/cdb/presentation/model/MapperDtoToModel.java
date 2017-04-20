@@ -36,10 +36,14 @@ public class MapperDtoToModel {
         if (c.getDiscontinued() != null) {
             discoStr = c.getDiscontinued().toString();
         }
+        ComputerDto.Builder builder = new ComputerDto.Builder(c.getName()).introduced(introStr)
+                .discontinued(discoStr).id(Long.toString(c.getId()));
+        if (c.getCompany() != null) {
+            builder.company(c.getCompany().getName())
+                    .companyId(Long.toString(c.getCompany().getId()));
+        }
 
-        return new ComputerDto.Builder(c.getName()).company(c.getCompany().getName())
-                .companyId(Long.toString(c.getCompany().getId())).introduced(introStr)
-                .discontinued(discoStr).id(Long.toString(c.getId())).build();
+        return builder.build();
     }
 
     /**

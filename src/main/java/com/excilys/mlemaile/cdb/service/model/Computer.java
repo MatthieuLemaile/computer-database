@@ -15,10 +15,11 @@ public class Computer {
     private Company   company;
 
     /**
-     * Hidden empty constructor.
+     * default empty constructor.
      */
-    private Computer() {
-    };
+    public Computer() {
+
+    }
 
     /**
      * Complete constructor of the computer.

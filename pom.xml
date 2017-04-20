@@ -39,7 +39,7 @@
 		<maven.tomcat7.version>2.2</maven.tomcat7.version>
 		<cargo.maven2.version>1.4.16</cargo.maven2.version>
 
-		<spring-framework.version>4.0.2.RELEASE</spring-framework.version>
+		<spring-framework.version>4.3.7.RELEASE</spring-framework.version>
 
 	</properties>
 

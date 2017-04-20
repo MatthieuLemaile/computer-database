@@ -39,12 +39,13 @@ public class Test {
 
     @BeforeClass
     public static void setUpClass() {
-//        System.setProperty("webdriver.gecko.driver", "/opt/geckodriver/geckodriver");
-//        driver = new FirefoxDriver();
+        // System.setProperty("webdriver.gecko.driver", "/opt/geckodriver/geckodriver");
+        // driver = new FirefoxDriver();
 //        
         DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setJavascriptEnabled(true);  
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs");
+        caps.setJavascriptEnabled(true);
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
+                "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs");
         driver = new PhantomJSDriver(caps);
 
     }

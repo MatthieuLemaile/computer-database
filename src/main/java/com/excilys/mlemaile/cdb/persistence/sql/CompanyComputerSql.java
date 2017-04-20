@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.mlemaile.cdb.persistence.CompanyComputerDao;
@@ -28,13 +27,17 @@ public class CompanyComputerSql implements CompanyComputerDao {
         this.dataSource = dataSource;
     }
 
+    @Autowired
+    private CompanyDao  companyDao;
+
+    @Autowired
+    private ComputerDao computerDao;
+
     @Override
     public boolean deleteCompany(long id) {
         boolean execution = false;
         Connection connection = null;
-        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
-        CompanyDao companyDao = ctx.getBean("companyDao", CompanyDao.class);
-        ComputerDao computerDao = ctx.getBean("computerDao", ComputerDao.class);
+
         try {
             connection = dataSource.getConnection();
             try {
@@ -50,7 +53,6 @@ public class CompanyComputerSql implements CompanyComputerDao {
             } catch (SQLException e) {
                 throw new ServiceException("Error with the connection", e);
             } finally {
-                ctx.close();
                 try {
                     connection.setAutoCommit(true);
                 } catch (SQLException e) {
@@ -58,13 +60,11 @@ public class CompanyComputerSql implements CompanyComputerDao {
                 }
             }
         } catch (SQLException e1) {
-            ctx.close();
             LOGGER.error("Unable to get the connection.", e1);
             throw new DaoException("Unable to get the connection.", e1);
         }
         try {
             connection.close();
-            ctx.close();
         } catch (SQLException e) {
             LOGGER.error("Error while closing connection :", e);
         }

@@ -1,31 +1,24 @@
 package com.excilys.mlemaile.cdb.service;
 
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.excilys.mlemaile.cdb.persistence.CompanyDao;
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:spring.xml" })
+//import org.junit.runner.RunWith;
+//import org.springframework.test.context.ContextConfiguration;
+//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+//
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration({ "classpath:spring.xml" })
 public class ServiceCompanyTest {
 
-    @Mock
-    CompanyDao             mockCompanyDao;
+    // @Mock
+    // CompanyDao mockCompanyDao;
+    //
+    // @Autowired
+    // @InjectMocks
+    // private ServiceCompany serviceCompany;
 
-    @Autowired
-    @InjectMocks
-    private ServiceCompany serviceCompany;
-
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
+    // @Before
+    // public void setup() {
+    // MockitoAnnotations.initMocks(this);
+    // }
 
     // @Test
     // public void testListcompanies() {

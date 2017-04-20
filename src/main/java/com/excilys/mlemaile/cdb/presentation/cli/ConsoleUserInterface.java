@@ -25,12 +25,12 @@ public class ConsoleUserInterface {
     private static ServiceComputer                serviceComputer = ctx.getBean("serviceComputer",
             ServiceComputer.class);
 
+
     /**
      * Display the menu and call the function to do the choosen action.
      * @return a boolean which is true as long as the user don't choose to leave
      */
     public static boolean menu() {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String entry;
         int optionNumber = 0;

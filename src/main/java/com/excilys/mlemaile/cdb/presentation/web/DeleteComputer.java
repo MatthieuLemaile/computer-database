@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
@@ -23,16 +24,21 @@ public class DeleteComputer extends HttpServlet {
     private static final String DASHBOARD_VIEW   = "/WEB-INF/views/dashboard.jsp";
     private static final String PARAM_ID_LIST    = "selection";
     private static final String ATT_EXCEPTION    = "exception";
-    private static ClassPathXmlApplicationContext ctx              = new ClassPathXmlApplicationContext(
-            "spring.xml");
-    private static ServiceComputer                serviceComputer  = ctx.getBean("serviceComputer",
-            ServiceComputer.class);
+    private WebApplicationContext ctx;
+    private ServiceComputer       serviceComputer;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public DeleteComputer() {
         super();
+    }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+        serviceComputer = ctx.getBean("serviceComputer", ServiceComputer.class);
     }
 
     @Override

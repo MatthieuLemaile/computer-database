@@ -17,7 +17,7 @@ import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public class ConsoleUserInterface {
-    private final static int NUMBER_PER_PAGE = 50;
+    private static final int                      NUMBER_PER_PAGE = 50;
     private static ClassPathXmlApplicationContext ctx             = new ClassPathXmlApplicationContext(
             "spring.xml");
     private static ServiceCompany                 serviceCompany  = ctx.getBean("serviceCompany",

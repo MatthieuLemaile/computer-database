@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
@@ -26,26 +27,31 @@ import com.excilys.mlemaile.cdb.service.Validator;
  */
 @WebServlet("/addComputer")
 public class AddComputer extends HttpServlet {
-    private static final long   serialVersionUID     = 1L;
-    private static final String ADD_COMPUTER_VIEW    = "/WEB-INF/views/addComputer.jsp";
-    private static final String ATT_COMPANIES        = "companies";
-    private static final String ATT_EXCEPTION        = "exception";
-    private static final String PARAM_COMPUTER_NAME  = "computerName";
-    private static final String PARAM_COMPUTER_INTRO = "introduced";
-    private static final String PARAM_COMPUTER_DISCO = "discontinued";
-    private static final String PARAM_COMPANY_ID     = "companyId";
-    private static ClassPathXmlApplicationContext ctx                  = new ClassPathXmlApplicationContext(
-            "spring.xml");
-    private static ServiceCompany                 serviceCompany       = ctx
-            .getBean("serviceCompany", ServiceCompany.class);
-    private static ServiceComputer                serviceComputer      = ctx
-            .getBean("serviceComputer", ServiceComputer.class);
+    private static final long     serialVersionUID     = 1L;
+    private static final String   ADD_COMPUTER_VIEW    = "/WEB-INF/views/addComputer.jsp";
+    private static final String   ATT_COMPANIES        = "companies";
+    private static final String   ATT_EXCEPTION        = "exception";
+    private static final String   PARAM_COMPUTER_NAME  = "computerName";
+    private static final String   PARAM_COMPUTER_INTRO = "introduced";
+    private static final String   PARAM_COMPUTER_DISCO = "discontinued";
+    private static final String   PARAM_COMPANY_ID     = "companyId";
+    private WebApplicationContext ctx;
+    private ServiceCompany        serviceCompany;
+    private ServiceComputer       serviceComputer;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AddComputer() {
         super();
+    }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+        serviceCompany = ctx.getBean("serviceCompany", ServiceCompany.class);
+        serviceComputer = ctx.getBean("serviceComputer", ServiceComputer.class);
     }
 
     @Override
@@ -89,14 +95,14 @@ public class AddComputer extends HttpServlet {
     }
 
     /**
-     * Validate the request made by the user
+     * Validate the request made by the user.
      * @param request the request issued by the client
      * @return a Map of errors
      */
     private Map<String, String> isValid(HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
         String nameValid = Validator.checkNameNotEmpty(request.getParameter(PARAM_COMPUTER_NAME));
-        if(nameValid!=null){
+        if (nameValid != null) {
             errors.put(PARAM_COMPUTER_NAME, nameValid);
         }
         String companyIdValid = Validator.checkId(request.getParameter(PARAM_COMPANY_ID));

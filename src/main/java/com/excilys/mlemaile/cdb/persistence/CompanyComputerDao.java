@@ -7,5 +7,5 @@ public interface CompanyComputerDao {
      * @param id The id of the company to delete
      * @return a boolean which is true if the execution went well
      */
-    public boolean deleteCompany(long id);
+    boolean deleteCompany(long id);
 }

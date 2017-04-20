@@ -27,7 +27,6 @@ public class ServiceCompany {
     }
 
     public void setCompanyDao(CompanyDao companyDao) {
-        System.out.println("set company dao : " + companyDao.toString());
         this.companyDao = companyDao;
     }
 
@@ -48,10 +47,7 @@ public class ServiceCompany {
     public List<Company> listcompanies(int number, long idFirst) {
         List<Company> companies = new ArrayList<Company>();
         try {
-            System.out.println(
-                    companyDao.toString() + " list companies(" + number + "," + idFirst + ")");
-            companies = companyDao.listNumberCompaniesStartingAt(number,
-                    idFirst);
+            companies = companyDao.listNumberCompaniesStartingAt(number, idFirst);
         } catch (DaoException e) {
             LOGGER.warn("can't list companies", e);
             throw new ServiceException("can't list companies", e);

@@ -10,6 +10,7 @@ public class Validator {
     /**
      * check that id is a long greater than 0.
      * @param id the id to check
+     * @return a String with the error or null
      */
     public static String checkId(String id) {
         if (id != null && !id.matches("^\\d+$")) {
@@ -21,6 +22,7 @@ public class Validator {
     /**
      * check that the given String is a date.
      * @param date the String to check
+     * @return a String with the error or null
      */
     public static String checkDate(String date) {
         if (date != null && !date.matches(REGEX_DATE)) {
@@ -30,9 +32,11 @@ public class Validator {
     }
 
     /**
-     * Check that String are date, and that introduced is at the same moment or before discontinued date.
+     * Check that String are date, and that introduced is at the same moment or before discontinued
+     * date.
      * @param discontinuedDate the discontinued date
      * @param introducedDate the introduced date
+     * @return a String with the error or null.
      */
     public static String checkDateNotBeforeDate(String discontinuedDate, String introducedDate) {
         if (introducedDate != null && discontinuedDate != null && !introducedDate.trim().isEmpty()
@@ -54,6 +58,11 @@ public class Validator {
         return null;
     }
 
+    /**
+     * check if the name of the computer is not empty.
+     * @param name the name to check
+     * @return a String with the error or null
+     */
     public static String checkNameNotEmpty(String name) {
         if (StringUtils.isNotEmpty(name)) {
             return null;
@@ -61,6 +70,11 @@ public class Validator {
         return "You must suply a name.";
     }
 
+    /**
+     * check if the numero of the page is a positive integer.
+     * @param number the number to check.
+     * @return the error or null.
+     */
     public static String checkPageNumberPositiveOrNull(String number) {
         if (number != null && !number.matches("^\\d+$")) {
             return "The page number must be a positive integer.";
@@ -68,6 +82,11 @@ public class Validator {
         return null;
     }
 
+    /**
+     * Check if number is a positive integer.
+     * @param number to check.
+     * @return the error or null
+     */
     public static String checkPageLimitPositiveOrNull(String number) {
         if (number != null && !number.matches("^\\d+$")) {
             return "The page limit must be a positive integer.";

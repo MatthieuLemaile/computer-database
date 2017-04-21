@@ -1,6 +1,5 @@
 package com.excilys.mlemaile.cdb.persistence;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +33,5 @@ public interface CompanyDao {
      * @param companyId the id of the company to delete
      * @param connection The connection to the database
      */
-    void deleteCompanyById(long companyId, Connection connection);
+    void deleteCompanyById(long companyId);
 }

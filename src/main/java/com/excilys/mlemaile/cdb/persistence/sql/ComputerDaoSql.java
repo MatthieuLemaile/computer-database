@@ -1,8 +1,5 @@
 package com.excilys.mlemaile.cdb.persistence.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,7 +15,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
-import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
@@ -31,8 +25,6 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
  */
 @Repository("computerDao")
 public class ComputerDaoSql implements ComputerDao {
-    private static final Logger LOGGER                = LoggerFactory
-            .getLogger(ComputerDaoSql.class);
     public static final String  ID                    = "id";
     public static final String  NAME                  = "name";
     public static final String  INTRODUCED            = "introduced";
@@ -196,22 +188,7 @@ public class ComputerDaoSql implements ComputerDao {
     }
 
     @Override
-    public void deleteComputerByCompanyId(long id, Connection connection) {
-        try (PreparedStatement preparedStatement = connection
-                .prepareStatement(SQL_DELETE_BY_COMPANY)) {
-            connection.setReadOnly(false);
-            preparedStatement.setLong(1, id);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                LOGGER.error("error manipulating the connection from:" + e.getMessage(), e1);
-                throw new DaoException("error manipulating the connection from:" + e.getMessage(),
-                        e1);
-            }
-            LOGGER.error("Failed to delete computers of company" + id, e);
-            throw new DaoException("Failed to delete computers", e);
-        }
+    public void deleteComputerByCompanyId(long id) {
+        jdbcTemplate.update(SQL_DELETE_BY_COMPANY, id);
     }
 }

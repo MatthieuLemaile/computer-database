@@ -1,20 +1,14 @@
 package com.excilys.mlemaile.cdb.persistence.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
-import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.service.model.Company;
 
 /**
@@ -24,7 +18,6 @@ import com.excilys.mlemaile.cdb.service.model.Company;
  */
 @Repository("companyDao")
 public class CompanyDaoSql implements CompanyDao {
-    private static final Logger LOGGER           = LoggerFactory.getLogger(CompanyDaoSql.class);
     private static final String ID               = "id";
     private static final String NAME             = "name";
     private static final String SQL_SELECT_BY_ID = "select " + ID + "," + NAME
@@ -76,21 +69,7 @@ public class CompanyDaoSql implements CompanyDao {
      * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#deleteCompany()
      */
     @Override
-    public void deleteCompanyById(long companyId, Connection connection) {
-        try (PreparedStatement deleteCompanyStatement = connection.prepareStatement(SQL_DELETE)) {
-            connection.setReadOnly(false);
-            deleteCompanyStatement.setLong(1, companyId);
-            deleteCompanyStatement.executeUpdate();
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                LOGGER.error("error manipulating the connection from:" + e.getMessage(), e1);
-                throw new DaoException("error manipulating the connection from:" + e.getMessage(),
-                        e1);
-            }
-            LOGGER.error("Failed to delete a company", e);
-            throw new DaoException("Failed to delete a company", e);
-        }
+    public void deleteCompanyById(long companyId) {
+        jdbcTemplate.update(SQL_DELETE, companyId);
     }
 }

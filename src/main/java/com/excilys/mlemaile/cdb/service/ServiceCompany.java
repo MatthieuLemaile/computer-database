@@ -8,9 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.mlemaile.cdb.persistence.CompanyComputerDao;
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
+import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.service.model.Company;
 
@@ -20,23 +21,7 @@ public class ServiceCompany {
     @Autowired
     private CompanyDao         companyDao;
     @Autowired
-    private CompanyComputerDao companyComputerDao;
-
-    public CompanyDao getCompanyDao() {
-        return companyDao;
-    }
-
-    public void setCompanyDao(CompanyDao companyDao) {
-        this.companyDao = companyDao;
-    }
-
-    public CompanyComputerDao getCompanyComputerDao() {
-        return companyComputerDao;
-    }
-
-    public void setCompanyComputerDao(CompanyComputerDao companyComputerDao) {
-        this.companyComputerDao = companyComputerDao;
-    }
+    private ComputerDao        computerDao;
 
     /**
      * return number companie, from idFirst, if there is enough.
@@ -94,7 +79,10 @@ public class ServiceCompany {
      * @param id The id of the company to delete
      * @return a boolean which is true if the execution went well
      */
+    @Transactional("txManager")
     public boolean deleteCompany(long id) {
-        return companyComputerDao.deleteCompany(id);
+        computerDao.deleteComputerByCompanyId(id);
+        companyDao.deleteCompanyById(id);
+        return true;
     }
 }

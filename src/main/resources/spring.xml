@@ -2,23 +2,40 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context-2.5.xsd" >
+	http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 	
 	<context:component-scan base-package="com.excilys.mlemaile.cdb" />
+
+	<mvc:annotation-driven />
+     
+    <bean
+        id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/views/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+    
+    <context:property-placeholder location="classpath:hikari.properties"/>
 	
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
 
-		<property name="driverClassName" value="org.mariadb.jdbc.Driver" />
-		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull" />
-		<property name="username" value="admincdb" />
-		<property name="password" value="TJeWkg5equo1mpOIWVUI" />
-		<property name="maximumPoolSize" value = "60"/>
-		<property name="maxLifetime" value="28000"/>
-		<property name="idleTimeout" value="28000"/>
-		<property name="leakDetectionThreshold" value = "4000"/>
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="jdbcUrl" value="${jdbcUrl}" />
+		<property name="username" value="${usernameDB}" />
+		<property name="password" value="${password}" />
+		<property name="maximumPoolSize" value = "${maximumPoolSize}"/>
+		<property name="maxLifetime" value="${maxLifetime}"/>
+		<property name="idleTimeout" value="${idleTimeout}"/>
+		<property name="leakDetectionThreshold" value = "${leakDetectionThreshold}"/>
 	</bean>
 	
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">

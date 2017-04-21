@@ -1,20 +1,17 @@
 package com.excilys.mlemaile.cdb.presentation.web;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.presentation.Page;
@@ -27,11 +24,10 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
 /**
  * Servlet implementation class homepage.
  */
-@WebServlet("/homepage")
-public class Homepage extends HttpServlet {
+@Controller
+@RequestMapping("/homepage")
+public class Homepage {
     private static final Logger LOGGER                = LoggerFactory.getLogger(Homepage.class);
-    private static final long   serialVersionUID      = 1L;
-    private static final String DASHBOARD_VIEW        = "/WEB-INF/views/dashboard.jsp";
     private static final String ATT_LIST_COMPUTERS    = "listComputers";
     private static final String ATT_PAGE              = "page";
     private static final String ATT_EXCEPTION         = "exception";
@@ -40,39 +36,26 @@ public class Homepage extends HttpServlet {
     private static final String PARAM_PAGE_LIMIT      = "limit";
     private static final String PARAM_SORT            = "sort";
     private static final String PARAM_SEARCH          = "search";
-    private WebApplicationContext ctx;
+    @Autowired
     private ServiceComputer       serviceComputer;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public Homepage() {
         super();
     }
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-        serviceComputer = ctx.getBean("serviceComputer", ServiceComputer.class);
-    }
-
-    @Override
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Map<String, String> errors = isValid(request);
-        for (String err : errors.values()) {
-            System.out.println(err);
-        }
+    @RequestMapping(method = RequestMethod.GET)
+    public String displayHomepage(ModelMap model,
+            @RequestParam(value = PARAM_PAGE_NUMBER, required = false) String pageNumber,
+            @RequestParam(value = PARAM_PAGE_LIMIT, required = false) String pageLimit,
+            @RequestParam(value = PARAM_SEARCH, required = false) String search,
+            @RequestParam(value=PARAM_SORT,required=false) String sort){
+        Map<String, String> errors = isValid(pageNumber, pageLimit);
         if (!errors.isEmpty()) {
-            request.setAttribute(ATT_EXCEPTION, errors);
+            model.addAttribute(ATT_EXCEPTION, errors);
         } else {
-            computeResponse(request);
+            computeResponse(model, pageNumber, pageLimit, search, sort);
         }
-        request.getServletContext().getRequestDispatcher(DASHBOARD_VIEW).forward(request, response);
+        return "dashboard";
     }
 
     /**
@@ -80,15 +63,18 @@ public class Homepage extends HttpServlet {
      * @param request the request issued by the client
      * @return a Map of errors
      */
-    private Map<String, String> isValid(HttpServletRequest request) {
+    private Map<String, String> isValid(String pageNumber, String pageLimit) {
         Map<String, String> errors = new HashMap<>();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Page Number : " + pageNumber + "\t" + "Page Limit : " + pageLimit);
+        }
         String pageNumberValid = Validator
-                .checkPageNumberPositiveOrNull(request.getParameter(PARAM_PAGE_NUMBER));
+                .checkPageNumberPositiveOrNull(pageNumber);
         if (pageNumberValid != null) {
             errors.put("numPage", pageNumberValid);
         }
         String pageLimitValid = Validator
-                .checkPageLimitPositiveOrNull(request.getParameter(PARAM_PAGE_LIMIT));
+                .checkPageLimitPositiveOrNull(pageLimit);
         if (pageLimitValid != null) {
             errors.put("pageLimit", pageLimitValid);
         }
@@ -99,20 +85,17 @@ public class Homepage extends HttpServlet {
      * Compute the response to give to the user.
      * @param request the request issued by the user
      */
-    private void computeResponse(HttpServletRequest request) {
-        int numPage = (request.getParameter(PARAM_PAGE_NUMBER) != null) ? Integer.parseInt(request.getParameter(PARAM_PAGE_NUMBER)) : 1;
-        int limit = (request.getParameter(PARAM_PAGE_LIMIT) != null)
-                ? Integer.parseInt(request.getParameter(PARAM_PAGE_LIMIT)) : 50;
-        String search = request.getParameter(PARAM_SEARCH);
+    private void computeResponse(ModelMap model,String pageNumber, String pageLimit,String search,String sort) {
+        int numPage = (pageNumber != null) ? Integer.parseInt(pageNumber) : 1;
+        int limit = (pageLimit != null) ? Integer.parseInt(pageLimit) : 50;
 
         Page page = new Page(numPage);
         page.setNumberPerPage(limit);
-        setSort(page, request);
-        request.setAttribute(ATT_LIST_COMPUTERS, listPageComputers(page, search));
-        request.setAttribute(ATT_PAGE, page);
-        request.setAttribute(PARAM_SEARCH, search);
-        request.setAttribute(TOTAL_NUMBER_COMPUTER,
-                serviceComputer.countComputers(search));
+        setSort(page, sort);
+        model.addAttribute(ATT_LIST_COMPUTERS, listPageComputers(page, search));
+        model.addAttribute(ATT_PAGE, page);
+        model.addAttribute(PARAM_SEARCH, search);
+        model.addAttribute(TOTAL_NUMBER_COMPUTER, serviceComputer.countComputers(search));
     }
 
     /**
@@ -133,8 +116,7 @@ public class Homepage extends HttpServlet {
      * @param page the page to set
      * @param request the request containing data's
      */
-    private void setSort(Page page, HttpServletRequest request) {
-        String field = request.getParameter(PARAM_SORT);
+    private void setSort(Page page, String field) {
         if (field != null && !field.trim().isEmpty()) {
             switch (field) {
             case "name":

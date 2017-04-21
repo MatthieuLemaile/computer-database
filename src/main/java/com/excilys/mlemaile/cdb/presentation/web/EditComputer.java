@@ -1,17 +1,14 @@
 package com.excilys.mlemaile.cdb.presentation.web;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
@@ -26,89 +23,67 @@ import com.excilys.mlemaile.cdb.service.model.Computer;
 /**
  * Servlet implementation class EditComputer.
  */
-@WebServlet("/editComputer")
-public class EditComputer extends HttpServlet {
-    private static final long   serialVersionUID     = 1L;
+@Controller
+@RequestMapping("/editComputer")
+public class EditComputer {
     private static final String PARAM_COMPUTER_ID    = "computerId";
     private static final String ATT_COMPUTER         = "computer";
     private static final String ATT_COMPANIES        = "companies";
     private static final String ATT_EXCEPTION        = "exception";
-    private static final String EDIT_COMPUTER_VIEW   = "/WEB-INF/views/editComputer.jsp";
     private static final String PARAM_COMPUTER_NAME  = "computerName";
     private static final String PARAM_COMPUTER_INTRO = "introduced";
     private static final String PARAM_COMPUTER_DISCO = "discontinued";
     private static final String PARAM_COMPANY_ID     = "companyId";
-    private WebApplicationContext ctx;
+    @Autowired
     private ServiceCompany        serviceCompany;
+    @Autowired
     private ServiceComputer       serviceComputer;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public EditComputer() {
         super();
     }
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
-        serviceCompany = ctx.getBean("serviceCompany", ServiceCompany.class);
-        serviceComputer = ctx.getBean("serviceComputer", ServiceComputer.class);
-    }
-
-    @Override
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @RequestMapping(method = RequestMethod.GET)
+    public String displayEditComputer(ModelMap model,
+            @RequestParam(value = PARAM_COMPUTER_ID, required = false) String computerIdStr) {
         try {
             long computerId = 0;
-            if (request.getParameter(PARAM_COMPUTER_ID) != null) {
-                computerId = Long.parseLong(request.getParameter(PARAM_COMPUTER_ID));
+            if (computerIdStr != null) {
+                computerId = Long.parseLong(computerIdStr);
             }
             Optional<Computer> optComputer = serviceComputer.getComputerById(computerId);
             if (optComputer.isPresent()) {
                 ComputerDto c = MapperDtoToModel.modelToComputerDto(optComputer.get());
-                request.setAttribute(ATT_COMPUTER, c);
+                model.addAttribute(ATT_COMPUTER, c);
             }
             List<CompanyDto> companies = MapperDtoToModel
                     .modelListToCompanyDto(serviceCompany.listCompanies());
-            request.setAttribute(ATT_COMPANIES, companies);
+            model.addAttribute(ATT_COMPANIES, companies);
         } catch (NumberFormatException | ServiceException e) {
-            request.setAttribute(ATT_EXCEPTION, e.getMessage());
-        } finally {
-            request.getServletContext().getRequestDispatcher(EDIT_COMPUTER_VIEW).forward(request,
-                    response);
+            model.addAttribute(ATT_EXCEPTION, e.getMessage());
         }
+        return "editComputer";
     }
 
-    @Override
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String id = request.getParameter(PARAM_COMPUTER_ID);
-        String companyId = request.getParameter(PARAM_COMPANY_ID);
-        String introduced = request.getParameter(PARAM_COMPUTER_INTRO);
-        String discontinued = request.getParameter(PARAM_COMPUTER_DISCO);
+    @RequestMapping(method = RequestMethod.POST)
+    public String doPost(ModelMap model, @RequestParam(value = PARAM_COMPUTER_ID) String id,
+            @RequestParam(value = PARAM_COMPUTER_NAME) String name,
+            @RequestParam(value = PARAM_COMPANY_ID, required = false) String companyId,
+            @RequestParam(value = PARAM_COMPUTER_INTRO, required = false) String introduced,
+            @RequestParam(value = PARAM_COMPUTER_DISCO, required = false) String discontinued) {
         Validator.checkId(id);
         Validator.checkId(companyId);
         Validator.checkDate(introduced);
         Validator.checkDate(discontinued);
         Validator.checkDateNotBeforeDate(discontinued, introduced);
-        ComputerDto ce = new ComputerDto.Builder(request.getParameter(PARAM_COMPUTER_NAME))
-                .introduced(introduced).discontinued(discontinued).companyId(companyId).id(id)
-                .build();
+        ComputerDto ce = new ComputerDto.Builder(name).introduced(introduced)
+                .discontinued(discontinued).companyId(companyId).id(id).build();
         try {
             serviceComputer.updatecomputer(MapperDtoToModel.computerDtoToModel(ce));
-            response.sendRedirect(getServletContext().getContextPath() + "/homepage");
+            return "redirect:/homepage";
         } catch (MapperException | ServiceException e) {
-            request.setAttribute(ATT_EXCEPTION, e.getMessage());
-            request.getServletContext().getRequestDispatcher(EDIT_COMPUTER_VIEW).forward(request,
-                    response);
+            model.addAttribute(ATT_EXCEPTION, e.getMessage());
+            return "editComputer";
         }
     }
 

@@ -32,4 +32,35 @@
     <error-code>500</error-code>
     <location>/views/500.jsp</location>
   </error-page>
+  
+  <servlet>
+    <servlet-name>dispatcher</servlet-name>
+    <servlet-class>
+        org.springframework.web.servlet.DispatcherServlet
+    </servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/classes/spring.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+ </servlet>
+ 
+ <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/homepage</url-pattern>
+	<url-pattern>/editComputer</url-pattern>
+    <url-pattern>/deleteComputer</url-pattern>
+    <url-pattern>/addComputer</url-pattern>
+ </servlet-mapping>
+<!--  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+ </servlet-mapping> -->
+ <!-- <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+ </servlet-mapping> -->
+ <!-- <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+ </servlet-mapping> -->
+ 
+  
 </web-app>

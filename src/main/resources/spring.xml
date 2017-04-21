@@ -1,45 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context-4.3.xsd
 	http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
-	
+
 	<context:component-scan base-package="com.excilys.mlemaile.cdb" />
 
 	<mvc:annotation-driven />
-     
-    <bean
-        id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix">
-            <value>/WEB-INF/views/</value>
-        </property>
-        <property name="suffix">
-            <value>.jsp</value>
-        </property>
-    </bean>
-    
-    <context:property-placeholder location="classpath:hikari.properties"/>
-	
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/views/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:language" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="en" />
+		<property name="cookieName" value="myAppLocaleCookie"></property>
+		<property name="cookieMaxAge" value="3600"></property>
+	</bean>
+
+	<!-- <bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en" />
+	</bean> -->
+
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="locale" />
+		</bean>
+	</mvc:interceptors>
+
+	<context:property-placeholder location="classpath:hikari.properties" />
+
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
 
 		<property name="driverClassName" value="${driverClassName}" />
 		<property name="jdbcUrl" value="${jdbcUrl}" />
 		<property name="username" value="${usernameDB}" />
 		<property name="password" value="${password}" />
-		<property name="maximumPoolSize" value = "${maximumPoolSize}"/>
-		<property name="maxLifetime" value="${maxLifetime}"/>
-		<property name="idleTimeout" value="${idleTimeout}"/>
-		<property name="leakDetectionThreshold" value = "${leakDetectionThreshold}"/>
+		<property name="maximumPoolSize" value="${maximumPoolSize}" />
+		<property name="maxLifetime" value="${maxLifetime}" />
+		<property name="idleTimeout" value="${idleTimeout}" />
+		<property name="leakDetectionThreshold" value="${leakDetectionThreshold}" />
 	</bean>
-	
+
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource" ref="dataSource"/>
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 
 </beans>

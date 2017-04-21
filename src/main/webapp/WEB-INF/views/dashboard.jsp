@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/myTagLib.tld" prefix="myLib"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <section id="main">
 
@@ -17,14 +18,15 @@
 			</c:forEach>
 		</c:forEach>
 	</c:if>
-	
+
 	<fmt:formatNumber var="numberPageMax"
 		value="${requestScope.totalNumberComputers/requestScope.page.numberPerPage}"
 		maxFractionDigits="0" />
 
 	<div class="container">
 		<h1 id="homeTitle">
-			<c:out value="${requestScope.totalNumberComputers} Computers found" />
+			<c:out value="${requestScope.totalNumberComputers} " />
+			<spring:message code="homepage.computers_found" />
 		</h1>
 		<div id="actions" class="form-horizontal">
 			<div class="pull-left">
@@ -36,15 +38,17 @@
 						type=hidden name="sort"
 						value="${requestScope.page.sort.toString()}" /> <input
 						type="search" id="searchbox" name="search" class="form-control"
-						placeholder="Search name" value="${requestScope.search}" /> <input
-						type="submit" id="searchsubmit" value="Filter by name"
+						placeholder="<spring:message code="homepage.searchName" />"
+						value="${requestScope.search}" /> <input type="submit"
+						id="searchsubmit"
+						value="<spring:message code="homepage.filterByName" />"
 						class="btn btn-primary" />
 				</form>
 			</div>
 			<div class="pull-right">
-				<a class="btn btn-success" id="addComputer" href="addComputer">Add
-					Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-					onclick="$.fn.toggleEditMode();">Edit</a>
+				<a class="btn btn-success" id="addComputer" href="addComputer"><spring:message
+						code="homepage.add.computer"/></a> <a class="btn btn-default"
+					id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message code="homepage.edit" /></a>
 			</div>
 		</div>
 	</div>
@@ -70,18 +74,15 @@
 						</a>
 					</span></th>
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=name&search=${requestScope.search}">Computer
-							name</a></th>
+						href="${pageContext.request.contextPath}/homepage?sort=name&search=${requestScope.search}"><spring:message code="computer.name" /></a></th>
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=introduced&search=${requestScope.search}">Introduced
-							date</a></th>
+						href="${pageContext.request.contextPath}/homepage?sort=introduced&search=${requestScope.search}"><spring:message code="computer.introduced" /></a></th>
 					<!-- Table header for Discontinued Date -->
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=discontinued&search=${requestScope.search}">Discontinued
-							date</a></th>
+						href="${pageContext.request.contextPath}/homepage?sort=discontinued&search=${requestScope.search}"><spring:message code="computer.discontinued" /></a></th>
 					<!-- Table header for Company -->
 					<th><a
-						href="${pageContext.request.contextPath}/homepage?sort=companyName&search=${requestScope.search}">Company</a></th>
+						href="${pageContext.request.contextPath}/homepage?sort=companyName&search=${requestScope.search}"><spring:message code="computer.company" /></a></th>
 
 				</tr>
 			</thead>

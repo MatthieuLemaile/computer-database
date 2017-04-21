@@ -3,12 +3,18 @@ package com.excilys.mlemaile.cdb.service.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 /**
  * This class represent a computer as in the database.
  * @author Matthieu Lemaile
  */
 public class Computer {
+    @NotNull
+    @Min(0)
     private long      id;
+    @NotNull
     private String    name;
     private LocalDate introduced;
     private LocalDate discontinued;

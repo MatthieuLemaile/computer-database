@@ -2,13 +2,19 @@ package com.excilys.mlemaile.cdb.service.model;
 
 import java.util.Objects;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 /**
  * This class represent a company as in database.
  * @author Matthieu Lemaile
  *
  */
 public class Company {
+    @NotNull
+    @Min(0)
     private long   id;
+    @NotNull
     private String name;
 
     /**

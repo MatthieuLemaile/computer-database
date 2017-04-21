@@ -1,11 +1,16 @@
 package com.excilys.mlemaile.cdb.presentation.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 /**
  * This class represent a computer as in the database.
  * @author Matthieu Lemaile
  */
 public class ComputerDto {
+    @Pattern(regexp = "^[0-9]+$")
     private String id;
+    @NotNull
     private String name;
     private String introduced;
     private String discontinued;

@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,8 +24,7 @@ import com.excilys.mlemaile.cdb.service.Validator;
  */
 @Controller
 @RequestMapping("/addComputer")
-public class AddComputer extends HttpServlet {
-    private static final long     serialVersionUID     = 1L;
+public class AddComputer {
     private static final String   ATT_COMPANIES        = "companies";
     private static final String   ATT_EXCEPTION        = "exception";
     private static final String   PARAM_COMPUTER_NAME  = "computerName";
@@ -61,7 +58,6 @@ public class AddComputer extends HttpServlet {
             @RequestParam(value = PARAM_COMPUTER_INTRO, required = false) String introduced,
             @RequestParam(value = PARAM_COMPUTER_DISCO, required = false) String discontinued,
             @RequestParam(value = PARAM_COMPANY_ID, required = false) String companyId) {
-
         ComputerDto ce = new ComputerDto.Builder(name).introduced(introduced)
                 .discontinued(discontinued).companyId(companyId).build();
         Map<String, String> errors = isValid(ce);

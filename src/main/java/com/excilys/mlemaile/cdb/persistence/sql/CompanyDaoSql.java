@@ -42,8 +42,13 @@ public class CompanyDaoSql implements CompanyDao {
      */
     @Override
     public Optional<Company> getCompanyById(long id) {
-        Company company = jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, new Object[] {id },
-                new BeanPropertyRowMapper<>(Company.class));
+        Company company = null;
+        try {
+            company = jdbcTemplate.queryForObject(SQL_SELECT_BY_ID, new Object[] {id },
+                    new BeanPropertyRowMapper<>(Company.class));
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            company = null;
+        }
         return Optional.ofNullable(company);
     }
 

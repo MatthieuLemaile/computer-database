@@ -22,7 +22,7 @@
 		<apacheCommonsConfiguration.version>2.0</apacheCommonsConfiguration.version>
 		<apacheCommonsBeanutils.version>1.9.3</apacheCommonsBeanutils.version>
 
-		<junit.version>4.10</junit.version>
+		<junit.version>4.12</junit.version>
 		<mockito.version>2.7.17</mockito.version>
 		<dbunit.version>2.4.9</dbunit.version>
 		<powermock.version>1.7.0RC4</powermock.version>
@@ -102,12 +102,14 @@
 			<version>${apacheCommonsBeanutils.version}</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.mockito</groupId>

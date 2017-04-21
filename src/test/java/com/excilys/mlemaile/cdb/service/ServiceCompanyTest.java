@@ -1,65 +1,73 @@
 package com.excilys.mlemaile.cdb.service;
 
-//import org.junit.runner.RunWith;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-//
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration({ "classpath:spring.xml" })
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import com.excilys.mlemaile.cdb.persistence.CompanyComputerDao;
+import com.excilys.mlemaile.cdb.persistence.CompanyDao;
+import com.excilys.mlemaile.cdb.service.model.Company;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration({"classpath:spring.xml" })
 public class ServiceCompanyTest {
 
-    // @Mock
-    // CompanyDao mockCompanyDao;
-    //
-    // @Autowired
-    // @InjectMocks
-    // private ServiceCompany serviceCompany;
+    @Mock
+    private CompanyDao         mockCompanyDao;
 
-    // @Before
-    // public void setup() {
-    // MockitoAnnotations.initMocks(this);
-    // }
+    @Mock
+    private CompanyComputerDao mockCompanyComputerDao;
 
-    // @Test
-    // public void testListcompanies() {
-    // List<Company> companies = new ArrayList<>();
-    // companies.add(new Company.Builder().build());
-    // CompanyDao mockCompanyDao = Mockito.mock(CompanyDao.class);
-    // Mockito.when(mockCompanyDao.listNumberCompaniesStartingAt(10, 0L)).thenReturn(companies);
-    // List<Company> companiesReturned = serviceCompany.listcompanies(10, 0L);
-    // Mockito.verify(mockCompanyDao).listNumberCompaniesStartingAt(10, 0L);
-    // assertEquals("List Companies does not work as intended", companies, companiesReturned);
-    //
-    // }
+    @Autowired
+    @InjectMocks
+    private ServiceCompany serviceCompany;
 
-    // @Test
-    // public void testGetCompany() {
-    // Company company = new Company.Builder().build();
-    // Optional<Company> opt = Optional.ofNullable(company);
-    // CompanyDao mockCompanyDao = mock(CompanyDao.class);
-    // DaoFactory mockFactory = mock(DaoFactory.class);
-    // Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
-    // when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-    // when(mockCompanyDao.getCompanyById(1)).thenReturn(opt);
-    // assertEquals("Get Company does not work as
-    // intended",company,ServiceCompany.INSTANCE.getCompanyById(1));
-    // }
-    //
-    // @Test
-    // public void testDeleteCompanyId(){
-    // Company c = new Company.Builder().build();
-    // DatabaseConnection mockDatabaseConnection = mock(DatabaseConnection.class);
-    // Connection mockConnection = mock(Connection.class);
-    // DaoFactory mockFactory = mock(DaoFactory.class);
-    // CompanyDao mockCompanyDao = mock(CompanyDao.class);
-    // ComputerDao mockComputerDao = mock(ComputerDao.class);
-    // Whitebox.setInternalState(DaoFactory.class, "INSTANCE", mockFactory);
-    // Whitebox.setInternalState(DatabaseConnection.class, "INSTANCE", mockDatabaseConnection);
-    // when(mockDatabaseConnection.getConnection()).thenReturn(mockConnection);
-    // when(mockFactory.getCompanyDao()).thenReturn(mockCompanyDao);
-    // when(mockFactory.getComputerDao()).thenReturn(mockComputerDao);
-    // when(mockCompanyDao.getCompanyById(1)).thenReturn(Optional.ofNullable(c));
-    // assertTrue("Delete company does not work as
-    // intended",ServiceCompany.INSTANCE.deleteCompany(1));
-    // }
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testListcompanies() {
+        List<Company> companies = new ArrayList<>();
+        companies.add(new Company.Builder().build());
+        Mockito.when(mockCompanyDao.listNumberCompaniesStartingAt(10, 0L)).thenReturn(companies);
+        List<Company> companiesReturned = serviceCompany.listcompanies(10, 0L);
+        Mockito.verify(mockCompanyDao).listNumberCompaniesStartingAt(10, 0L);
+        assertEquals("List Companies does not work as intended", companies, companiesReturned);
+
+    }
+
+    @Test
+     public void testGetCompany() {
+     Company company = new Company.Builder().build();
+     Optional<Company> opt = Optional.ofNullable(company);
+        Mockito.when(mockCompanyDao.getCompanyById(1)).thenReturn(opt);
+        assertEquals("Get Company does not work as intended", company,
+                serviceCompany.getCompanyById(1));
+     }
+
+    @Test
+    public void testDeleteCompanyId() {
+        Company c = new Company.Builder().build();
+        Mockito.when(mockCompanyDao.getCompanyById(1)).thenReturn(Optional.ofNullable(c));
+        Mockito.when(mockCompanyComputerDao.deleteCompany(1)).thenReturn(true);
+        assertTrue("Delete company does not work as intended", serviceCompany.deleteCompany(1));
+    }
 }

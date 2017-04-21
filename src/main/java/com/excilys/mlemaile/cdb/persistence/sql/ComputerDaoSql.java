@@ -134,8 +134,13 @@ public class ComputerDaoSql implements ComputerDao {
      */
     @Override
     public Optional<Computer> getComputerById(long id) {
-        Computer computer = jdbcTemplate.queryForObject(SQL_SELECT_ID, new Object[] {id },
-                rowMapper);
+        Computer computer = null;
+        try {
+            computer = jdbcTemplate.queryForObject(SQL_SELECT_ID, new Object[] {id },
+                    rowMapper);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            computer = null;
+        }
         return Optional.ofNullable(computer);
     }
 

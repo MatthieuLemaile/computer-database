@@ -51,16 +51,6 @@
 	<url-pattern>/editComputer</url-pattern>
     <url-pattern>/deleteComputer</url-pattern>
     <url-pattern>/addComputer</url-pattern>
- </servlet-mapping>
-<!--  <servlet-mapping>
-    <servlet-name>dispatcher</servlet-name>
- </servlet-mapping> -->
- <!-- <servlet-mapping>
-    <servlet-name>dispatcher</servlet-name>
- </servlet-mapping> -->
- <!-- <servlet-mapping>
-    <servlet-name>dispatcher</servlet-name>
- </servlet-mapping> -->
- 
+ </servlet-mapping> 
   
 </web-app>

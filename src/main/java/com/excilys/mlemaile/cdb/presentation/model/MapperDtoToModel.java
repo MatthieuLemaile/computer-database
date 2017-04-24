@@ -30,11 +30,14 @@ public class MapperDtoToModel {
     public static ComputerDto modelToComputerDto(Computer c) {
         String introStr = "";
         String discoStr = "";
+        // DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        // .withLocale(LocaleContextHolder.getLocale());
+
         if (c.getIntroduced() != null) {
-            introStr = c.getIntroduced().toString();
+            introStr = c.getIntroduced().toString(); // .format(formatter);
         }
         if (c.getDiscontinued() != null) {
-            discoStr = c.getDiscontinued().toString();
+            discoStr = c.getDiscontinued().toString(); // .format(formatter);
         }
         ComputerDto.Builder builder = new ComputerDto.Builder(c.getName()).introduced(introStr)
                 .discontinued(discoStr).id(Long.toString(c.getId()));

@@ -47,7 +47,7 @@ public class EditComputer {
 
     @RequestMapping(method = RequestMethod.GET)
     public String displayEditComputer(ModelMap model,
-            // @ModelAttribute("computerDto") ComputerDto computerDto,
+            @ModelAttribute("computerDto") ComputerDto computerDto,
             @RequestParam(value = PARAM_COMPUTER_ID, required = false) String computerIdStr) {
         Map<String, String> errors = new HashMap<>();
         try {
@@ -58,6 +58,7 @@ public class EditComputer {
             Optional<Computer> optComputer = serviceComputer.getComputerById(computerId);
             if (optComputer.isPresent()) {
                 ComputerDto c = MapperDtoToModel.modelToComputerDto(optComputer.get());
+                computerDto = c;
                 model.addAttribute(ATT_COMPUTER, c);
             }
             List<CompanyDto> companies = MapperDtoToModel

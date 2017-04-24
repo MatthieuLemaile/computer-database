@@ -35,13 +35,12 @@ public class Test {
     private static WebDriver    driver;
     private final static int    TIMEOUT  = 5;
     private final static String BASE_URL = "http://localhost:8080/ComputerDatabase";
-    // private final static String BASE_URL = "http://localhost:8080/ComputerDatabase-1.4-RELEASE/";
 
     @BeforeClass
     public static void setUpClass() {
         // System.setProperty("webdriver.gecko.driver", "/opt/geckodriver/geckodriver");
         // driver = new FirefoxDriver();
-//        
+
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setJavascriptEnabled(true);
         caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,

@@ -53,9 +53,11 @@
 							<form:label path="name">
 								<spring:message code="computer.name" />
 							</form:label>
+							
+							<spring:message code="computer.name" var="placeholderComputerName"/>
+							
 							<form:input path="name" type="text" class="form-control"
-								id="name" required="required"/>
-							<%-- placeholder="<spring:message code=computer.name />" --%>
+								id="name" placeholder="${placeholderComputerName}" required="required"/>
 						</div>
 						<div class="form-group">
 							<form:label path="introduced">

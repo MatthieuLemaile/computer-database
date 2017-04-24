@@ -2,20 +2,6 @@
 $(function() {
 	// Default: hide edit mode
 	$(".editMode").hide();
-
-	// $(".pageNumber").click(
-	// function() {
-	// window.location = window.location.pathname
-	// + replaceQueryParam('page', this.text,
-	// window.location.search);
-	// });
-	//	
-	// $(".numberPerPage").click(
-	// function() {
-	// window.location = window.location.pathname
-	// + replaceQueryParam('numberPerPage', this.innerText,
-	// window.location.search);
-	// });
 	
 	$(".nb-per-page").click(function(){
 		$(this).children()[0].click();

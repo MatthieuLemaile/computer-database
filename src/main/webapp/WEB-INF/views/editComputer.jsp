@@ -39,7 +39,7 @@
 							<fmt:formatDate value="${parsedIntroDate}" var="intro"
 								pattern="yyyy-MM-dd" />
 							<form:label path="introduced"><spring:message code="computer.introduced"/></form:label> <form:input
-								type="date" class="form-control" path="introduced"
+								type="text" class="form-control" path="introduced"
 								id="introduced" />
 
 						</div>
@@ -49,7 +49,7 @@
 							<fmt:formatDate value="${parsedDiscoDate}" var="disco"
 								pattern="yyyy-MM-dd" />
 							<form:label path="discontinued"><spring:message code="computer.discontinued"/></form:label> <form:input
-								type="date" class="form-control" path="discontinued"
+								type="text" class="form-control" path="discontinued"
 								id="discontinued" />
 						</div>
 						<div class="form-group">

@@ -1,6 +1,6 @@
 //on load
 
-$(function() {
+$(function() {	
 	$( "#introduced" ).datepicker({
 		dateFormat: 'yy-mm-dd',
 		onSelect:function(){validateDate();}
@@ -27,7 +27,23 @@ $(function() {
 	
 });
 
+$.urlParam = function(name){
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	return results[1] || 0;
+}
 
+function getParameterByName(name, url) {
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	if (!results) return null
+	return results[1] || 0;
+//    if (!url) url = window.location.href;
+//    name = name.replace(/[\[\]]/g, "\\$&");
+//    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+//        results = regex.exec(url);
+//    ;
+//    if (!results[2]) return '';
+//    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
 function validateDate(){
 	var disco=$('#discontinued').val();

@@ -54,7 +54,7 @@
 								<spring:message code="computer.name" />
 							</form:label>
 							<form:input path="name" type="text" class="form-control"
-								id="name" />
+								id="name" required="required"/>
 							<%-- placeholder="<spring:message code=computer.name />" --%>
 						</div>
 						<div class="form-group">

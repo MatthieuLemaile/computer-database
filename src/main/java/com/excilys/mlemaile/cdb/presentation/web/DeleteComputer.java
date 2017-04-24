@@ -21,6 +21,9 @@ public class DeleteComputer {
     @Autowired
     private ServiceComputer       serviceComputer;
 
+    /**
+     * default empty constructor.
+     */
     public DeleteComputer() {
         super();
     }

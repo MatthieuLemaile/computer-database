@@ -55,7 +55,6 @@ public interface ComputerDao {
     /**
      * Delete Computer by company Id.
      * @param id the id of the company of computer to delete
-     * @param connection the connection to use
      */
     void deleteComputerByCompanyId(long id);
 

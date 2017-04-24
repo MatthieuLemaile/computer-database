@@ -29,6 +29,7 @@ public class ServiceCompany {
      * @param idFirst The numero of the first company to return
      * @return a List of Company
      */
+    @Transactional("txManager")
     public List<Company> listcompanies(int number, long idFirst) {
         List<Company> companies = new ArrayList<Company>();
         try {
@@ -45,6 +46,7 @@ public class ServiceCompany {
      * @param id The id of the company to return.
      * @return a Company
      */
+    @Transactional("txManager")
     public Company getCompanyById(long id) {
         Company company = new Company.Builder().build();
         try {
@@ -63,6 +65,7 @@ public class ServiceCompany {
      * List all companies in the database.
      * @return a List of Companies
      */
+    @Transactional("txManager")
     public List<Company> listCompanies() {
         List<Company> companies = new ArrayList<Company>();
         try {

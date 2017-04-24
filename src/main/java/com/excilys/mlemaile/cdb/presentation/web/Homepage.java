@@ -37,18 +37,30 @@ public class Homepage {
     private static final String PARAM_SORT            = "sort";
     private static final String PARAM_SEARCH          = "search";
     @Autowired
-    private ServiceComputer       serviceComputer;
+    private ServiceComputer     serviceComputer;
 
+    /**
+     * default empty constructor.
+     */
     public Homepage() {
         super();
     }
 
+    /**
+     * The handler of the request.
+     * @param model The ModelMap of the request
+     * @param pageNumber the numero of the page requested by the client
+     * @param pageLimit the number of computer per page
+     * @param search the String to search computer by
+     * @param sort the field to sort computer by
+     * @return a String which is the id of the view
+     */
     @RequestMapping(method = RequestMethod.GET)
     public String displayHomepage(ModelMap model,
             @RequestParam(value = PARAM_PAGE_NUMBER, required = false) String pageNumber,
             @RequestParam(value = PARAM_PAGE_LIMIT, required = false) String pageLimit,
             @RequestParam(value = PARAM_SEARCH, required = false) String search,
-            @RequestParam(value=PARAM_SORT,required=false) String sort){
+            @RequestParam(value = PARAM_SORT, required = false) String sort) {
         Map<String, String> errors = isValid(pageNumber, pageLimit);
         if (!errors.isEmpty()) {
             model.addAttribute(ATT_EXCEPTION, errors);
@@ -60,7 +72,8 @@ public class Homepage {
 
     /**
      * Validate the request made by the user.
-     * @param request the request issued by the client
+     * @param pageNumber the numero of the page requested by the client
+     * @param pageLimit the number of computer per page
      * @return a Map of errors
      */
     private Map<String, String> isValid(String pageNumber, String pageLimit) {
@@ -68,13 +81,11 @@ public class Homepage {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Page Number : " + pageNumber + "\t" + "Page Limit : " + pageLimit);
         }
-        String pageNumberValid = Validator
-                .checkPageNumberPositiveOrNull(pageNumber);
+        String pageNumberValid = Validator.checkPageNumberPositiveOrNull(pageNumber);
         if (pageNumberValid != null) {
             errors.put("numPage", pageNumberValid);
         }
-        String pageLimitValid = Validator
-                .checkPageLimitPositiveOrNull(pageLimit);
+        String pageLimitValid = Validator.checkPageLimitPositiveOrNull(pageLimit);
         if (pageLimitValid != null) {
             errors.put("pageLimit", pageLimitValid);
         }
@@ -82,10 +93,15 @@ public class Homepage {
     }
 
     /**
-     * Compute the response to give to the user.
-     * @param request the request issued by the user
+     * This function compute the response to send according to the given parameters.
+     * @param model the ModelMap of the request
+     * @param pageNumber the numero of the requested page
+     * @param pageLimit the number of computer per pages
+     * @param search the String to search computer
+     * @param sort the field to sort computer
      */
-    private void computeResponse(ModelMap model,String pageNumber, String pageLimit,String search,String sort) {
+    private void computeResponse(ModelMap model, String pageNumber, String pageLimit, String search,
+            String sort) {
         int numPage = (pageNumber != null) ? Integer.parseInt(pageNumber) : 1;
         int limit = (pageLimit != null) ? Integer.parseInt(pageLimit) : 50;
 
@@ -112,9 +128,9 @@ public class Homepage {
     }
 
     /**
-     * This function set the sort parameter of the given page according to the request's parameter.
+     * This function set the sort parameter of the given page according to the given field.
      * @param page the page to set
-     * @param request the request containing data's
+     * @param field The field to sort by
      */
     private void setSort(Page page, String field) {
         if (field != null && !field.trim().isEmpty()) {

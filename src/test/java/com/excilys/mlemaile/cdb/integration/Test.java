@@ -74,7 +74,7 @@ public class Test {
     }
 
     private void testValidationDateRealTime() {
-        driver.findElement(By.id("computerName")).sendKeys("ZZAutomatised Test with Selenium");
+        driver.findElement(By.id("name")).sendKeys("ZZAutomatised Test with Selenium");
         driver.findElement(By.id("introduced")).sendKeys("2012-02-05");
         driver.findElement(By.id("discontinued")).sendKeys("2012-02-01");
         Pattern pattern = Pattern.compile("alert alert-danger");
@@ -84,8 +84,8 @@ public class Test {
     }
 
     private void testAddComputer() {
-        driver.findElement(By.id("computerName")).clear();
-        driver.findElement(By.id("computerName")).sendKeys("ZZAutomatised Test with Selenium");
+        driver.findElement(By.id("name")).clear();
+        driver.findElement(By.id("name")).sendKeys("ZZAutomatised Test with Selenium");
         driver.findElement(By.id("introduced")).clear();
         driver.findElement(By.id("introduced")).sendKeys("2012-02-05");
         driver.findElement(By.id("discontinued")).clear();
@@ -108,9 +108,9 @@ public class Test {
         el.sendKeys(Keys.ENTER);
         // wait the loading of the page
         (new WebDriverWait(driver, TIMEOUT))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("computerName")));
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("name")));
         assertEquals("ZZAutomatised Test with Selenium",
-                driver.findElement(By.id("computerName")).getAttribute("value"));
+                driver.findElement(By.id("name")).getAttribute("value"));
         assertEquals("2012-02-05", driver.findElement(By.id("introduced")).getAttribute("value"));
         assertEquals("2014-02-01", driver.findElement(By.id("discontinued")).getAttribute("value"));
         driver.findElement(By.id("discontinued")).clear();
@@ -126,8 +126,8 @@ public class Test {
         driver.findElement(By.id("introduced")).sendKeys("2014-02-05");
         driver.findElement(By.id("discontinued")).clear();
         driver.findElement(By.id("discontinued")).sendKeys("2015-02-01");
-        driver.findElement(By.id("computerName")).clear();
-        driver.findElement(By.id("computerName"))
+        driver.findElement(By.id("name")).clear();
+        driver.findElement(By.id("name"))
                 .sendKeys("ZZAutomatised Test with Selenium[Edited]");
         driver.findElement(By.id("submit")).click();
         WebElement lastPage = (new WebDriverWait(driver, TIMEOUT))
@@ -212,8 +212,8 @@ public class Test {
     private void addComputer() {
         driver.get(BASE_URL + "/addComputer");
         (new WebDriverWait(driver, TIMEOUT))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("computerName")));
-        driver.findElement(By.id("computerName")).sendKeys("ZZAutomatised Test with Selenium");
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("name")));
+        driver.findElement(By.id("name")).sendKeys("ZZAutomatised Test with Selenium");
         driver.findElement(By.id("introduced")).sendKeys("2014-02-05");
         driver.findElement(By.id("discontinued")).sendKeys("2015-02-01");
         driver.findElement(By.id("submit")).click();

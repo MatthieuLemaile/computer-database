@@ -36,6 +36,9 @@ public class AddComputer {
     @Autowired
     private ServiceComputer       serviceComputer;
 
+    /**
+     * Default empty constructor.
+     */
     public AddComputer() {
         super();
     }
@@ -66,8 +69,8 @@ public class AddComputer {
     }
 
     /**
-     * Validate the request made by the user.
-     * @param request the request issued by the client
+     * Validate the computer sent by the user.
+     * @param computer the computer to test
      * @return a Map of errors
      */
     public static Map<String, String> isValid(ComputerDto computer) {

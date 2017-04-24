@@ -38,6 +38,9 @@ public class EditComputer {
     @Autowired
     private ServiceComputer       serviceComputer;
 
+    /**
+     * default empty constructor.
+     */
     public EditComputer() {
         super();
     }
@@ -79,7 +82,12 @@ public class EditComputer {
         return "redirect:/homepage";
     }
 
-    private Map<String, String> isValid(ComputerDto computer){
+    /**
+     * validate the computer sent by the user.
+     * @param computer the computer to test
+     * @return A Map containing errors
+     */
+    private Map<String, String> isValid(ComputerDto computer) {
         Map<String, String> errors = AddComputer.isValid(computer);
         String idValid = Validator.checkId(computer.getId());
         if (idValid != null) {

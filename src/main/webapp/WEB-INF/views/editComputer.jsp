@@ -31,7 +31,7 @@
 						<div class="form-group">
 							<form:label path="name"><spring:message code="computer.name"/></form:label>
 							<form:input type="text" class="form-control" path="name"
-								id="name" required/>
+								id="name" required="required"/>
 						</div>
 						<div class="form-group">
 							<fmt:parseDate value="${requestScope.computerDto.introduced}"

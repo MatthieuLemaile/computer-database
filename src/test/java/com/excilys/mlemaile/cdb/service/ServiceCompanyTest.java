@@ -19,8 +19,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.excilys.mlemaile.cdb.persistence.CompanyComputerDao;
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
+import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.service.model.Company;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,7 +32,8 @@ public class ServiceCompanyTest {
     private CompanyDao         mockCompanyDao;
 
     @Mock
-    private CompanyComputerDao mockCompanyComputerDao;
+    private ComputerDao    mockComputerDao;
+
 
     @Autowired
     @InjectMocks
@@ -67,7 +68,6 @@ public class ServiceCompanyTest {
     public void testDeleteCompanyId() {
         Company c = new Company.Builder().build();
         Mockito.when(mockCompanyDao.getCompanyById(1)).thenReturn(Optional.ofNullable(c));
-        Mockito.when(mockCompanyComputerDao.deleteCompany(1)).thenReturn(true);
         assertTrue("Delete company does not work as intended", serviceCompany.deleteCompany(1));
     }
 }

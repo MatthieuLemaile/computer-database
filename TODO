@@ -1,9 +1,13 @@
 WIP :
-* recherche, bouton buggé ???
+* Transaction pour toutes les requêtes SQL
+* Internationnalisation pour les dates
+* @Valid not done (errors management)
 
 Before next Impl :
+* c:out doesn't work within form:input (placeholder is not known)
 
 Opt mais important: 
+* "{companyId=The id supplied is not a good one.}" map erreur mal mise en place dans le add.jsp (check others)
 
 Opt :
 

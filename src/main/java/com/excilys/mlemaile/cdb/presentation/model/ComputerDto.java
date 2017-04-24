@@ -8,19 +8,24 @@ import javax.validation.constraints.Pattern;
  * @author Matthieu Lemaile
  */
 public class ComputerDto {
+    private static final String REGEX_DATE = "^(((((1[26]|2[048])00)|[12]\\d([2468][048]|[13579][26]|0[48]))-((((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01]))|((0[469]|11)-(0[1-9]|[12]\\d|30)))|(02-(0[1-9]|[12]\\d))))|((([12]\\d([02468][1235679]|[13579][01345789]))|((1[1345789]|2[1235679])00))-((((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01]))|((0[469]|11)-(0[1-9]|[12]\\d|30)))|(02-(0[1-9]|1\\d|2[0-8])))))$";
+
     @Pattern(regexp = "^[0-9]+$")
     private String id;
     @NotNull
     private String name;
+    @Pattern(regexp = REGEX_DATE) // or null not after discontinued
     private String introduced;
+    @Pattern(regexp = REGEX_DATE) // or null
     private String discontinued;
     private String companyName;
+    @Pattern(regexp = "^[0-9]+$")
     private String companyId;
 
     /**
-     * Hidden empty constructor.
+     * default empty constructor.
      */
-    private ComputerDto() {
+    public ComputerDto() {
     };
 
     /**

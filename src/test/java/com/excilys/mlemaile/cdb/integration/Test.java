@@ -70,7 +70,7 @@ public class Test {
     private void testOpenUrl() {
         driver.get(BASE_URL + "/addComputer");
         WebElement el = driver.findElement(By.tagName("h1"));
-        assertEquals("Add Computer", el.getText());
+        assertEquals("Add computer", el.getText());
     }
 
     private void testValidationDateRealTime() {

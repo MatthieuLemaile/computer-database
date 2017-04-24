@@ -42,7 +42,7 @@ function validateDate(){
 }
 
 function validateName(){
-	var name=$('#computerName').val();
+	var name=$('#name').val();
 	if(typeof name === "undefined" || name.trim()==""){
 		alert("You must suply a name");
 		return false;

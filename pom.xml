@@ -4,7 +4,7 @@
 
 	<groupId>com.excilys.mlemaile.cdb</groupId>
 	<artifactId>ComputerDatabase</artifactId>
-	<version>1.6-SNAPSHOT</version>
+	<version>1.6-RELEASE</version>
 	<name>Computer Database</name>
 	<packaging>war</packaging>
 

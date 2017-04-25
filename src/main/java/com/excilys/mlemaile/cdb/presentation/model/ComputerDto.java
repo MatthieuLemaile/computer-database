@@ -1,7 +1,8 @@
 package com.excilys.mlemaile.cdb.presentation.model;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * This class represent a computer as in the database.
@@ -10,16 +11,16 @@ import javax.validation.constraints.Pattern;
 public class ComputerDto {
     private static final String REGEX_DATE = "^(((((1[26]|2[048])00)|[12]\\d([2468][048]|[13579][26]|0[48]))-((((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01]))|((0[469]|11)-(0[1-9]|[12]\\d|30)))|(02-(0[1-9]|[12]\\d))))|((([12]\\d([02468][1235679]|[13579][01345789]))|((1[1345789]|2[1235679])00))-((((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01]))|((0[469]|11)-(0[1-9]|[12]\\d|30)))|(02-(0[1-9]|1\\d|2[0-8])))))$";
 
-    @Pattern(regexp = "^[0-9]+$")
+    @Pattern(regexp = "^[0-9]+$", message = "The provided id is not correct.")
     private String id;
-    @NotNull
+    @NotEmpty(message = "The name must be provided.")
     private String name;
-    @Pattern(regexp = REGEX_DATE) // or null not after discontinued
+    @Pattern(regexp = REGEX_DATE, message = "The format of the date must be yyyy-mm-dd. The introduced date must be before the discontinued one.")
     private String introduced;
-    @Pattern(regexp = REGEX_DATE) // or null
+    @Pattern(regexp = REGEX_DATE, message = "The format of the date must be yyyy-mm-dd.")
     private String discontinued;
     private String companyName;
-    @Pattern(regexp = "^[0-9]+$")
+    @Pattern(regexp = "^[0-9]+$", message = "The provided id is not correct")
     private String companyId;
 
     /**

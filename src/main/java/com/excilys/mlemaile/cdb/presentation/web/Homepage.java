@@ -40,13 +40,6 @@ public class Homepage {
     private ServiceComputer     serviceComputer;
 
     /**
-     * default empty constructor.
-     */
-    public Homepage() {
-        super();
-    }
-
-    /**
      * The handler of the request.
      * @param model The ModelMap of the request
      * @param pageNumber the numero of the page requested by the client

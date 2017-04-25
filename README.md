@@ -1,6 +1,8 @@
 Training: computer-database
 ===========================
 
+https://github.com/excilys/training-java
+
 # Content
 - Prerequisite
 - Installation

@@ -38,13 +38,6 @@ public class EditComputer {
     @Autowired
     private ServiceComputer       serviceComputer;
 
-    /**
-     * default empty constructor.
-     */
-    public EditComputer() {
-        super();
-    }
-
     @RequestMapping(method = RequestMethod.GET)
     public String displayEditComputer(ModelMap model,
             @ModelAttribute("computerDto") ComputerDto computerDto,

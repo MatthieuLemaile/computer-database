@@ -8,11 +8,11 @@
 
 	<c:if test="${not empty exception}">
 		<%--Display with a List of ObjectError --%>
-		<%-- 	<c:forEach var="error" items="${requestScope.exception}">
+		 	<c:forEach var="error" items="${requestScope.exception}">
 				<div class="container">
 					<div class="alert alert-danger">
 						<c:out value="${error.getDefaultMessage()}" /><br/>
-						<c:out value="${error.getObjectName()}" /><br/>
+						<%-- <c:out value="${error.getObjectName()}" /><br/>
 						<c:out value="${error.getClass()}" /><br/>
 						<c:out value="${error.getCode()}" /><br/>
 
@@ -21,13 +21,13 @@
 						</c:forEach>
 						<c:forEach var="code" items="${error.getCodes()}" >
 						<c:out value="${code}" /><br/>
-						</c:forEach>
+						</c:forEach> --%>
 					</div>
 				</div>
 
-			</c:forEach> --%>
+			</c:forEach>
 		<%-- Display with hash map : --%>
-		<c:forEach var="map" items="${requestScope.exception}">
+		<%-- <c:forEach var="map" items="${requestScope.exception}">
 			<c:forEach var="hash" items="${map.value}">
 				<div class="container">
 					<div class="alert alert-danger">
@@ -36,7 +36,7 @@
 				</div>
 
 			</c:forEach>
-		</c:forEach>
+		</c:forEach> --%>
 	</c:if>
 
 	<div class="container">

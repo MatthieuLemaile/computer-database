@@ -4,10 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,11 +41,9 @@ public class AddComputer {
     @Autowired
     private ServiceComputer       serviceComputer;
 
-    /**
-     * Default empty constructor.
-     */
-    public AddComputer() {
-        super();
+    @InitBinder /* Converts empty strings into null when a form is submitted */
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -57,13 +60,18 @@ public class AddComputer {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String addComputer(@ModelAttribute("computerDto") ComputerDto computerDto,
+    public String addComputer(@Valid @ModelAttribute("computerDto") ComputerDto computerDto,
             BindingResult result, ModelMap model) {
-        Map<String, String> errors = isValid(computerDto);
-        if (!errors.isEmpty()) {
-            model.addAttribute(ATT_EXCEPTION, errors);
+        System.out.println(computerDto);
+        if (result.hasErrors()) {
+            model.addAttribute(ATT_EXCEPTION, result.getAllErrors());
             return "addComputer";
         }
+        // Map<String, String> errors = isValid(computerDto);
+        // if (!errors.isEmpty()) {
+        // model.addAttribute(ATT_EXCEPTION, errors);
+        // return "addComputer";
+        // }
         serviceComputer.createComputer(MapperDtoToModel.computerDtoToModel(computerDto));
         return "redirect:/homepage";
     }

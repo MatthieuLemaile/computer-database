@@ -21,13 +21,6 @@ public class DeleteComputer {
     @Autowired
     private ServiceComputer       serviceComputer;
 
-    /**
-     * default empty constructor.
-     */
-    public DeleteComputer() {
-        super();
-    }
-
     @RequestMapping(method = RequestMethod.POST)
     public String deleteComputer(ModelMap model,
             @RequestParam(value = PARAM_ID_LIST) String idList) {

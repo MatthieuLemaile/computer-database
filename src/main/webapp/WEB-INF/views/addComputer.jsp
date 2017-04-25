@@ -8,35 +8,14 @@
 
 	<c:if test="${not empty exception}">
 		<%--Display with a List of ObjectError --%>
-		 	<c:forEach var="error" items="${requestScope.exception}">
-				<div class="container">
-					<div class="alert alert-danger">
-						<c:out value="${error.getDefaultMessage()}" /><br/>
-						<%-- <c:out value="${error.getObjectName()}" /><br/>
-						<c:out value="${error.getClass()}" /><br/>
-						<c:out value="${error.getCode()}" /><br/>
-
-						<c:forEach var="arg" items="${error.getArguments()}" >
-						<c:out value="${arg}" /><br/>
-						</c:forEach>
-						<c:forEach var="code" items="${error.getCodes()}" >
-						<c:out value="${code}" /><br/>
-						</c:forEach> --%>
-					</div>
+		<c:forEach var="error" items="${requestScope.exception}">
+			<div class="container">
+				<div class="alert alert-danger">
+					<c:out value="${error.getCode()}" />
 				</div>
+			</div>
 
-			</c:forEach>
-		<%-- Display with hash map : --%>
-		<%-- <c:forEach var="map" items="${requestScope.exception}">
-			<c:forEach var="hash" items="${map.value}">
-				<div class="container">
-					<div class="alert alert-danger">
-						<c:out value="${hash}" />
-					</div>
-				</div>
-
-			</c:forEach>
-		</c:forEach> --%>
+		</c:forEach>
 	</c:if>
 
 	<div class="container">
@@ -53,11 +32,13 @@
 							<form:label path="name">
 								<spring:message code="computer.name" />
 							</form:label>
-							
-							<spring:message code="computer.name" var="placeholderComputerName"/>
-							
+
+							<spring:message code="computer.name"
+								var="placeholderComputerName" />
+
 							<form:input path="name" type="text" class="form-control"
-								id="name" placeholder="${placeholderComputerName}" required="required"/>
+								id="name" placeholder="${placeholderComputerName}"
+								required="required" autofocus="autofocus"/>
 						</div>
 						<div class="form-group">
 							<form:label path="introduced">

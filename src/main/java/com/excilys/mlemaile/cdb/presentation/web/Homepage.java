@@ -17,8 +17,8 @@ import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.presentation.Page;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
 import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
+import com.excilys.mlemaile.cdb.service.ComputerValidator;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
-import com.excilys.mlemaile.cdb.service.Validator;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
 /**
@@ -74,11 +74,11 @@ public class Homepage {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Page Number : " + pageNumber + "\t" + "Page Limit : " + pageLimit);
         }
-        String pageNumberValid = Validator.checkPageNumberPositiveOrNull(pageNumber);
+        String pageNumberValid = ComputerValidator.checkPageNumberPositiveOrNull(pageNumber);
         if (pageNumberValid != null) {
             errors.put("numPage", pageNumberValid);
         }
-        String pageLimitValid = Validator.checkPageLimitPositiveOrNull(pageLimit);
+        String pageLimitValid = ComputerValidator.checkPageLimitPositiveOrNull(pageLimit);
         if (pageLimitValid != null) {
             errors.put("pageLimit", pageLimitValid);
         }

@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.excilys.mlemaile.cdb.presentation.model.CompanyDto;
 import com.excilys.mlemaile.cdb.presentation.model.ComputerDto;
 import com.excilys.mlemaile.cdb.presentation.model.MapperDtoToModel;
+import com.excilys.mlemaile.cdb.service.ComputerValidator;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
-import com.excilys.mlemaile.cdb.service.Validator;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
 /**
@@ -37,6 +42,18 @@ public class EditComputer {
     private ServiceCompany        serviceCompany;
     @Autowired
     private ServiceComputer       serviceComputer;
+    @Autowired
+    private ComputerValidator   computerValidator;
+
+    /**
+     * Initialise the mapping of datas.
+     * @param binder
+     */
+    @InitBinder /* Converts empty strings into null when a form is submitted */
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+        binder.addValidators(computerValidator);
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String displayEditComputer(ModelMap model,
@@ -65,29 +82,13 @@ public class EditComputer {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String doPost(@ModelAttribute("computerDto") ComputerDto computerDto,
+    public String doPost(@Valid @ModelAttribute("computerDto") ComputerDto computerDto,
             BindingResult result, ModelMap model) {
-        Map<String, String> errors = isValid(computerDto);
-        if (!errors.isEmpty()) {
-            model.addAttribute(ATT_EXCEPTION, errors);
+        if (result.hasErrors()) {
+            model.addAttribute(ATT_EXCEPTION, result.getAllErrors());
             return "editComputer";
         }
         serviceComputer.updatecomputer(MapperDtoToModel.computerDtoToModel(computerDto));
         return "redirect:/homepage";
     }
-
-    /**
-     * validate the computer sent by the user.
-     * @param computer the computer to test
-     * @return A Map containing errors
-     */
-    private Map<String, String> isValid(ComputerDto computer) {
-        Map<String, String> errors = AddComputer.isValid(computer);
-        String idValid = Validator.checkId(computer.getId());
-        if (idValid != null) {
-            errors.put(PARAM_COMPUTER_ID, idValid);
-        }
-        return errors;
-    }
-
 }

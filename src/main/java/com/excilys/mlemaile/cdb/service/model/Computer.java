@@ -3,21 +3,35 @@ package com.excilys.mlemaile.cdb.service.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * This class represent a computer as in the database.
  * @author Matthieu Lemaile
  */
+@Entity
+@Table(name = "computer")
 public class Computer {
-    @NotNull
-    @Min(0)
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long      id;
-    @NotNull
+    @Column
     private String    name;
+    @Column
     private LocalDate introduced;
+    @Column
     private LocalDate discontinued;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Company   company;
 
     /**
@@ -35,7 +49,7 @@ public class Computer {
      * @param id The id.
      * @param company Sa company.
      */
-    private Computer(String name, LocalDate introduced, LocalDate discontinued, long id,
+    public Computer(String name, LocalDate introduced, LocalDate discontinued, long id,
             Company company) {
         this(name, introduced, discontinued, company);
         setId(id);
@@ -48,7 +62,7 @@ public class Computer {
      * @param discontinued Sa date d'arrêt
      * @param company The company
      */
-    private Computer(String name, LocalDate introduced, LocalDate discontinued, Company company) {
+    public Computer(String name, LocalDate introduced, LocalDate discontinued, Company company) {
         setName(name);
         setIntroduced(introduced);
         setDiscontinued(discontinued);
@@ -64,7 +78,7 @@ public class Computer {
      * @param id The computer id
      */
     public void setId(long id) {
-        if (id > 0) {
+        if (id >= 0) {
             this.id = id;
         } else {
             throw new IllegalArgumentException(
@@ -167,73 +181,5 @@ public class Computer {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, introduced, discontinued, company);
-    }
-
-    public static class Builder {
-        private long      id;
-        private LocalDate introduced;
-        private LocalDate discontinued;
-        private String    name;
-        private Company   company;
-
-        /**
-         * Builder constructor. The name of the computer is required.
-         * @param name The name of the computer
-         */
-        public Builder(String name) {
-            this.name = name;
-        }
-
-        /**
-         * Setter of the computer id.
-         * @param id the id of the computer.
-         * @return The instance of the builder
-         */
-        public Builder id(long id) {
-            this.id = id;
-            return this;
-        }
-
-        /**
-         * setter of the introduced date.
-         * @param introduced the introduced date
-         * @return The instance of the builder
-         */
-        public Builder introduced(LocalDate introduced) {
-            this.introduced = introduced;
-            return this;
-        }
-
-        /**
-         * Setter of the discontinued date.
-         * @param discontinued The computer's discontinued date
-         * @return The instance of the builder
-         */
-        public Builder discontinued(LocalDate discontinued) {
-            this.discontinued = discontinued;
-            return this;
-        }
-
-        /**
-         * The setter of the computer's company.
-         * @param company The computer's company
-         * @return The instance of the builder
-         */
-        public Builder company(Company company) {
-            this.company = company;
-            return this;
-        }
-
-        /**
-         * Build the computer with given argument.
-         * @return The new computer
-         */
-        public Computer build() {
-            if (id != 0) {
-                return new Computer(name, introduced, discontinued, id, company);
-            } else {
-                return new Computer(name, introduced, discontinued, company);
-            }
-        }
     }
 }

@@ -3,6 +3,7 @@ package com.excilys.mlemaile.cdb.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
 public interface ComputerDao {
@@ -53,9 +54,9 @@ public interface ComputerDao {
     void deleteComputerById(long id);
 
     /**
-     * Delete Computer by company Id.
-     * @param id the id of the company of computer to delete
+     * Delete Computer by company.
+     * @param company the company of computer to delete
      */
-    void deleteComputerByCompanyId(long id);
+    void deleteComputerByCompanyId(Company company);
 
 }

@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
@@ -18,7 +19,7 @@ import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
 
-@Service("serviceComputer")
+@Service
 public class ServiceComputer {
     public static final Logger LOGGER            = LoggerFactory.getLogger(ServiceComputer.class);
     private static int         numberOfComputers = 0;
@@ -52,7 +53,7 @@ public class ServiceComputer {
      * @param companyId the manufacturer id
      * @return a boolean, which is true if the execution went well
      */
-    @Transactional("txManager")
+    @Transactional
     public boolean createComputer(String name, LocalDate introduced, LocalDate discontinued,
             long companyId) {
         boolean computerCreated = false;
@@ -77,14 +78,15 @@ public class ServiceComputer {
                     company = opt.get();
                 }
             }
-            Computer c = new Computer.Builder(name).introduced(introduced)
-                    .discontinued(discontinued).company(company).build();
+            Computer c = new Computer(name, introduced, discontinued, company);
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("creating computer " + c.toString());
+                System.out.println("creating computer");
             }
             computerDao.createComputer(c);
             computerCreated = true;
             addCounterComputer();
+            System.out.println("created");
             LOGGER.info("Computer created : " + c.toString());
         } catch (DaoException e) {
             LOGGER.warn("Can't create the computer", e);
@@ -101,8 +103,12 @@ public class ServiceComputer {
      * @param c the Computer to create
      * @return a boolean which is true if the execution went well
      */
-    @Transactional("txManager")
+    @Transactional
     public boolean createComputer(Computer c) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("creating computer");
+            LOGGER.debug("Computer : " + c);
+        }
         if (c.getCompany() != null) {
             return this.createComputer(c.getName(), c.getIntroduced(), c.getDiscontinued(),
                     c.getCompany().getId());
@@ -116,7 +122,7 @@ public class ServiceComputer {
      * @param c the computer to update
      * @return a boolean which is true if the execution went well.
      */
-    @Transactional("txManager")
+    @Transactional
     public boolean updatecomputer(Computer c) {
         boolean execution = false;
         try {
@@ -139,7 +145,7 @@ public class ServiceComputer {
      * @param companyId the new Company of the computer
      * @return a boolean, which is true of the execution went well
      */
-    @Transactional("txManager")
+    @Transactional
     public boolean updatecomputer(long id, String name, LocalDate introduced,
             LocalDate discontinued, long companyId) {
         boolean execution = false;
@@ -180,7 +186,6 @@ public class ServiceComputer {
      * @param sort the field to sort the result according to
      * @return a List of Computer
      */
-    @Transactional("txManager")
     public List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort,
             String search) {
         List<Computer> computers = new ArrayList<>();
@@ -199,7 +204,6 @@ public class ServiceComputer {
      * @param id The id of the computer to return
      * @return a Computer
      */
-    @Transactional("txManager")
     public Optional<Computer> getComputerById(long id) {
         Optional<Computer> optComputer;
         try {
@@ -216,7 +220,7 @@ public class ServiceComputer {
      * @param c The computer to delete
      * @return a boolean which is true if the execution went well
      */
-    @Transactional("txManager")
+    @Transactional
     public boolean deleteComputer(Computer c) {
         boolean execution = false;
         try {
@@ -236,7 +240,7 @@ public class ServiceComputer {
      * @param id The id of the computer
      * @return a boolean which is true if the execution went well
      */
-    @Transactional("txManager")
+    @Transactional
     public boolean deleteComputer(long id) {
         boolean execution = false;
         try {
@@ -256,7 +260,6 @@ public class ServiceComputer {
      * @param search the String to search in the database
      * @return The number of computer.
      */
-    @Transactional("txManager")
     public int countComputers(String search) {
         if (!updated || !"".equals(search)) {
             try {

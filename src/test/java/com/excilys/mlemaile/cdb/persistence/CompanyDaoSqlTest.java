@@ -95,7 +95,8 @@ public class CompanyDaoSqlTest {
 
     @Test
     public void testDeleteCompany() {
-        companyDao.deleteCompanyById(5);
+        Company company = companyDao.getCompanyById(5).get();
+        companyDao.deleteCompanyById(company);
         assertFalse("deleteCompany does not work", companyDao.getCompanyById(5).isPresent());
     }
 

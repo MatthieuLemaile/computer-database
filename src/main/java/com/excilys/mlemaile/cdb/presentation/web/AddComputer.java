@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -29,12 +31,13 @@ import com.excilys.mlemaile.cdb.service.ServiceException;
 @Controller
 @RequestMapping("/addComputer")
 public class AddComputer {
-    private static final String   ATT_COMPANIES        = "companies";
-    private static final String   ATT_EXCEPTION        = "exception";
+    private static final String ATT_COMPANIES = "companies";
+    private static final String ATT_EXCEPTION = "exception";
+    private static final Logger LOGGER        = LoggerFactory.getLogger(AddComputer.class);
     @Autowired
-    private ServiceCompany        serviceCompany;
+    private ServiceCompany      serviceCompany;
     @Autowired
-    private ServiceComputer       serviceComputer;
+    private ServiceComputer     serviceComputer;
     @Autowired
     private ComputerValidator   computerValidator;
 
@@ -51,6 +54,7 @@ public class AddComputer {
     @RequestMapping(method = RequestMethod.GET)
     public String displayAddComputer(@ModelAttribute("computerDto") ComputerDto computerDto,
             BindingResult result, ModelMap model) {
+
         try {
             List<CompanyDto> companies = MapperDtoToModel
                     .modelListToCompanyDto(serviceCompany.listCompanies());
@@ -64,6 +68,11 @@ public class AddComputer {
     @RequestMapping(method = RequestMethod.POST)
     public String addComputer(@Valid @ModelAttribute("computerDto") ComputerDto computerDto,
             BindingResult result, ModelMap model) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("errors ? : " + result.hasErrors());
+            System.out.println("Add Controller : " + computerDto);
+            LOGGER.debug("Computer : " + computerDto);
+        }
         if (result.hasErrors()) {
             model.addAttribute(ATT_EXCEPTION, result.getAllErrors());
             return "addComputer";

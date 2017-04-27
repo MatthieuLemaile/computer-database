@@ -2,19 +2,25 @@ package com.excilys.mlemaile.cdb.service.model;
 
 import java.util.Objects;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * This class represent a company as in database.
  * @author Matthieu Lemaile
  *
  */
+@Entity
+@Table(name = "company")
 public class Company {
-    @NotNull
-    @Min(0)
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long   id;
-    @NotNull
     private String name;
 
     /**
@@ -29,7 +35,7 @@ public class Company {
      * @param id l'id de la company.
      * @param name le nom de la compagnie.
      */
-    private Company(long id, String name) {
+    public Company(long id, String name) {
         setId(id);
         setName(name);
     }
@@ -74,39 +80,5 @@ public class Company {
             }
         }
         return equal;
-    }
-
-    public static class Builder {
-        private long   id;
-        private String name;
-
-        /**
-         * Choisit un id pour la company à créer.
-         * @param id id de la company à céer.
-         * @return l'instance du builder.
-         */
-        public Builder id(long id) {
-            this.id = id;
-            return this;
-        }
-
-        /**
-         * choisit un nom pour la company à créer.
-         * @param name nom de la company à créer.
-         * @return retourne l'instance du builder.
-         */
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        /**
-         * Construit et retourne la Company avec les paramètres entrés
-         * précédemment.
-         * @return l'instance de la company
-         */
-        public Company build() {
-            return new Company(id, name);
-        }
     }
 }

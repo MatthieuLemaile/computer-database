@@ -15,21 +15,21 @@ import com.excilys.mlemaile.cdb.persistence.ComputerDao;
 import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.service.model.Company;
 
-@Service("serviceCompany")
+@Service
 public class ServiceCompany {
     public static final Logger LOGGER = LoggerFactory.getLogger(ServiceCompany.class);
     @Autowired
     private CompanyDao         companyDao;
     @Autowired
     private ComputerDao        computerDao;
-
+    
+    
     /**
      * return number companie, from idFirst, if there is enough.
      * @param number The number of companies to return.
      * @param idFirst The numero of the first company to return
      * @return a List of Company
      */
-    @Transactional("txManager")
     public List<Company> listcompanies(int number, long idFirst) {
         List<Company> companies = new ArrayList<Company>();
         try {
@@ -46,9 +46,8 @@ public class ServiceCompany {
      * @param id The id of the company to return.
      * @return a Company
      */
-    @Transactional("txManager")
     public Company getCompanyById(long id) {
-        Company company = new Company.Builder().build();
+        Company company = new Company();
         try {
             Optional<Company> opt = companyDao.getCompanyById(id);
             if (opt.isPresent()) {
@@ -65,7 +64,6 @@ public class ServiceCompany {
      * List all companies in the database.
      * @return a List of Companies
      */
-    @Transactional("txManager")
     public List<Company> listCompanies() {
         List<Company> companies = new ArrayList<Company>();
         try {
@@ -82,10 +80,14 @@ public class ServiceCompany {
      * @param id The id of the company to delete
      * @return a boolean which is true if the execution went well
      */
-    @Transactional("txManager")
+    @Transactional
     public boolean deleteCompany(long id) {
-        computerDao.deleteComputerByCompanyId(id);
-        companyDao.deleteCompanyById(id);
+        Optional<Company> c = companyDao.getCompanyById(id);
+        if (c.isPresent()) {
+            computerDao.deleteComputerByCompanyId(c.get());
+            companyDao.deleteCompanyById(c.get());
+        }
+
         return true;
     }
 }

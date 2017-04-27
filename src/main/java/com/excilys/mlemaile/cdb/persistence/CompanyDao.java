@@ -30,7 +30,7 @@ public interface CompanyDao {
 
     /**
      * This method delete a company.
-     * @param companyId the id of the company to delete
+     * @param company the company to delete
      */
-    void deleteCompanyById(long companyId);
+    void deleteCompanyById(Company company);
 }

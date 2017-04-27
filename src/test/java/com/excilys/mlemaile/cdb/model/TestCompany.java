@@ -11,7 +11,7 @@ public class TestCompany {
 	public void testCompany(){
 		int id = 4;
 		String name = "Company's name";
-		Company company = new Company.Builder().name(name).id(id).build();
+        Company company = new Company(id, name);
 		assertEquals("The company id is not properly set",id,company.getId());
 		assertEquals("The company name is not properly set",name, company.getName());
 	}

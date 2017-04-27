@@ -79,7 +79,7 @@ public class ComputerDaoSqlTest {
     public void testCreateComputer() {
         LocalDate date = LocalDate.now();
         Company company = companyDao.getCompanyById(1).get();
-        Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
+        Computer c = new Computer("Test", date, null, company);
         computerDao.createComputer(c);
         assertEquals("Creation of a computer is not working", c.toString(),
                 computerDao.getComputerById(c.getId()).get().toString());
@@ -158,7 +158,7 @@ public class ComputerDaoSqlTest {
     public void testDeleteComputer() {
         LocalDate date = LocalDate.now();
         Company company = companyDao.getCompanyById(1).get();
-        Computer c = new Computer.Builder("Test").introduced(date).company(company).build();
+        Computer c = new Computer("Test", date, null, company);
         computerDao.createComputer(c);
         computerDao.deleteComputerById(c.getId());
         assertFalse("Deletion of a computer is not working",

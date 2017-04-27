@@ -3,6 +3,7 @@ package com.excilys.mlemaile.cdb.presentation.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -81,9 +82,7 @@ public class MapperDtoToModel {
         if (companyId > 0) {
             company = serviceCompany.getCompanyById(companyId);
         }
-
-        return new Computer.Builder(ce.getName()).company(company).id(id).introduced(introduced)
-                .discontinued(discontinued).build();
+        return new Computer(ce.getName(), introduced, discontinued, id, company);
     }
 
     /**
@@ -93,6 +92,10 @@ public class MapperDtoToModel {
      */
     public static List<ComputerDto> modelListToComputerDto(List<Computer> computers) {
         List<ComputerDto> computersEdit = new ArrayList<>();
+        Iterator iterator = computers.iterator();
+        while (iterator.hasNext()) {
+            Object o = iterator.next();
+        }
         for (Computer c : computers) {
             computersEdit.add(modelToComputerDto(c));
         }

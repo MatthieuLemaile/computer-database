@@ -21,7 +21,8 @@
     </encoder>
     
   </appender>
-
+  
+<logger name="org.hibernate" level="DEBUG" />
   
   <root level="debug">
     <appender-ref ref="RollingFile" />

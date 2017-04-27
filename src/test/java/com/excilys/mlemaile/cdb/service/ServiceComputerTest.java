@@ -2,11 +2,16 @@ package com.excilys.mlemaile.cdb.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,6 +20,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.excilys.mlemaile.cdb.persistence.CompanyDao;
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
+import com.excilys.mlemaile.cdb.persistence.FieldSort;
+import com.excilys.mlemaile.cdb.service.model.Computer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -42,37 +49,38 @@ public class ServiceComputerTest {
                 serviceComputer.createComputer("", null, null, 0));
     }
 
-    // @Test
-    // public void testUpdatecomputer() {
-    // Computer computer = new Computer.Builder("").build();
-    // assertEquals("Update Computer does not work as intended", true,
-    // serviceComputer.updatecomputer(computer));
-    // }
+    @Test
+    public void testUpdatecomputer() {
+        Computer computer = new Computer();
+        assertEquals("Update Computer does not work as intended", true,
+                serviceComputer.updatecomputer(computer));
+    }
 
-    // @Test
-    // public void testListComputer() {
-    // List<Computer> computers = new ArrayList<>();
-    // computers.add(new Computer.Builder("").build());
-    // Mockito.when(mockComputerDao.listSortSearchNumberComputer(10, 0, FieldSort.NAME, null))
-    // .thenReturn(computers);
-    // assertEquals("List computers does not work as intended", computers,
-    // serviceComputer.listSortSearchNumberComputer(10, 0, FieldSort.NAME, null));
-    // }
-    //
-    // @Test
-    // public void testGetComputer() {
-    // Computer computer = new Computer.Builder("").build();
-    // Mockito.when(mockComputerDao.getComputerById(1)).thenReturn(Optional.ofNullable(computer));
-    // assertEquals("Get computer does not work as intended", computer,
-    // serviceComputer.getComputerById(1).get());
-    //
-    // }
-    //
-    // @Test
-    // public void testDeleteComputer() {
-    // Computer computer = new Computer.Builder("").id(2).build();
-    // assertEquals("Update Computer does not work as intended", true,
-    // serviceComputer.deleteComputer(computer));
-    // }
+    @Test
+    public void testListComputer() {
+        List<Computer> computers = new ArrayList<>();
+        computers.add(new Computer());
+        Mockito.when(mockComputerDao.listSortSearchNumberComputer(10, 0, FieldSort.NAME, null))
+                .thenReturn(computers);
+        assertEquals("List computers does not work as intended", computers,
+                serviceComputer.listSortSearchNumberComputer(10, 0, FieldSort.NAME, null));
+    }
+
+    @Test
+    public void testGetComputer() {
+        Computer computer = new Computer();
+        Mockito.when(mockComputerDao.getComputerById(1)).thenReturn(Optional.ofNullable(computer));
+        assertEquals("Get computer does not work as intended", computer,
+                serviceComputer.getComputerById(1).get());
+
+    }
+
+    @Test
+    public void testDeleteComputer() {
+        Computer computer = new Computer();
+        computer.setId(2);
+        assertEquals("Update Computer does not work as intended", true,
+                serviceComputer.deleteComputer(computer));
+    }
 
 }

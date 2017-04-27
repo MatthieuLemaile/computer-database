@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.mlemaile.cdb.service.model.Company;
 
@@ -94,6 +95,7 @@ public class CompanyDaoSqlTest {
     }
 
     @Test
+    @Transactional
     public void testDeleteCompany() {
         Company company = companyDao.getCompanyById(5).get();
         companyDao.deleteCompanyById(company);

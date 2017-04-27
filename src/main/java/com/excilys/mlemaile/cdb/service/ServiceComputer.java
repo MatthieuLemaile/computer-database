@@ -81,12 +81,10 @@ public class ServiceComputer {
             Computer c = new Computer(name, introduced, discontinued, company);
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("creating computer " + c.toString());
-                System.out.println("creating computer");
             }
             computerDao.createComputer(c);
             computerCreated = true;
             addCounterComputer();
-            System.out.println("created");
             LOGGER.info("Computer created : " + c.toString());
         } catch (DaoException e) {
             LOGGER.warn("Can't create the computer", e);

@@ -39,7 +39,6 @@ public class ComputerDaoSql implements ComputerDao {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("persisting in db");
         }
-        System.out.println("In db");
         this.session.persist(computer);
         this.session.flush();
         this.session.refresh(computer);
@@ -55,8 +54,9 @@ public class ComputerDaoSql implements ComputerDao {
         String searchPattern = search != null ? search + "%" : "%";
         TypedQuery<Computer> query = this.session
                 .createQuery(
-                "Select c From Computer as c left join c.company as company where c.name like :search or company.name like :search order by :order",
-                Computer.class).setMaxResults(number).setFirstResult((int) idFirst);
+                        "Select c From Computer as c left join c.company as company where c.name like :search or company.name like :search order by :order asc",
+                        Computer.class)
+                .setMaxResults(number);// .setFirstResult((int) idFirst);
         query.setParameter("search", searchPattern);
         query.setParameter("order", sort.toString());
         return query.getResultList();

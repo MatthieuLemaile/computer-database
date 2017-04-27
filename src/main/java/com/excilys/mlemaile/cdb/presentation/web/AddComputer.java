@@ -70,7 +70,6 @@ public class AddComputer {
             BindingResult result, ModelMap model) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("errors ? : " + result.hasErrors());
-            System.out.println("Add Controller : " + computerDto);
             LOGGER.debug("Computer : " + computerDto);
         }
         if (result.hasErrors()) {

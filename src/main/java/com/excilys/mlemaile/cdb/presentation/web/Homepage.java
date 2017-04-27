@@ -55,6 +55,7 @@ public class Homepage {
             @RequestParam(value = PARAM_SEARCH, required = false) String search,
             @RequestParam(value = PARAM_SORT, required = false) String sort) {
         Map<String, String> errors = isValid(pageNumber, pageLimit);
+        System.out.println("tri par  : " + sort);
         if (!errors.isEmpty()) {
             model.addAttribute(ATT_EXCEPTION, errors);
         } else {

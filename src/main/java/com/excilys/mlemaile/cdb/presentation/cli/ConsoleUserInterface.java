@@ -133,7 +133,7 @@ public class ConsoleUserInterface {
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
                     int indexMin = (pageNumber - 1) * NUMBER_PER_PAGE;
-                    companies = (ArrayList<Company>) serviceCompany.listcompanies(NUMBER_PER_PAGE,
+                    companies = (ArrayList<Company>) serviceCompany.listCompanies(NUMBER_PER_PAGE,
                             indexMin);
                     for (Company company : companies) {
                         System.out.println(company.toString());

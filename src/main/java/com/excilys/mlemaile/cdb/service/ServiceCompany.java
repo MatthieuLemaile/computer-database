@@ -30,7 +30,7 @@ public class ServiceCompany {
      * @param idFirst The numero of the first company to return
      * @return a List of Company
      */
-    public List<Company> listcompanies(int number, long idFirst) {
+    public List<Company> listCompanies(int number, long idFirst) {
         List<Company> companies = new ArrayList<Company>();
         try {
             companies = companyDao.listNumberCompaniesStartingAt(number, idFirst);

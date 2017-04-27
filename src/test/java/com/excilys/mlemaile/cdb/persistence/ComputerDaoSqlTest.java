@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.mlemaile.cdb.service.model.Company;
 import com.excilys.mlemaile.cdb.service.model.Computer;
@@ -76,6 +77,7 @@ public class ComputerDaoSqlTest {
     }
 
     @Test
+    @Transactional
     public void testCreateComputer() {
         LocalDate date = LocalDate.now();
         Company company = companyDao.getCompanyById(1).get();
@@ -96,7 +98,7 @@ public class ComputerDaoSqlTest {
                 "ID : 10 name : computer10 manufacturer [ID : 2 name : company2] introduced : 2016-04-09 Discontinued : 2017-02-18",
                 computers.get(1).toString());
         assertEquals("Read method is not correct",
-                "ID : 11 name : computer11 manufacturer [ID : 3 name : company3] introduced : 2016-04-09 Discontinued : 2017-02-18",
+                "ID : 11 name : computer11 manufacturer [ID : 3 name w: company3] introduced : 2016-04-09 Discontinued : 2017-02-18",
                 computers.get(2).toString());
         assertEquals("Read method is not correct",
                 "ID : 12 name : computer12 manufacturer [ID : 1 name : company1] introduced : 2016-04-09 Discontinued : 2017-02-18",
@@ -145,6 +147,7 @@ public class ComputerDaoSqlTest {
     }
 
     @Test
+    @Transactional
     public void testUpdateComputer() {
         Computer computer = computerDao.getComputerById(2).get();
         computer.setName("Test");
@@ -155,6 +158,7 @@ public class ComputerDaoSqlTest {
     }
 
     @Test
+    @Transactional
     public void testDeleteComputer() {
         LocalDate date = LocalDate.now();
         Company company = companyDao.getCompanyById(1).get();

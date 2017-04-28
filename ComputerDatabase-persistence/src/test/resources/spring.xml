@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:component-scan base-package="com.excilys.mlemaile.cdb" />
+	
+	<context:property-placeholder location="classpath:hikari.properties" />
+
+	<!-- hikari dataSource -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="jdbcUrl" value="${jdbcUrl}" />
+		<property name="username" value="${usernameDB}" />
+		<property name="password" value="${password}" />
+		<property name="maximumPoolSize" value="${maximumPoolSize}" />
+		<property name="maxLifetime" value="${maxLifetime}" />
+		<property name="idleTimeout" value="${idleTimeout}" />
+		<property name="leakDetectionThreshold" value="${leakDetectionThreshold}" />
+	</bean>
+	
+	<!--trransaction manager  -->
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<bean id="jpaAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="database" value="MYSQL"></property>
+		<property name="showSql" value="true"></property>
+	</bean>
+	
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<!-- <property name="persistenceUnitName" ref="myPU"/> -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="jpaAdapter" />
+		<property name="packagesToScan" value="com.excilys.mlemaile.cdb.model" />
+		<property name="loadTimeWeaver">
+			<bean
+				class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
+		</property>
+	</bean>
+
+	<tx:annotation-driven transaction-manager="txManager" />
+
+</beans>

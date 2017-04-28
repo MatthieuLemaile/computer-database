@@ -1,3 +1,0 @@
-checkstyle:3.47
-github:1.26.2
-junit:1.20

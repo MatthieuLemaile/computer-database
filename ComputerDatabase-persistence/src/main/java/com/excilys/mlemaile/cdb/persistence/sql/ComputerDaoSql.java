@@ -52,13 +52,13 @@ public class ComputerDaoSql implements ComputerDao {
             String search) {
         // String sql = String.format(SQL_SEARCH, sort.toString());
         String searchPattern = search != null ? search + "%" : "%";
+        String hqlQuery = "Select c From Computer as c left join c.company as company where c.name like :search or company.name like :search order by %s asc";
+        hqlQuery = String.format(hqlQuery, "c." + sort.toString());
         TypedQuery<Computer> query = this.session
-                .createQuery(
-                        "Select c From Computer as c left join c.company as company where c.name like :search or company.name like :search order by :order asc",
+                .createQuery(hqlQuery,
                         Computer.class)
-                .setMaxResults(number);// .setFirstResult((int) idFirst);
+                .setMaxResults(number).setFirstResult((int) idFirst);
         query.setParameter("search", searchPattern);
-        query.setParameter("order", sort.toString());
         return query.getResultList();
     }
 

@@ -19,7 +19,6 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +87,6 @@ public class ComputerDaoSqlTest {
                 computerDao.getComputerById(c.getId()).get().toString());
     }
 
-    @Ignore
     @Test
     public void testListSomecomputer() {
         List<Computer> computers = computerDao.listSortSearchNumberComputer(10, 0,FieldSort.NAME, null);
@@ -100,7 +98,7 @@ public class ComputerDaoSqlTest {
                 "ID : 10 name : computer10 manufacturer [ID : 2 name : company2] introduced : 2016-04-09 Discontinued : 2017-02-18",
                 computers.get(1).toString());
         assertEquals("Read method is not correct",
-                "ID : 11 name : computer11 manufacturer [ID : 3 name w: company3] introduced : 2016-04-09 Discontinued : 2017-02-18",
+                "ID : 11 name : computer11 manufacturer [ID : 3 name : company3] introduced : 2016-04-09 Discontinued : 2017-02-18",
                 computers.get(2).toString());
         assertEquals("Read method is not correct",
                 "ID : 12 name : computer12 manufacturer [ID : 1 name : company1] introduced : 2016-04-09 Discontinued : 2017-02-18",
@@ -125,7 +123,6 @@ public class ComputerDaoSqlTest {
                 computers.get(9).toString());
     }
 
-    @Ignore
     @Test
     public void testListSomecomputerLastPage() {
         List<Computer> computers = computerDao.listSortSearchNumberComputer(10, 10,FieldSort.NAME, null);

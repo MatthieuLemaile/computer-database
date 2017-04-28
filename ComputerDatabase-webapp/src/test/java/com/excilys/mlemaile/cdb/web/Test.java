@@ -11,11 +11,14 @@ import java.util.regex.Pattern;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -36,22 +39,23 @@ public class Test {
 
     @BeforeClass
     public static void setUpClass() {
-        System.setProperty("webdriver.gecko.driver", "/opt/geckodriver/geckodriver");
-        driver = new FirefoxDriver();
+        // System.setProperty("webdriver.gecko.driver", "/opt/geckodriver/geckodriver");
+        // driver = new FirefoxDriver();
 
-        // DesiredCapabilities caps = new DesiredCapabilities();
-        // caps.setJavascriptEnabled(true);
-        // caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-        // "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs");
-        // driver = new PhantomJSDriver(caps);
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setJavascriptEnabled(true);
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
+                "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs");
+        driver = new PhantomJSDriver(caps);
 
     }
 
     @AfterClass
     public static void tearDownClass() {
-        // driver.quit();
+        driver.quit();
     }
 
+    @Ignore
     @org.junit.Test
     public void test() throws IOException {
         testOpenUrl();

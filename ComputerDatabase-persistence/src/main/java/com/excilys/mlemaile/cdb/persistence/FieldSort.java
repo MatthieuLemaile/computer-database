@@ -2,7 +2,7 @@ package com.excilys.mlemaile.cdb.persistence;
 
 public enum FieldSort {
     NAME("name"), INTRODUCED("introduced"), DISCONTINUED("discontinued"), COMPANY_NAME(
-            "company_name");
+            "company.name");
     private final String text;
 
     /**

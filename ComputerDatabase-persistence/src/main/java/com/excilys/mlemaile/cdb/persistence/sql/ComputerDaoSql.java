@@ -22,6 +22,10 @@ import com.excilys.mlemaile.cdb.persistence.FieldSort;
  */
 @Repository
 public class ComputerDaoSql implements ComputerDao {
+    private static final String HQL_SELECT_FILTER_ORDER = "Select c From Computer as c left join c.company as company where c.name like :search or company.name like :search order by %s asc";
+    private static final String HQL_UPDATE_COMPUTER     = "UPDATE Computer c set c.name = :name, c.introduced = :introduced, c.discontinued = :discontinued, c.company = :company WHERE c.id = :id";
+    private static final String HQL_COUNT_COMPUTER      = "Select COUNT(c) From Computer as c left join c.company as company where c.name like :search or company.name like :search";
+    private static final String HQL_DELETE_COMPANY_ID   = "delete from Computer c where c.company = :company";
     private static final Logger LOGGER                = LoggerFactory
             .getLogger(ComputerDaoSql.class);
 
@@ -52,8 +56,7 @@ public class ComputerDaoSql implements ComputerDao {
             String search) {
         // String sql = String.format(SQL_SEARCH, sort.toString());
         String searchPattern = search != null ? search + "%" : "%";
-        String hqlQuery = "Select c From Computer as c left join c.company as company where c.name like :search or company.name like :search order by %s asc";
-        hqlQuery = String.format(hqlQuery, "c." + sort.toString());
+        String hqlQuery = String.format(HQL_SELECT_FILTER_ORDER, "c." + sort.toString());
         TypedQuery<Computer> query = this.session
                 .createQuery(hqlQuery,
                         Computer.class)
@@ -78,8 +81,7 @@ public class ComputerDaoSql implements ComputerDao {
     public void updateComputer(Computer computer) {
         // this.session.joinTransaction();
         this.session
-                .createQuery(
-                        "UPDATE Computer c set c.name = :name, c.introduced = :introduced, c.discontinued = :discontinued, c.company = :company WHERE c.id = :id")
+                .createQuery(HQL_UPDATE_COMPUTER)
                 .setParameter("name", computer.getName())
                 .setParameter("introduced", computer.getIntroduced())
                 .setParameter("discontinued", computer.getDiscontinued())
@@ -98,9 +100,7 @@ public class ComputerDaoSql implements ComputerDao {
 
     @Override
     public int countSearchedComputer(String search) {
-        TypedQuery<Long> query = this.session.createQuery(
-                "Select COUNT(c) From Computer as c left join c.company as company where c.name like :search or company.name like :search",
-                Long.class);
+        TypedQuery<Long> query = this.session.createQuery(HQL_COUNT_COMPUTER, Long.class);
         String searchPattern = search != null ? search + "%" : "%";
         query.setParameter("search", searchPattern);
         return query.getResultList().get(0).intValue();
@@ -109,7 +109,7 @@ public class ComputerDaoSql implements ComputerDao {
 
     @Override
     public void deleteComputerByCompanyId(Company company) {
-        this.session.createQuery("delete from Computer c where c.company = :company")
+        this.session.createQuery(HQL_DELETE_COMPANY_ID)
                 .setParameter("company", company).executeUpdate();
     }
 }

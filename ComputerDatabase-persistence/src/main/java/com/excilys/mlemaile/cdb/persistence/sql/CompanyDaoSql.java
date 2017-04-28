@@ -18,6 +18,7 @@ import com.excilys.mlemaile.cdb.persistence.CompanyDao;
  */
 @Repository("companyDao")
 public class CompanyDaoSql implements CompanyDao {
+    private static final String HQL_SELECT_COMPANIES = "from Company";
 
     @PersistenceContext
     private EntityManager session;
@@ -39,7 +40,7 @@ public class CompanyDaoSql implements CompanyDao {
     long                                                                           idFirst)
     {
         List<Company> companies = (List<Company>) session
-                .createQuery("from Company", Company.class).setMaxResults(number)
+                .createQuery(HQL_SELECT_COMPANIES, Company.class).setMaxResults(number)
                 .setFirstResult((int) idFirst).getResultList();
         return companies;
     }
@@ -50,7 +51,7 @@ public class CompanyDaoSql implements CompanyDao {
     @Override
     public List<Company> listCompanies() {
         List<Company> companies = (List<Company>) this.session
-                .createQuery("from Company", Company.class)
+                .createQuery(HQL_SELECT_COMPANIES, Company.class)
                 .getResultList();
         return companies;
     }

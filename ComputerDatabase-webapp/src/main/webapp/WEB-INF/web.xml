@@ -22,15 +22,15 @@
   </welcome-file-list>
   <error-page>
     <error-code>404</error-code>
-    <location>/views/404.jsp</location>
+    <location>/WEB-INF/views/404.jsp</location>
   </error-page>
   <error-page>
     <error-code>403</error-code>
-    <location>/views/403.jsp</location>
+    <location>/WEB-INF/views/403.jsp</location>
   </error-page>
   <error-page>
     <error-code>500</error-code>
-    <location>/views/500.jsp</location>
+    <location>/WEB-INF/views/500.jsp</location>
   </error-page>
   
   <servlet>
@@ -51,6 +51,21 @@
 	<url-pattern>/editComputer</url-pattern>
     <url-pattern>/deleteComputer</url-pattern>
     <url-pattern>/addComputer</url-pattern>
+    <url-pattern>/logout</url-pattern>
+    <url-pattern>/login</url-pattern>
  </servlet-mapping> 
+
+	<!-- Spring Security -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+ 
   
 </web-app>

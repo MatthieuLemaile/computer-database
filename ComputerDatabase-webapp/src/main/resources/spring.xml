@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:sec="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -10,7 +11,9 @@
 	http://www.springframework.org/schema/tx
     http://www.springframework.org/schema/tx/spring-tx.xsd
 	http://www.springframework.org/schema/mvc
-	http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+	http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
 	<mvc:annotation-driven />
 
 	<context:component-scan base-package="com.excilys.mlemaile.cdb" />
@@ -80,6 +83,10 @@
 				class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
 		</property>
 	</bean>
+	
+	<import resource="classpath:spring-security.xml" />
+	
+	
 
 	<tx:annotation-driven transaction-manager="txManager" />
 

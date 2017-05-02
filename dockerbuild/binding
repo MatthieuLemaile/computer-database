@@ -1,0 +1,14 @@
+jenkins port 8282:8080
+
+docker network create --driver=bridge --subnet=172.18.0.0/16 --gateway=172.18.0.1 prod-network
+	.0.2 : mysql
+	.0.3 : tomcat port 8181:8080
+docker network create --driver=bridge --subnet=172.19.0.0/16 --gateway=172.19.0.1 test-network
+	.0.2 : mysql-test
+	.0.3 : javamaven
+
+	
+docker volume create --name test
+docker volume create --name prod
+
+on the cloud : /war in each container, but db & tomcat (/usr/local/tomcat/webapps)

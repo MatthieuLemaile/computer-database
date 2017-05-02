@@ -23,7 +23,6 @@ import com.excilys.mlemaile.cdb.web.model.MapperDtoToModel;
  * Servlet implementation class homepage.
  */
 @Controller
-@RequestMapping("/homepage")
 public class Homepage {
     private static final Logger LOGGER                = LoggerFactory.getLogger(Homepage.class);
     private static final String ATT_LIST_COMPUTERS    = "listComputers";
@@ -46,7 +45,7 @@ public class Homepage {
      * @param sort the field to sort computer by
      * @return a String which is the id of the view
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/homepage", method = RequestMethod.GET)
     public String displayHomepage(ModelMap model,
             @RequestParam(value = PARAM_PAGE_NUMBER, required = false) String pageNumber,
             @RequestParam(value = PARAM_PAGE_LIMIT, required = false) String pageLimit,

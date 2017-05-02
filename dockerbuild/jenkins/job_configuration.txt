@@ -1,0 +1,79 @@
+//conf local
+
+node {
+    try {
+        stage('Preparation') { // for display purposes
+        // Get some code from a GitHub repository
+        git 'https://github.com/MatthieuLemaile/computer-database'
+    }
+       stage('checkstyle'){
+        step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', checkstyle: 'checkstyle.xml'])
+       }
+       withDockerContainer(args: '-d --net=test-network --ip=172.19.0.3 -v test:/war/ -u 0', image: 'javamaven') {
+         stage('Build') {
+          // Run the maven build
+                 sh "'/usr/share/maven/bin/mvn' -Dmaven.test.failure.ignore clean compile"
+          }
+          stage('Test'){
+            sh "'/usr/share/maven/bin/mvn' test"
+          }
+          stage('Package'){
+            sh "'/usr/share/maven/bin/mvn' -DskipTests package"
+          }
+          stage('pass to jenkins'){
+            sh "cp /var/jenkins_home/workspace/CDB-pipeline/target/*.war /war/"
+          }
+       }
+       stage("deploy to tomcat"){
+           sh "ls /test/"
+           sh "sudo cp /test/*.war /prod/ComputerDatabase.war"
+       }
+       stage('Results') {
+          junit '**/target/surefire-reports/TEST-*.xml'
+       }
+    } catch (Exception e) {
+        mail bcc: '', body: "Build # '${BUILD_NUMBER}' - FAILURE '(${e.message})'", cc: '', from: '', replyTo: '', subject: "[JENKINS] - '${env.JOB_NAME}'", to: 'mlemaile@excilys.com'
+        throw e; // rethrow so the build is considered failed                        
+    } 
+}
+
+//conf docker hub
+
+node {
+    try {
+        stage('Preparation') { // for display purposes
+        // Get some code from a GitHub repository
+        git 'https://github.com/MatthieuLemaile/computer-database'
+        sh "docker pull mlemaile/javamaven:latest"
+    }
+       stage('checkstyle'){
+        step([$class: 'hudson.plugins.checkstyle.CheckStylePublisher', checkstyle: 'checkstyle.xml'])
+       }
+       withDockerContainer(args: '-d -u 0 -v /war:/war', image: 'mlemaile/javamaven:latest') {
+         stage('Build') {
+          // Run the maven build
+                 sh "rm /var/jenkins_home/workspace/CDB-pipeline/target/*.war"
+                 sh "'/usr/share/maven/bin/mvn' -Dmaven.test.failure.ignore compile"
+          }
+          stage('Test'){
+            sh "'/usr/share/maven/bin/mvn' integration-test"
+          }
+          stage('Package'){
+            sh "'/usr/share/maven/bin/mvn' -DskipTests package"
+          }
+          stage('pass to jenkins'){
+            sh "cp /var/jenkins_home/workspace/CDB-pipeline/target/*.war /war/ComputerDatabase.war"
+          }
+       }
+       /*stage("deploy to tomcat"){
+           sh "ls /test/"
+           sh "sudo cp /test/*.war /prod/ComputerDatabase.war"
+       }*/
+       stage('Results') {
+          junit '**/target/surefire-reports/TEST-*.xml'
+       }
+    } catch (Exception e) {
+        mail bcc: '', body: "Build # '${BUILD_NUMBER}' - FAILURE '(${e.message})'", cc: '', from: '', replyTo: '', subject: "[JENKINS] - '${env.JOB_NAME}'", to: 'mlemaile@excilys.com'
+        throw e; // rethrow so the build is considered failed                        
+    } 
+}

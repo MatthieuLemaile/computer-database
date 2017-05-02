@@ -42,7 +42,7 @@ public class AddComputer {
 
     /**
      * Initialise the mapping of datas.
-     * @param binder
+     * @param binder The binder of parameters
      */
     @InitBinder /* Converts empty strings into null when a form is submitted */
     public void initBinder(WebDataBinder binder) {

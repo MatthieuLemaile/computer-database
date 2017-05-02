@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -47,7 +46,6 @@ public class Test {
         caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
                 "/opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs");
         driver = new PhantomJSDriver(caps);
-
     }
 
     @AfterClass
@@ -55,9 +53,10 @@ public class Test {
         driver.quit();
     }
 
-    @Ignore
+
     @org.junit.Test
     public void test() throws IOException {
+        login();
         testOpenUrl();
         testValidationDateRealTime();
         testAddComputer();
@@ -66,6 +65,18 @@ public class Test {
         testDelete();
         testMultipleDelete();
         assertNumberPerPage();
+    }
+
+    private void login() throws IOException {
+        driver.get(BASE_URL + "/login");
+        (new WebDriverWait(driver, TIMEOUT))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("username")));
+
+        driver.findElement(By.id("username")).sendKeys("user1");
+        driver.findElement(By.id("password")).sendKeys("123456");
+        driver.findElement(By.id("submit")).click();
+        (new WebDriverWait(driver, TIMEOUT))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id("lastPage")));
     }
 
     private void testOpenUrl() {

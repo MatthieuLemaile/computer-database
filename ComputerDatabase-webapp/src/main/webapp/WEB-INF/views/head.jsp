@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <head>
 <title>Computer Database</title>
@@ -22,22 +23,22 @@
 		<div class="container">
 			<a class="navbar-brand" href="homepage"> Application - Computer
 				Database </a>
-			<%-- <sec:authentication property="principal.username" /> --%>
 			<sec:authorize access="isAnonymous()">
-				<form name='loginForm' action="<c:url value='login' />"
-					method='POST'>
-					<label class="navbar-brand" for="username">User : </label> <input class="navbar-brand"
-						type='text' name='username' value=''>
-					<label for="password" class="navbar-brand">  Password : </label> <input class="navbar-brand"
-						type='password' name='password' /> <input class="navbar-brand"
-						name="submit" type="submit" value="submit" />
-					<input type="hidden" name="${_csrf.parameterName}"
-						value="${_csrf.token}" />
+				<form class="form-inline" name='loginForm'
+					action="<c:url value='login' />" method='POST'>
+					<label for="username" class="perso-navbar-text"><spring:message
+							code="login.user" /> : </label> <input type='text' class="form-control"
+						name='username' value=''> <label for="password"
+						class="perso-navbar-text"><spring:message
+							code="login.password" /> : </label> <input type='password'
+						class="form-control" name='password' /> <input name="submit"
+						type="submit" value='<spring:message code="login.login"/>' /> <input
+						type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</form>
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">
-				<a class="navbar-brand" href="<c:url value="/logout" />">
-					Logout</a>
+				<a class="navbar-brand" href="<c:url value="/logout" />"> <spring:message
+						code="login.logout" /></a>
 			</sec:authorize>
 
 		</div>

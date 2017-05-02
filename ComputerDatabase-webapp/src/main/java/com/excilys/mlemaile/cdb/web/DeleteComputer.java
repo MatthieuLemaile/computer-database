@@ -21,6 +21,12 @@ public class DeleteComputer {
     @Autowired
     private ServiceComputer       serviceComputer;
 
+    @RequestMapping(method = RequestMethod.GET)
+    public String deleteComputerGet(ModelMap model) {
+        System.out.println("Authorized");
+        return "dashboard";
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public String deleteComputer(ModelMap model,
             @RequestParam(value = PARAM_ID_LIST) String idList) {

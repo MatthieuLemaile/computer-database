@@ -21,7 +21,7 @@ public class CompanyDaoSql implements CompanyDao {
     private static final String HQL_SELECT_COMPANIES = "from Company";
 
     @PersistenceContext
-    private EntityManager session;
+    private EntityManager       session;
 
     /**
      * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#getCompanyById(long)
@@ -36,9 +36,7 @@ public class CompanyDaoSql implements CompanyDao {
      * @see com.excilys.mlemaile.cdb.persistence.CompanyDao#listNumberCompaniesStartingAt(int, long)
      */
     @Override
-    public List<Company> listNumberCompaniesStartingAt(int number,
-    long                                                                           idFirst)
-    {
+    public List<Company> listNumberCompaniesStartingAt(int number, long idFirst) {
         List<Company> companies = (List<Company>) session
                 .createQuery(HQL_SELECT_COMPANIES, Company.class).setMaxResults(number)
                 .setFirstResult((int) idFirst).getResultList();
@@ -51,8 +49,7 @@ public class CompanyDaoSql implements CompanyDao {
     @Override
     public List<Company> listCompanies() {
         List<Company> companies = (List<Company>) this.session
-                .createQuery(HQL_SELECT_COMPANIES, Company.class)
-                .getResultList();
+                .createQuery(HQL_SELECT_COMPANIES, Company.class).getResultList();
         return companies;
     }
 

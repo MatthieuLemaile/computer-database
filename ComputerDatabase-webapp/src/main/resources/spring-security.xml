@@ -7,19 +7,21 @@
         http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<http auto-config="true">  <!-- entry-point-ref="digestEntryPoint" --> <!-- create-session="stateless" -->
-		<intercept-url pattern="/deleteComputer" access="hasRole('ROLE_USER')" method="POST" />
+	<http auto-config="true"> <!-- entry-point-ref="digestEntryPoint" --> <!-- create-session="stateless" -->
+		<intercept-url pattern="/deleteComputer" access="hasRole('ROLE_USER')"
+			method="POST" />
 		<intercept-url pattern="/editComputer" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/editComputer" access="hasRole('ROLE_USER')" method="POST"/>
+		<intercept-url pattern="/editComputer" access="hasRole('ROLE_USER')"
+			method="POST" />
 		<intercept-url pattern="/addComputer" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/addComputer" access="hasRole('ROLE_USER')" method="POST"/>
+		<intercept-url pattern="/addComputer" access="hasRole('ROLE_USER')"
+			method="POST" />
 		<form-login login-page="/login" default-target-url="/homepage"
 			authentication-failure-url="/login?error" username-parameter="username"
 			password-parameter="password" />
 		<logout logout-success-url="/logout" />
 		<!-- enable csrf protection -->
 		<csrf />
-
 	</http>
 
 	<authentication-manager>
@@ -28,7 +30,7 @@
 			<jdbc-user-service id="userService"
 				data-source-ref="dataSource"
 				users-by-username-query="select username,password, enabled from users where username=?"
-				authorities-by-username-query="select username, role from user_roles where username =?  " />
+				authorities-by-username-query="select username, role from user_roles where username =? " />
 		</authentication-provider>
 	</authentication-manager>
 

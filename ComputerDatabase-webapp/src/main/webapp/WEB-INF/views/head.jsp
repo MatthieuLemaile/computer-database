@@ -26,12 +26,12 @@
 			<sec:authorize access="isAnonymous()">
 				<form class="form-inline" name='loginForm'
 					action="<c:url value='login' />" method='POST'>
-					<label for="username" class="perso-navbar-text"><spring:message
+					<label for="username-nav" class="perso-navbar-text"><spring:message
 							code="login.user" /> : </label> <input type='text' class="form-control"
-						name='username' value=''> <label for="password"
+						name='username' id="username-nav"> <label for="password-nav"
 						class="perso-navbar-text"><spring:message
 							code="login.password" /> : </label> <input type='password'
-						class="form-control" name='password' /> <input name="submit"
+						class="form-control" name='password' id="password-nav"/> <input name="submit"
 						type="submit" value='<spring:message code="login.login"/>' /> <input
 						type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</form>

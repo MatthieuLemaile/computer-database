@@ -53,6 +53,7 @@
     <url-pattern>/addComputer</url-pattern>
     <url-pattern>/logout</url-pattern>
     <url-pattern>/login</url-pattern>
+    <url-pattern>/register</url-pattern>
  </servlet-mapping> 
 
 	<!-- Spring Security -->

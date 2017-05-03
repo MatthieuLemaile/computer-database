@@ -17,6 +17,7 @@ import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.web.model.ComputerDto;
+import com.excilys.mlemaile.cdb.web.model.ComputerValidator;
 import com.excilys.mlemaile.cdb.web.model.MapperDtoToModel;
 
 /**

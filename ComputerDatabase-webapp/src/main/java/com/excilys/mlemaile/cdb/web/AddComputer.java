@@ -22,6 +22,7 @@ import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
 import com.excilys.mlemaile.cdb.web.model.CompanyDto;
 import com.excilys.mlemaile.cdb.web.model.ComputerDto;
+import com.excilys.mlemaile.cdb.web.model.ComputerValidator;
 import com.excilys.mlemaile.cdb.web.model.MapperDtoToModel;
 
 /**
@@ -41,10 +42,10 @@ public class AddComputer {
     private ComputerValidator   computerValidator;
 
     /**
-     * Initialise the mapping of datas.
+     * Converts empty strings into null when a form is submitted.
      * @param binder The binder of parameters
      */
-    @InitBinder /* Converts empty strings into null when a form is submitted */
+    @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
         binder.addValidators(computerValidator);

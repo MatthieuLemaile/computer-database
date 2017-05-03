@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.web;
+package com.excilys.mlemaile.cdb.web.model;
 
 import java.time.LocalDate;
 
@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-
-import com.excilys.mlemaile.cdb.web.model.ComputerDto;
 
 @Component
 public class ComputerValidator implements Validator {

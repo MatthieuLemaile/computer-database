@@ -34,7 +34,7 @@
 							<input id="submit" name="submit" type="submit"
 								value="<spring:message code='login.login'/>" />
 						</div>
-						<input type="hidden" name="${_csrf.parameterName}"
+						<input type="hidden" id="_csrf" name="${_csrf.parameterName}"
 							value="${_csrf.token}" />
 
 					</fieldset>

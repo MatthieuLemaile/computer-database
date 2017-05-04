@@ -11,7 +11,6 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<context:component-scan base-package="com.excilys.mlemaile.cdb" />
-
 	<context:property-placeholder location="classpath:hikari.properties" />
 
 	<!-- hikari dataSource -->

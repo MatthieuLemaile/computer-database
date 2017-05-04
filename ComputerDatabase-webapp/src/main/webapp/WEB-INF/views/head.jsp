@@ -1,6 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <head>
@@ -33,7 +32,7 @@
 							code="login.password" /> : </label> <input type='password'
 						class="form-control" name='password' id="password-nav"/> <input name="submit"
 						type="submit" value='<spring:message code="login.login"/>' /> <input
-						type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+						type="hidden" id="_csrf-nav" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</form>
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">

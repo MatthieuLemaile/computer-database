@@ -8,6 +8,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
@@ -43,6 +44,7 @@ public class ConsoleUserInterface {
             System.out.println("5 : update a computer");
             System.out.println("6 : delete a computer");
             System.out.println("7 : delete a company");
+            System.out.println("8 : get the bcrypt of a password");
             System.out.println("0 : Exit");
             try {
                 entry = br.readLine();
@@ -52,7 +54,7 @@ public class ConsoleUserInterface {
             } catch (NumberFormatException e) {
                 System.out.println("You must enter an integer");
             }
-        } while (optionNumber < 0 || optionNumber > 7);
+        } while (optionNumber < 0 || optionNumber > 8);
 
         switch (optionNumber) {
         case 1:
@@ -75,6 +77,9 @@ public class ConsoleUserInterface {
             break;
         case 7:
             deleteCompany(br);
+            break;
+        case 8:
+            bcryptPass(br);
             break;
         default:
             continuProgramm = false;
@@ -343,6 +348,27 @@ public class ConsoleUserInterface {
             System.out.println("Company successfully deleted !");
         } catch (ServiceException e) {
             System.out.println("a problem occur" + e.getMessage());
+        }
+    }
+
+    /**
+     * This function print 10 hashes of the password given by the user.
+     * @param br the reader allowing the user to input something
+     */
+    private static void bcryptPass(BufferedReader br) {
+        System.out.println("Enter the password you want to get hashed");
+        String entry = "";
+        try {
+            entry = br.readLine();
+        } catch (IOException e) {
+            System.out.println("a problem occur" + e.getMessage());
+        }
+        int i = 0;
+        while (i < 10) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(entry);
+            System.out.println(hashedPassword);
+            i++;
         }
     }
 }

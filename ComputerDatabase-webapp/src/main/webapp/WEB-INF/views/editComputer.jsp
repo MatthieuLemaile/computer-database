@@ -69,7 +69,7 @@
 							href="${pageContext.request.contextPath}/homepage"
 							class="btn btn-default"><spring:message code="addpage.cancel"/></a>
 					</div>
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<input type="hidden" id="_csrf" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</form:form>
 			</div>
 		</div>

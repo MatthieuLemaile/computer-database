@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.excilys.mlemaile.cdb.dto.CompanyDto;
+import com.excilys.mlemaile.cdb.dto.ComputerDto;
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
 import com.excilys.mlemaile.cdb.service.ServiceComputer;
 import com.excilys.mlemaile.cdb.service.ServiceException;
-import com.excilys.mlemaile.cdb.web.model.CompanyDto;
-import com.excilys.mlemaile.cdb.web.model.ComputerDto;
 import com.excilys.mlemaile.cdb.web.model.ComputerValidator;
 import com.excilys.mlemaile.cdb.web.model.MapperDtoToModel;
 

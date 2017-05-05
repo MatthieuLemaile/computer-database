@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.excilys.mlemaile.cdb.dto.CompanyDto;
+import com.excilys.mlemaile.cdb.dto.ComputerDto;
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.service.ServiceCompany;
@@ -66,11 +68,11 @@ public class MapperDtoToModel {
             if (ce.getDiscontinued() != null && !ce.getDiscontinued().trim().isEmpty()) {
                 discontinued = LocalDate.parse(ce.getDiscontinued());
             }
-            if (ce.getCompanyId() != null) {
-                companyId = Long.parseLong(ce.getCompanyId());
+            if (ce.getCompanyId() != null && !ce.getCompanyId().trim().isEmpty()) {
+                companyId = Long.parseLong(ce.getCompanyId().trim());
             }
-            if (ce.getId() != null) {
-                id = Long.parseLong(ce.getId());
+            if (ce.getId() != null && !ce.getId().trim().isEmpty()) {
+                id = Long.parseLong(ce.getId().trim());
             }
         } catch (NumberFormatException e) {
             throw new MapperException(e.getMessage());

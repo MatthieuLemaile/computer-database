@@ -12,14 +12,9 @@
    </listener-class>
 </listener> 
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
     <welcome-file>homepage</welcome-file>
   </welcome-file-list>
+  
   <error-page>
     <error-code>404</error-code>
     <location>/WEB-INF/views/404.jsp</location>
@@ -34,25 +29,20 @@
   </error-page>
   
   <servlet>
-    <servlet-name>dispatcher</servlet-name>
+    <servlet-name>base</servlet-name>
     <servlet-class>
         org.springframework.web.servlet.DispatcherServlet
     </servlet-class>
     <init-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/classes/spring.xml</param-value>
+        <param-value>/WEB-INF/classes/base-servlet.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
  </servlet>
  
  <servlet-mapping>
-    <servlet-name>dispatcher</servlet-name>
-    <url-pattern>/homepage</url-pattern>
-	<url-pattern>/editComputer</url-pattern>
-    <url-pattern>/deleteComputer</url-pattern>
-    <url-pattern>/addComputer</url-pattern>
-    <url-pattern>/logout</url-pattern>
-    <url-pattern>/login</url-pattern>
+    <servlet-name>base</servlet-name>
+    <url-pattern>/</url-pattern>
  </servlet-mapping> 
 
 	<!-- Spring Security -->

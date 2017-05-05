@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.web.model;
+package com.excilys.mlemaile.cdb.dto;
 
 /**
  * This class represent a company as in database.
@@ -12,7 +12,7 @@ public class CompanyDto {
     /**
      * Constructeur par défaut.
      */
-    private CompanyDto() {
+    public CompanyDto() {
     }
 
     /**

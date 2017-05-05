@@ -1,4 +1,4 @@
-package com.excilys.mlemaile.cdb.web.model;
+package com.excilys.mlemaile.cdb.dto;
 
 /**
  * This class represent a computer as in the database.

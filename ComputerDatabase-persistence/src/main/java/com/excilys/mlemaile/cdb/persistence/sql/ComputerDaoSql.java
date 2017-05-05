@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.excilys.mlemaile.cdb.model.Company;
 import com.excilys.mlemaile.cdb.model.Computer;
 import com.excilys.mlemaile.cdb.persistence.ComputerDao;
+import com.excilys.mlemaile.cdb.persistence.DaoException;
 import com.excilys.mlemaile.cdb.persistence.FieldSort;
 
 /**
@@ -95,6 +96,9 @@ public class ComputerDaoSql implements ComputerDao {
     @Override
     public void deleteComputerById(long id) {
         Computer computer = this.session.find(Computer.class, id);
+        if (computer == null) {
+            throw new DaoException("The computer does not exist in the database.");
+        }
         this.session.remove(computer);
     }
 

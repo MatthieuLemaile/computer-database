@@ -6,29 +6,18 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.excilys.mlemaile.cdb.model.Company;
-import com.excilys.mlemaile.cdb.model.Computer;
-import com.excilys.mlemaile.cdb.persistence.FieldSort;
-import com.excilys.mlemaile.cdb.service.ServiceCompany;
-import com.excilys.mlemaile.cdb.service.ServiceComputer;
-import com.excilys.mlemaile.cdb.service.ServiceException;
+import com.excilys.mlemaile.cdb.dto.CompanyDto;
+import com.excilys.mlemaile.cdb.dto.ComputerDto;
 
 public class ConsoleUserInterface {
-    private static final int                      NUMBER_PER_PAGE = 50;
-    private static ClassPathXmlApplicationContext ctx             = new ClassPathXmlApplicationContext(
-            "spring.xml");
-    private static ServiceCompany                 serviceCompany  = ctx.getBean("serviceCompany",
-            ServiceCompany.class);
-    private static ServiceComputer                serviceComputer = ctx.getBean("serviceComputer",
-            ServiceComputer.class);
-
 
     /**
-     * Display the menu and call the function to do the choosen action.
+     * client.cre Display the menu and call the funclient.crection to do the choosen action.
      * @return a boolean which is true as long as the user don't choose to leave
      */
     public static boolean menu() {
@@ -94,7 +83,7 @@ public class ConsoleUserInterface {
      * @param br BufferedReader to read the user's entry
      */
     private static void listComputers(BufferedReader br) {
-        ArrayList<Computer> computers = new ArrayList<Computer>();
+        List<ComputerDto> computers = new ArrayList<>();
         String entry;
         int pageNumber = 0;
         do {
@@ -103,11 +92,8 @@ public class ConsoleUserInterface {
                 entry = br.readLine();
                 pageNumber = Integer.parseInt(entry);
                 if (pageNumber > 0) {
-                    int indexMin = (pageNumber - 1) * NUMBER_PER_PAGE;
-                    computers = (ArrayList<Computer>) serviceComputer.listSortSearchNumberComputer(
-                            NUMBER_PER_PAGE, indexMin, FieldSort.NAME,
-                                    null);
-                    for (Computer computer : computers) {
+                    computers = WebServiceAccess.INSTANCE.listComputers(pageNumber);
+                    for (ComputerDto computer : computers) {
                         System.out.println(computer.toString());
                     }
                 }
@@ -127,25 +113,15 @@ public class ConsoleUserInterface {
      * @param br BufferedReader to read the user's entry
      */
     private static void listCompanies(BufferedReader br) {
-        ArrayList<Company> companies = new ArrayList<Company>();
-
-        String entry;
+        List<CompanyDto> companies = new ArrayList<>();
         int pageNumber = 0;
         do {
-            System.out.println("Enter a page number, 0 to leave.");
             try {
-                entry = br.readLine();
-                pageNumber = Integer.parseInt(entry);
-                if (pageNumber > 0) {
-                    int indexMin = (pageNumber - 1) * NUMBER_PER_PAGE;
-                    companies = (ArrayList<Company>) serviceCompany.listCompanies(NUMBER_PER_PAGE,
-                            indexMin);
-                    for (Company company : companies) {
-                        System.out.println(company.toString());
-                    }
+
+                companies = WebServiceAccess.INSTANCE.listCompanies();
+                for (CompanyDto company : companies) {
+                    System.out.println(company.toString());
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             } catch (NumberFormatException e) {
                 System.out.println("You must enter an integer");
             } catch (ServiceException e) {
@@ -163,13 +139,21 @@ public class ConsoleUserInterface {
         System.out.println("enter the id of the computer of which you want to see the details");
         String entry;
         int id = 0;
-        Computer c = null;
+        ComputerDto c = null;
         do {
             System.out.println("Enter a number greater or equal to 1");
             try {
                 entry = br.readLine();
                 id = Integer.parseInt(entry);
-                c = serviceComputer.getComputerById(id).get();
+                try {
+                    c = WebServiceAccess.INSTANCE.getComputer(id);
+                    System.out.println("\tid : " + c.getId() + " name : " + c.getName());
+                    System.out.println("\tintroduced : " + c.getIntroduced() + " discontinued : "
+                            + c.getDiscontinued());
+                    System.out.println("\tmanufacturer : " + c.getCompanyName());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (NumberFormatException e) {
@@ -178,11 +162,6 @@ public class ConsoleUserInterface {
                 System.out.println("a problem occur" + e.getMessage());
             }
         } while (id < 1);
-        Company company = c.getCompany();
-        System.out.println("\tid : " + c.getId() + " name : " + c.getName());
-        System.out.println(
-                "\tintroduced : " + c.getIntroduced() + " discontinued : " + c.getDiscontinued());
-        System.out.println("\tmanufacturer : " + company.getName());
     }
 
     /**
@@ -193,9 +172,10 @@ public class ConsoleUserInterface {
         System.out.println(
                 "Enter the following details. You can just type enter to let a field blank, except for the name.");
         try {
+            ComputerDto computerDto = new ComputerDto();
             LocalDate defaultDate = LocalDate.now();
             System.out.print("please enter the name of the computer :");
-            String name = br.readLine();
+            computerDto.setName(br.readLine());
             System.out.print("date of introduction (yyyy-mm-dd)?");
             String dateIntroduced = br.readLine();
             LocalDate ldIntro = defaultDate;
@@ -217,14 +197,15 @@ public class ConsoleUserInterface {
                     System.out.println("The id of the company must be greater or equals to 1.");
                     return;
                 }
+                computerDto.setCompanyId(String.valueOf(companyId));
             }
             if (ldIntro.isEqual(defaultDate)) {
-                ldIntro = null;
+                computerDto.setIntroduced(ldIntro.toString());
             }
             if (ldDisco.isEqual(defaultDate)) {
-                ldDisco = null;
+                computerDto.setDiscontinued(ldDisco.toString());
             }
-            serviceComputer.createComputer(name, ldIntro, ldDisco, companyId);
+            WebServiceAccess.INSTANCE.createComputer(computerDto);
             System.out.println("computer successfully created !");
         } catch (IOException e) {
             e.printStackTrace();
@@ -255,32 +236,31 @@ public class ConsoleUserInterface {
             entry = br.readLine();
             String[] args = entry.split("( -|=)");
             id = Integer.parseInt(args[0]);
-            Computer c = serviceComputer.getComputerById(id).get();
+            ComputerDto c = WebServiceAccess.INSTANCE.getComputer(id);
             for (int i = 1; i < args.length; i = i + 2) {
                 if ("name".equals(args[i])) {
                     c.setName(args[i + 1]);
                 } else if ("introduced-date".equals(args[i])) {
                     String date = args[i + 1];
                     if (date != null && !date.trim().isEmpty()) {
-                        c.setIntroduced(LocalDate.parse(date));
+                        c.setIntroduced(date);
                     }
                 } else if ("discontinued-date".equals(args[i])) {
                     String date = args[i + 1];
                     if (date != null && !date.trim().isEmpty()) {
-                        c.setDiscontinued(LocalDate.parse(date));
+                        c.setDiscontinued(date);
                     }
                 } else if ("company-id".equals(args[i])) {
                     String strId = args[i + 1];
                     if (strId != null && !strId.trim().isEmpty()) {
                         long companyId = Long.parseLong(strId);
                         if (companyId > 1) {
-                            Company company = serviceCompany.getCompanyById(companyId);
-                            c.setCompany(company);
+                            c.setCompanyId(strId);
                         }
                     }
                 }
             }
-            serviceComputer.updatecomputer(c);
+            WebServiceAccess.INSTANCE.updateComputer(c);
             System.out.println("computer successfully updated");
         } catch (IOException e) {
             e.printStackTrace();
@@ -314,8 +294,7 @@ public class ConsoleUserInterface {
             }
         } while (id < 1);
         try {
-            Computer c = serviceComputer.getComputerById(id).get();
-            serviceComputer.deleteComputer(c);
+            WebServiceAccess.INSTANCE.deleteComputer(id);
             System.out.println("Computer successfully deleted !");
         } catch (ServiceException e) {
             System.out.println("a problem occurpage.getPageNumber() - 1) * Page.numberPerPage)"
@@ -344,7 +323,7 @@ public class ConsoleUserInterface {
             }
         } while (id < 1);
         try {
-            serviceCompany.deleteCompany(id);
+            WebServiceAccess.INSTANCE.deleteCompany(id);
             System.out.println("Company successfully deleted !");
         } catch (ServiceException e) {
             System.out.println("a problem occur" + e.getMessage());

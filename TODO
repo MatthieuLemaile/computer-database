@@ -1,6 +1,8 @@
 WIP :
 
 Before next Impl :
+* Repasser un coup de checkstyle : bcp de Javadoc pour le REST
+* "/ComputerDatabase/" en regex dans webapp -> model -> CsrfSecurityRequestMatcher : un peu moche le chemin en dur dans le code !
 * Register
 * Internationalisation register
 * Internationalisation Erreurs

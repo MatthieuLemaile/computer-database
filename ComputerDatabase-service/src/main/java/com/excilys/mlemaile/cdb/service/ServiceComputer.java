@@ -187,6 +187,9 @@ public class ServiceComputer {
     public List<Computer> listSortSearchNumberComputer(int number, long idFirst, FieldSort sort,
             String search) {
         List<Computer> computers = new ArrayList<>();
+        if (sort == null) {
+            sort = FieldSort.NAME;
+        }
         try {
             computers = computerDao.listSortSearchNumberComputer(number,
                     idFirst, sort, search);

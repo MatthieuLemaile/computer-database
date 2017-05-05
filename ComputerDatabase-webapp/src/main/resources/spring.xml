@@ -14,9 +14,14 @@
 	http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security.xsd">
-	<mvc:annotation-driven />
 
+	<mvc:annotation-driven />
 	<context:component-scan base-package="com.excilys.mlemaile.cdb" />
+
+	<!-- <bean id="viewResolver"
+		class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="2" />
+	</bean> -->
 
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -60,8 +65,8 @@
 		<property name="idleTimeout" value="${idleTimeout}" />
 		<property name="leakDetectionThreshold" value="${leakDetectionThreshold}" />
 	</bean>
-	
-	<!--trransaction manager  -->
+
+	<!--trransaction manager -->
 	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
@@ -71,7 +76,7 @@
 		<property name="database" value="MYSQL"></property>
 		<property name="showSql" value="true"></property>
 	</bean>
-	
+
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<!-- <property name="persistenceUnitName" ref="myPU"/> -->
@@ -83,10 +88,10 @@
 				class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
 		</property>
 	</bean>
-	
+
 	<import resource="classpath:spring-security.xml" />
-	
-	
+
+
 
 	<tx:annotation-driven transaction-manager="txManager" />
 
